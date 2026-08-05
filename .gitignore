@@ -65,3 +65,5 @@ rsconnect/
 # Operating-system files
 .DS_Store
 Thumbs.db
+# Large processed VEP output
+data/processed/ENSEMBL_VEP_OUTPUT.xlsx
