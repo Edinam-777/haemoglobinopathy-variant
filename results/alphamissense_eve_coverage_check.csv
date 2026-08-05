@@ -1,0 +1,7 @@
+variant_group,tool,tool_classification,score_column,total_variants_in_group,variants_with_score,variants_without_score,percent_with_score
+All variants,AlphaMissense,Missense predictor,am_pathogenicity_new,1627,757,870,46.5
+Missense,AlphaMissense,Missense predictor,am_pathogenicity_new,998,757,241,75.9
+Splice / cryptic splice,AlphaMissense,Missense predictor,am_pathogenicity_new,127,29,98,22.8
+All variants,EVE,Missense/evolutionary model,EVE_SCORE_new,1627,577,1050,35.5
+Missense,EVE,Missense/evolutionary model,EVE_SCORE_new,998,577,421,57.8
+Splice / cryptic splice,EVE,Missense/evolutionary model,EVE_SCORE_new,127,16,111,12.6

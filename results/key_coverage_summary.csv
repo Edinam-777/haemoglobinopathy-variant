@@ -1,0 +1,211 @@
+variant_group,tool,tool_classification,score_column,total_variants_in_group,variants_with_score,variants_without_score,percent_with_score
+All variants,AlphaMissense,Missense predictor,am_pathogenicity_new,1627,757,870,46.5
+Frameshift,AlphaMissense,Missense predictor,am_pathogenicity_new,215,0,215,0
+Missense,AlphaMissense,Missense predictor,am_pathogenicity_new,998,757,241,75.9
+Nonsense / stop,AlphaMissense,Missense predictor,am_pathogenicity_new,68,0,68,0
+Splice / cryptic splice,AlphaMissense,Missense predictor,am_pathogenicity_new,127,29,98,22.8
+All variants,BLOSUM62,Amino-acid substitution/conservation score,BLOSUM62_new,1627,993,634,61
+Frameshift,BLOSUM62,Amino-acid substitution/conservation score,BLOSUM62_new,215,0,215,0
+Missense,BLOSUM62,Amino-acid substitution/conservation score,BLOSUM62_new,998,978,20,98
+Nonsense / stop,BLOSUM62,Amino-acid substitution/conservation score,BLOSUM62_new,68,0,68,0
+Splice / cryptic splice,BLOSUM62,Amino-acid substitution/conservation score,BLOSUM62_new,127,38,89,29.9
+All variants,BayesDel addAF,Meta-predictor,BayesDel_addAF_score_new,1627,1042,585,64
+Frameshift,BayesDel addAF,Meta-predictor,BayesDel_addAF_score_new,215,0,215,0
+Missense,BayesDel addAF,Meta-predictor,BayesDel_addAF_score_new,998,977,21,97.9
+Nonsense / stop,BayesDel addAF,Meta-predictor,BayesDel_addAF_score_new,68,50,18,73.5
+Splice / cryptic splice,BayesDel addAF,Meta-predictor,BayesDel_addAF_score_new,127,39,88,30.7
+All variants,BayesDel noAF,Meta-predictor,BayesDel_noAF_score_new,1627,1042,585,64
+Frameshift,BayesDel noAF,Meta-predictor,BayesDel_noAF_score_new,215,0,215,0
+Missense,BayesDel noAF,Meta-predictor,BayesDel_noAF_score_new,998,977,21,97.9
+Nonsense / stop,BayesDel noAF,Meta-predictor,BayesDel_noAF_score_new,68,50,18,73.5
+Splice / cryptic splice,BayesDel noAF,Meta-predictor,BayesDel_noAF_score_new,127,39,88,30.7
+All variants,CADD,General deleteriousness predictor,CADD_PHRED_new,1627,1319,308,81.1
+Frameshift,CADD,General deleteriousness predictor,CADD_PHRED_new,215,9,206,4.2
+Missense,CADD,General deleteriousness predictor,CADD_PHRED_new,998,993,5,99.5
+Nonsense / stop,CADD,General deleteriousness predictor,CADD_PHRED_new,68,50,18,73.5
+Splice / cryptic splice,CADD,General deleteriousness predictor,CADD_PHRED_new,127,108,19,85
+All variants,ClinPred,Meta-predictor,ClinPred_score_new,1627,992,635,61
+Frameshift,ClinPred,Meta-predictor,ClinPred_score_new,215,0,215,0
+Missense,ClinPred,Meta-predictor,ClinPred_score_new,998,977,21,97.9
+Nonsense / stop,ClinPred,Meta-predictor,ClinPred_score_new,68,0,68,0
+Splice / cryptic splice,ClinPred,Meta-predictor,ClinPred_score_new,127,38,89,29.9
+All variants,Condel,Meta-predictor,Condel_score,1627,1007,620,61.9
+Frameshift,Condel,Meta-predictor,Condel_score,215,0,215,0
+Missense,Condel,Meta-predictor,Condel_score,998,992,6,99.4
+Nonsense / stop,Condel,Meta-predictor,Condel_score,68,0,68,0
+Splice / cryptic splice,Condel,Meta-predictor,Condel_score,127,38,89,29.9
+All variants,DANN,General deleteriousness predictor,DANN_score_new,1627,1042,585,64
+Frameshift,DANN,General deleteriousness predictor,DANN_score_new,215,0,215,0
+Missense,DANN,General deleteriousness predictor,DANN_score_new,998,977,21,97.9
+Nonsense / stop,DANN,General deleteriousness predictor,DANN_score_new,68,50,18,73.5
+Splice / cryptic splice,DANN,General deleteriousness predictor,DANN_score_new,127,39,88,30.7
+All variants,DEOGEN2,Missense predictor,DEOGEN2_score_new,1627,767,860,47.1
+Frameshift,DEOGEN2,Missense predictor,DEOGEN2_score_new,215,0,215,0
+Missense,DEOGEN2,Missense predictor,DEOGEN2_score_new,998,757,241,75.9
+Nonsense / stop,DEOGEN2,Missense predictor,DEOGEN2_score_new,68,0,68,0
+Splice / cryptic splice,DEOGEN2,Missense predictor,DEOGEN2_score_new,127,29,98,22.8
+All variants,ESM1b,Protein language model predictor,ESM1b_score_new,1627,1034,593,63.6
+Frameshift,ESM1b,Protein language model predictor,ESM1b_score_new,215,0,215,0
+Missense,ESM1b,Protein language model predictor,ESM1b_score_new,998,977,21,97.9
+Nonsense / stop,ESM1b,Protein language model predictor,ESM1b_score_new,68,42,26,61.8
+Splice / cryptic splice,ESM1b,Protein language model predictor,ESM1b_score_new,127,39,88,30.7
+All variants,EVE,Missense/evolutionary model,EVE_SCORE_new,1627,577,1050,35.5
+Frameshift,EVE,Missense/evolutionary model,EVE_SCORE_new,215,0,215,0
+Missense,EVE,Missense/evolutionary model,EVE_SCORE_new,998,577,421,57.8
+Nonsense / stop,EVE,Missense/evolutionary model,EVE_SCORE_new,68,0,68,0
+Splice / cryptic splice,EVE,Missense/evolutionary model,EVE_SCORE_new,127,16,111,12.6
+All variants,Eigen,Meta-predictor,Eigen_phred_coding_new,1627,1042,585,64
+Frameshift,Eigen,Meta-predictor,Eigen_phred_coding_new,215,0,215,0
+Missense,Eigen,Meta-predictor,Eigen_phred_coding_new,998,977,21,97.9
+Nonsense / stop,Eigen,Meta-predictor,Eigen_phred_coding_new,68,50,18,73.5
+Splice / cryptic splice,Eigen,Meta-predictor,Eigen_phred_coding_new,127,39,88,30.7
+All variants,Eigen-PC,Meta-predictor,Eigen_PC_phred_coding_new,1627,1042,585,64
+Frameshift,Eigen-PC,Meta-predictor,Eigen_PC_phred_coding_new,215,0,215,0
+Missense,Eigen-PC,Meta-predictor,Eigen_PC_phred_coding_new,998,977,21,97.9
+Nonsense / stop,Eigen-PC,Meta-predictor,Eigen_PC_phred_coding_new,68,50,18,73.5
+Splice / cryptic splice,Eigen-PC,Meta-predictor,Eigen_PC_phred_coding_new,127,39,88,30.7
+All variants,GERP++,Conservation score,GERP__RS_new,1627,1042,585,64
+Frameshift,GERP++,Conservation score,GERP__RS_new,215,0,215,0
+Missense,GERP++,Conservation score,GERP__RS_new,998,977,21,97.9
+Nonsense / stop,GERP++,Conservation score,GERP__RS_new,68,50,18,73.5
+Splice / cryptic splice,GERP++,Conservation score,GERP__RS_new,127,39,88,30.7
+All variants,LIST-S2,Meta-predictor,LIST_S2_score_new,1627,178,1449,10.9
+Frameshift,LIST-S2,Meta-predictor,LIST_S2_score_new,215,0,215,0
+Missense,LIST-S2,Meta-predictor,LIST_S2_score_new,998,176,822,17.6
+Nonsense / stop,LIST-S2,Meta-predictor,LIST_S2_score_new,68,0,68,0
+Splice / cryptic splice,LIST-S2,Meta-predictor,LIST_S2_score_new,127,8,119,6.3
+All variants,MPC,Missense predictor,MPC_score_new,1627,801,826,49.2
+Frameshift,MPC,Missense predictor,MPC_score_new,215,0,215,0
+Missense,MPC,Missense predictor,MPC_score_new,998,801,197,80.3
+Nonsense / stop,MPC,Missense predictor,MPC_score_new,68,0,68,0
+Splice / cryptic splice,MPC,Missense predictor,MPC_score_new,127,30,97,23.6
+All variants,MVP,Missense predictor,MVP_score_new,1627,992,635,61
+Frameshift,MVP,Missense predictor,MVP_score_new,215,0,215,0
+Missense,MVP,Missense predictor,MVP_score_new,998,977,21,97.9
+Nonsense / stop,MVP,Missense predictor,MVP_score_new,68,0,68,0
+Splice / cryptic splice,MVP,Missense predictor,MVP_score_new,127,38,89,29.9
+All variants,MaxEntScan,Splicing predictor,MaxEntScan_diff_new,1627,94,1533,5.8
+Frameshift,MaxEntScan,Splicing predictor,MaxEntScan_diff_new,215,0,215,0
+Missense,MaxEntScan,Splicing predictor,MaxEntScan_diff_new,998,34,964,3.4
+Nonsense / stop,MaxEntScan,Splicing predictor,MaxEntScan_diff_new,68,1,67,1.5
+Splice / cryptic splice,MaxEntScan,Splicing predictor,MaxEntScan_diff_new,127,92,35,72.4
+All variants,MetaLR,Meta-predictor,MetaLR_score_new,1627,992,635,61
+Frameshift,MetaLR,Meta-predictor,MetaLR_score_new,215,0,215,0
+Missense,MetaLR,Meta-predictor,MetaLR_score_new,998,977,21,97.9
+Nonsense / stop,MetaLR,Meta-predictor,MetaLR_score_new,68,0,68,0
+Splice / cryptic splice,MetaLR,Meta-predictor,MetaLR_score_new,127,38,89,29.9
+All variants,MetaRNN,Meta-predictor,MetaRNN_score_new,1627,992,635,61
+Frameshift,MetaRNN,Meta-predictor,MetaRNN_score_new,215,0,215,0
+Missense,MetaRNN,Meta-predictor,MetaRNN_score_new,998,977,21,97.9
+Nonsense / stop,MetaRNN,Meta-predictor,MetaRNN_score_new,68,0,68,0
+Splice / cryptic splice,MetaRNN,Meta-predictor,MetaRNN_score_new,127,38,89,29.9
+All variants,MetaSVM,Meta-predictor,MetaSVM_score_new,1627,992,635,61
+Frameshift,MetaSVM,Meta-predictor,MetaSVM_score_new,215,0,215,0
+Missense,MetaSVM,Meta-predictor,MetaSVM_score_new,998,977,21,97.9
+Nonsense / stop,MetaSVM,Meta-predictor,MetaSVM_score_new,68,0,68,0
+Splice / cryptic splice,MetaSVM,Meta-predictor,MetaSVM_score_new,127,38,89,29.9
+All variants,MutPred2,Missense predictor,MutPred2_score_new,1627,992,635,61
+Frameshift,MutPred2,Missense predictor,MutPred2_score_new,215,0,215,0
+Missense,MutPred2,Missense predictor,MutPred2_score_new,998,977,21,97.9
+Nonsense / stop,MutPred2,Missense predictor,MutPred2_score_new,68,0,68,0
+Splice / cryptic splice,MutPred2,Missense predictor,MutPred2_score_new,127,38,89,29.9
+All variants,MutationAssessor,Missense predictor,MutationAssessor_score_new,1627,581,1046,35.7
+Frameshift,MutationAssessor,Missense predictor,MutationAssessor_score_new,215,0,215,0
+Missense,MutationAssessor,Missense predictor,MutationAssessor_score_new,998,581,417,58.2
+Nonsense / stop,MutationAssessor,Missense predictor,MutationAssessor_score_new,68,0,68,0
+Splice / cryptic splice,MutationAssessor,Missense predictor,MutationAssessor_score_new,127,21,106,16.5
+All variants,MutationTaster,General functional predictor,MutationTaster_score_new,1627,1042,585,64
+Frameshift,MutationTaster,General functional predictor,MutationTaster_score_new,215,0,215,0
+Missense,MutationTaster,General functional predictor,MutationTaster_score_new,998,977,21,97.9
+Nonsense / stop,MutationTaster,General functional predictor,MutationTaster_score_new,68,50,18,73.5
+Splice / cryptic splice,MutationTaster,General functional predictor,MutationTaster_score_new,127,39,88,30.7
+All variants,PROVEAN,Missense predictor,PROVEAN_score_new,1627,992,635,61
+Frameshift,PROVEAN,Missense predictor,PROVEAN_score_new,215,0,215,0
+Missense,PROVEAN,Missense predictor,PROVEAN_score_new,998,977,21,97.9
+Nonsense / stop,PROVEAN,Missense predictor,PROVEAN_score_new,68,0,68,0
+Splice / cryptic splice,PROVEAN,Missense predictor,PROVEAN_score_new,127,38,89,29.9
+All variants,PolyPhen-2,Missense predictor,PolyPhen_score,1627,1007,620,61.9
+Frameshift,PolyPhen-2,Missense predictor,PolyPhen_score,215,0,215,0
+Missense,PolyPhen-2,Missense predictor,PolyPhen_score,998,992,6,99.4
+Nonsense / stop,PolyPhen-2,Missense predictor,PolyPhen_score,68,0,68,0
+Splice / cryptic splice,PolyPhen-2,Missense predictor,PolyPhen_score,127,38,89,29.9
+All variants,PrimateAI,Missense predictor,PrimateAI_score_new,1627,977,650,60
+Frameshift,PrimateAI,Missense predictor,PrimateAI_score_new,215,0,215,0
+Missense,PrimateAI,Missense predictor,PrimateAI_score_new,998,977,21,97.9
+Nonsense / stop,PrimateAI,Missense predictor,PrimateAI_score_new,68,0,68,0
+Splice / cryptic splice,PrimateAI,Missense predictor,PrimateAI_score_new,127,38,89,29.9
+All variants,REVEL,Meta-predictor,REVEL_score_new,1627,992,635,61
+Frameshift,REVEL,Meta-predictor,REVEL_score_new,215,0,215,0
+Missense,REVEL,Meta-predictor,REVEL_score_new,998,977,21,97.9
+Nonsense / stop,REVEL,Meta-predictor,REVEL_score_new,68,0,68,0
+Splice / cryptic splice,REVEL,Meta-predictor,REVEL_score_new,127,38,89,29.9
+All variants,SIFT,Missense predictor,SIFT_score,1627,1007,620,61.9
+Frameshift,SIFT,Missense predictor,SIFT_score,215,0,215,0
+Missense,SIFT,Missense predictor,SIFT_score,998,992,6,99.4
+Nonsense / stop,SIFT,Missense predictor,SIFT_score,68,0,68,0
+Splice / cryptic splice,SIFT,Missense predictor,SIFT_score,127,38,89,29.9
+All variants,SiPhy,Conservation score,SiPhy_29way_logOdds,1627,1056,571,64.9
+Frameshift,SiPhy,Conservation score,SiPhy_29way_logOdds,215,0,215,0
+Missense,SiPhy,Conservation score,SiPhy_29way_logOdds,998,991,7,99.3
+Nonsense / stop,SiPhy,Conservation score,SiPhy_29way_logOdds,68,50,18,73.5
+Splice / cryptic splice,SiPhy,Conservation score,SiPhy_29way_logOdds,127,39,88,30.7
+All variants,SpliceAI,Splicing predictor,SpliceAI_DS,1627,1182,445,72.6
+Frameshift,SpliceAI,Splicing predictor,SpliceAI_DS,215,134,81,62.3
+Missense,SpliceAI,Splicing predictor,SpliceAI_DS,998,805,193,80.7
+Nonsense / stop,SpliceAI,Splicing predictor,SpliceAI_DS,68,45,23,66.2
+Splice / cryptic splice,SpliceAI,Splicing predictor,SpliceAI_DS,127,94,33,74
+All variants,SpliceAI acceptor gain,Splicing predictor,SpliceAI_pred_DS_AG_new,1627,1440,187,88.5
+Frameshift,SpliceAI acceptor gain,Splicing predictor,SpliceAI_pred_DS_AG_new,215,172,43,80
+Missense,SpliceAI acceptor gain,Splicing predictor,SpliceAI_pred_DS_AG_new,998,980,18,98.2
+Nonsense / stop,SpliceAI acceptor gain,Splicing predictor,SpliceAI_pred_DS_AG_new,68,59,9,86.8
+Splice / cryptic splice,SpliceAI acceptor gain,Splicing predictor,SpliceAI_pred_DS_AG_new,127,116,11,91.3
+All variants,SpliceAI acceptor loss,Splicing predictor,SpliceAI_pred_DS_AL_new,1627,1440,187,88.5
+Frameshift,SpliceAI acceptor loss,Splicing predictor,SpliceAI_pred_DS_AL_new,215,172,43,80
+Missense,SpliceAI acceptor loss,Splicing predictor,SpliceAI_pred_DS_AL_new,998,980,18,98.2
+Nonsense / stop,SpliceAI acceptor loss,Splicing predictor,SpliceAI_pred_DS_AL_new,68,59,9,86.8
+Splice / cryptic splice,SpliceAI acceptor loss,Splicing predictor,SpliceAI_pred_DS_AL_new,127,116,11,91.3
+All variants,SpliceAI donor gain,Splicing predictor,SpliceAI_pred_DS_DG_new,1627,1440,187,88.5
+Frameshift,SpliceAI donor gain,Splicing predictor,SpliceAI_pred_DS_DG_new,215,172,43,80
+Missense,SpliceAI donor gain,Splicing predictor,SpliceAI_pred_DS_DG_new,998,980,18,98.2
+Nonsense / stop,SpliceAI donor gain,Splicing predictor,SpliceAI_pred_DS_DG_new,68,59,9,86.8
+Splice / cryptic splice,SpliceAI donor gain,Splicing predictor,SpliceAI_pred_DS_DG_new,127,116,11,91.3
+All variants,SpliceAI donor loss,Splicing predictor,SpliceAI_pred_DS_DL_new,1627,1440,187,88.5
+Frameshift,SpliceAI donor loss,Splicing predictor,SpliceAI_pred_DS_DL_new,215,172,43,80
+Missense,SpliceAI donor loss,Splicing predictor,SpliceAI_pred_DS_DL_new,998,980,18,98.2
+Nonsense / stop,SpliceAI donor loss,Splicing predictor,SpliceAI_pred_DS_DL_new,68,59,9,86.8
+Splice / cryptic splice,SpliceAI donor loss,Splicing predictor,SpliceAI_pred_DS_DL_new,127,116,11,91.3
+All variants,VEST4,Missense predictor,VEST4_score_seperated,1627,1056,571,64.9
+Frameshift,VEST4,Missense predictor,VEST4_score_seperated,215,0,215,0
+Missense,VEST4,Missense predictor,VEST4_score_seperated,998,991,7,99.3
+Nonsense / stop,VEST4,Missense predictor,VEST4_score_seperated,68,50,18,73.5
+Splice / cryptic splice,VEST4,Missense predictor,VEST4_score_seperated,127,39,88,30.7
+All variants,ada_score,Splicing predictor,ada_score_new,1627,93,1534,5.7
+Frameshift,ada_score,Splicing predictor,ada_score_new,215,0,215,0
+Missense,ada_score,Splicing predictor,ada_score_new,998,29,969,2.9
+Nonsense / stop,ada_score,Splicing predictor,ada_score_new,68,1,67,1.5
+Splice / cryptic splice,ada_score,Splicing predictor,ada_score_new,127,87,40,68.5
+All variants,gMVP,Missense predictor,gMVP_score_new,1627,403,1224,24.8
+Frameshift,gMVP,Missense predictor,gMVP_score_new,215,0,215,0
+Missense,gMVP,Missense predictor,gMVP_score_new,998,396,602,39.7
+Nonsense / stop,gMVP,Missense predictor,gMVP_score_new,68,0,68,0
+Splice / cryptic splice,gMVP,Missense predictor,gMVP_score_new,127,17,110,13.4
+All variants,phastCons100way,Conservation score,phastCons100way_vertebrate_new,1627,1042,585,64
+Frameshift,phastCons100way,Conservation score,phastCons100way_vertebrate_new,215,0,215,0
+Missense,phastCons100way,Conservation score,phastCons100way_vertebrate_new,998,977,21,97.9
+Nonsense / stop,phastCons100way,Conservation score,phastCons100way_vertebrate_new,68,50,18,73.5
+Splice / cryptic splice,phastCons100way,Conservation score,phastCons100way_vertebrate_new,127,39,88,30.7
+All variants,phyloP100way,Conservation score,phyloP100way_vertebrate_new,1627,1042,585,64
+Frameshift,phyloP100way,Conservation score,phyloP100way_vertebrate_new,215,0,215,0
+Missense,phyloP100way,Conservation score,phyloP100way_vertebrate_new,998,977,21,97.9
+Nonsense / stop,phyloP100way,Conservation score,phyloP100way_vertebrate_new,68,50,18,73.5
+Splice / cryptic splice,phyloP100way,Conservation score,phyloP100way_vertebrate_new,127,39,88,30.7
+All variants,popEVE,Population-adjusted evolutionary model,popEVE_SCORE_1_new,1627,977,650,60
+Frameshift,popEVE,Population-adjusted evolutionary model,popEVE_SCORE_1_new,215,0,215,0
+Missense,popEVE,Population-adjusted evolutionary model,popEVE_SCORE_1_new,998,977,21,97.9
+Nonsense / stop,popEVE,Population-adjusted evolutionary model,popEVE_SCORE_1_new,68,0,68,0
+Splice / cryptic splice,popEVE,Population-adjusted evolutionary model,popEVE_SCORE_1_new,127,38,89,29.9
+All variants,rf_score,Splicing predictor,rf_score_new,1627,93,1534,5.7
+Frameshift,rf_score,Splicing predictor,rf_score_new,215,0,215,0
+Missense,rf_score,Splicing predictor,rf_score_new,998,29,969,2.9
+Nonsense / stop,rf_score,Splicing predictor,rf_score_new,68,1,67,1.5
+Splice / cryptic splice,rf_score,Splicing predictor,rf_score_new,127,87,40,68.5
