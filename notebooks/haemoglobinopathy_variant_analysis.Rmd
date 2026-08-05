@@ -1,12 +1,68 @@
 ---
-title: "Assessment of In Silico Tools for Variant Effect Prediction in Haemoglobinopathies"
-output: html_document
+title: "Assessment of In Silico Tools for Variant-Effect Prediction in Haemoglobinopathies"
+author: "Edinam"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    code_folding: show
+    df_print: paged
 ---
 
 
 # Assessment of In Silico Tools for Variant Effect Prediction in Haemoglobinopathies
 
+
+# Project overview
+
+This notebook documents the data-processing, annotation, quality-control,
+coverage, and performance-analysis workflow used to assess in silico
+variant-effect prediction tools for variants in HBA1, HBA2, and HBB.
+
+The original variant dataset was standardised and converted from GRCh37 to
+GRCh38 before annotation using Ensembl Variant Effect Predictor. Appropriate
+MANE Select transcript annotations were retained before computational
+predictions were compared with observed clinical classifications.
+
 ## Setup
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 8,
+  fig.height = 6
+)
+
+required_packages <- c(
+  "tidyverse",
+  "readxl",
+  "readr",
+  "janitor",
+  "stringr",
+  "ggplot2"
+)
+
+missing_packages <- required_packages[
+  !required_packages %in% rownames(installed.packages())
+]
+
+if (length(missing_packages) > 0) {
+  stop(
+    "Install the following packages before running the notebook: ",
+    paste(missing_packages, collapse = ", ")
+  )
+}
+
+invisible(
+  lapply(required_packages, library, character.only = TRUE)
+)
+```
+
+
 
 ```{r setup, message=FALSE, warning=FALSE}
 library(readxl)
