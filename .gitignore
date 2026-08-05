@@ -44,3 +44,24 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+# R session and temporary files
+.Rhistory
+.RData
+.RDataTmp*
+.Ruserdata
+.Rproj.user/
+
+# R Markdown temporary files
+*_cache/
+*_files/
+
+# Environment variables and credentials
+.Renviron
+.env
+
+# Temporary Office files
+~$*
+
+# Operating-system files
+.DS_Store
+Thumbs.db
