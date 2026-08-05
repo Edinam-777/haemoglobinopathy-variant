@@ -1,0 +1,11 @@
+output_type,output_name,file_name
+Table,Whole binary tool performance with coverage,binary_performance_summary_with_coverage.csv
+Table,Main analysis comparison summary,main_analysis_comparison_summary.csv
+Table,Corrected optimised thresholds,corrected_optimised_thresholds_confirmed_tools_whole_dataset.csv
+Table,Same-score default versus optimised threshold comparison,default_vs_optimised_same_score_threshold_comparison.csv
+Table,Allele-frequency column summary,allele_frequency_column_summary.csv
+Table,AF by clinical group summary,af_by_clinical_group_summary.csv
+Table,AF by tool error group summary,af_by_tool_error_group_summary.csv
+Plot,Whole-dataset MCC plot,plots/whole_dataset_mcc_by_tool.png
+Plot,AF by clinical group boxplot,plots/af_by_clinical_group_boxplot.png
+Plot,AF by tool error group boxplot,plots/af_by_tool_error_group_boxplot.png

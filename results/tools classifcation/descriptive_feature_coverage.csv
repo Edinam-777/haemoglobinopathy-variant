@@ -1,0 +1,2 @@
+tool_category,tool,total_variants,variants_with_tool_output,variants_without_tool_output,percent_with_tool_output
+Substitution matrix / descriptive feature,BLOSUM62,1627,993,634,61

@@ -1,0 +1,7 @@
+tool_category,tool,total_variants,variants_with_tool_output,variants_without_tool_output,percent_with_tool_output
+Conservation score,GERP++,1627,1056,571,64.9
+Conservation score,phyloP,1627,1056,571,64.9
+Conservation score,phastCons,1627,1056,571,64.9
+Conservation score,SiPhy,1627,1056,571,64.9
+Conservation score,fitCons,1627,1056,571,64.9
+Conservation score,Eigen-PC,1627,0,1627,0

@@ -1,0 +1,3 @@
+candidate_type,threshold,n_evaluated,TP,TN,FP,FN,sensitivity,specificity,LR_positive,LR_positive_lower_95,LR_positive_upper_95,LR_negative,LR_negative_lower_95,LR_negative_upper_95,qualifies_pathogenic_LR,qualifies_benign_LR
+Pathogenic threshold: LR+ lower 95% CI >= 2.08,0.8500000000000001,325,163,56,9,97,0.627,0.862,4.528,2.399,7.897,0.433,0.362,0.525,TRUE,FALSE
+Benign threshold: LR- upper 95% CI <= 0.48,0.65,325,190,48,17,70,0.731,0.738,2.794,1.83,4.141,0.365,0.287,0.47,FALSE,TRUE

@@ -1,0 +1,7 @@
+alphamissense_lr_category,observed_binary,n,category_total,percent_within_category
+Benign-supporting,Benign,49,120,40.8
+Benign-supporting,Pathogenic,71,120,59.2
+Pathogenic-supporting,Benign,12,184,6.5
+Pathogenic-supporting,Pathogenic,172,184,93.5
+Uncertain interval,Benign,4,21,19
+Uncertain interval,Pathogenic,17,21,81

@@ -1,0 +1,111 @@
+tool,variant_group,total_variants_in_group,variants_with_tool_output,variants_without_tool_output,percent_with_tool_output,columns_present,tool_category
+SIFT,Frameshift,214,0,214,0,SIFT_score; SIFT_new,Individual missense predictor
+PROVEAN,Frameshift,214,0,214,0,PROVEAN_score_seperated; PROVEAN_score_new; PROVEAN_pred_new,Individual missense predictor
+FATHMM,Frameshift,214,0,214,0,FATHMM_score_seperated,Individual missense predictor
+FATHMM-MKL,Frameshift,214,0,214,0,fathmm-MKL_coding_score,Meta/ensemble predictor
+FATHMM-XF,Frameshift,214,0,214,0,fathmm_XF_coding_score_new; fathmm_XF_coding_pred_new,Modern/deep learning predictor
+PolyPhen-2,Frameshift,214,0,214,0,PolyPhen_score; PolyPhen_new,Individual missense predictor
+MutationTaster,Frameshift,214,0,214,0,MutationTaster_score; MutationTaster_score_new; MutationTaster_pred_new; MutationTaster_model_new,Individual missense predictor
+MutationAssessor,Frameshift,214,0,214,0,MutationAssessor_standalone_score; MutationAssessor_score_new; MutationAssessor_pred_new,Individual missense predictor
+DEOGEN2,Frameshift,214,0,214,0,DEOGEN2_score_new; DEOGEN2_pred_new,Modern/deep learning predictor
+PrimateAI,Frameshift,214,0,214,0,PrimateAI_score_new; PrimateAI_pred_new,Modern/deep learning predictor
+MutPred2,Frameshift,214,0,214,0,MutPred_score; MutPred2_score_new; MutPred2_pred_new,Modern/deep learning predictor
+MetaRNN,Frameshift,214,0,214,0,MetaRNN_score_new; MetaRNN_pred_new,Modern/deep learning predictor
+REVEL,Frameshift,214,0,214,0,REVEL_score; REVEL_score_new; REVEL_new,Meta/ensemble predictor
+ClinPred,Frameshift,214,0,214,0,ClinPred_score; ClinPred_score_new; ClinPred_pred_new; ClinPred_new,Meta/ensemble predictor
+MetaSVM,Frameshift,214,0,214,0,MetaSVM_score; MetaSVM_score_new; MetaSVM_pred_new,Meta/ensemble predictor
+MetaLR,Frameshift,214,0,214,0,MetaLR_score; MetaLR_score_new; MetaLR_pred_new,Meta/ensemble predictor
+BayesDel addAF,Frameshift,214,0,214,0,BayesDel_addAF_score; BayesDel_addAF_score_new; BayesDel_addAF_pred_new,Meta/ensemble predictor
+BayesDel noAF,Frameshift,214,0,214,0,BayesDel_noAF_score_new; BayesDel_noAF_pred_new,Meta/ensemble predictor
+LIST-S2,Frameshift,214,0,214,0,LIST-S2_score_seperated; LIST_S2_score_new; LIST_S2_pred_new,Meta/ensemble predictor
+AlphaMissense,Frameshift,214,0,214,0,am_class_new; am_pathogenicity_new,Modern/deep learning predictor
+EVE,Frameshift,214,0,214,0,EVE_CLASS_new; EVE_SCORE_new,Modern/deep learning predictor
+popEVE,Frameshift,214,0,214,0,popEVE_pred_new; popEVE_score_new; popEVE_SCORE_1_new; popEVE_EVE_new; popEVE_ESM1v_new,Modern/deep learning predictor
+SIFT,Missense,979,978,1,99.9,SIFT_score; SIFT_new,Individual missense predictor
+PolyPhen-2,Missense,979,978,1,99.9,PolyPhen_score; PolyPhen_new,Individual missense predictor
+PROVEAN,Missense,979,977,2,99.8,PROVEAN_score_seperated; PROVEAN_score_new; PROVEAN_pred_new,Individual missense predictor
+FATHMM,Missense,979,977,2,99.8,FATHMM_score_seperated,Individual missense predictor
+FATHMM-MKL,Missense,979,977,2,99.8,fathmm-MKL_coding_score,Meta/ensemble predictor
+FATHMM-XF,Missense,979,977,2,99.8,fathmm_XF_coding_score_new; fathmm_XF_coding_pred_new,Modern/deep learning predictor
+MutationTaster,Missense,979,977,2,99.8,MutationTaster_score; MutationTaster_score_new; MutationTaster_pred_new; MutationTaster_model_new,Individual missense predictor
+PrimateAI,Missense,979,977,2,99.8,PrimateAI_score_new; PrimateAI_pred_new,Modern/deep learning predictor
+MutPred2,Missense,979,977,2,99.8,MutPred_score; MutPred2_score_new; MutPred2_pred_new,Modern/deep learning predictor
+MetaRNN,Missense,979,977,2,99.8,MetaRNN_score_new; MetaRNN_pred_new,Modern/deep learning predictor
+REVEL,Missense,979,977,2,99.8,REVEL_score; REVEL_score_new; REVEL_new,Meta/ensemble predictor
+ClinPred,Missense,979,977,2,99.8,ClinPred_score; ClinPred_score_new; ClinPred_pred_new; ClinPred_new,Meta/ensemble predictor
+MetaSVM,Missense,979,977,2,99.8,MetaSVM_score; MetaSVM_score_new; MetaSVM_pred_new,Meta/ensemble predictor
+MetaLR,Missense,979,977,2,99.8,MetaLR_score; MetaLR_score_new; MetaLR_pred_new,Meta/ensemble predictor
+BayesDel addAF,Missense,979,977,2,99.8,BayesDel_addAF_score; BayesDel_addAF_score_new; BayesDel_addAF_pred_new,Meta/ensemble predictor
+BayesDel noAF,Missense,979,977,2,99.8,BayesDel_noAF_score_new; BayesDel_noAF_pred_new,Meta/ensemble predictor
+popEVE,Missense,979,977,2,99.8,popEVE_pred_new; popEVE_score_new; popEVE_SCORE_1_new; popEVE_EVE_new; popEVE_ESM1v_new,Modern/deep learning predictor
+MutationAssessor,Missense,979,798,181,81.5,MutationAssessor_standalone_score; MutationAssessor_score_new; MutationAssessor_pred_new,Individual missense predictor
+DEOGEN2,Missense,979,757,222,77.3,DEOGEN2_score_new; DEOGEN2_pred_new,Modern/deep learning predictor
+LIST-S2,Missense,979,757,222,77.3,LIST-S2_score_seperated; LIST_S2_score_new; LIST_S2_pred_new,Meta/ensemble predictor
+AlphaMissense,Missense,979,757,222,77.3,am_class_new; am_pathogenicity_new,Modern/deep learning predictor
+EVE,Missense,979,577,402,58.9,EVE_CLASS_new; EVE_SCORE_new,Modern/deep learning predictor
+MutationAssessor,Other coding,67,2,65,3,MutationAssessor_standalone_score; MutationAssessor_score_new; MutationAssessor_pred_new,Individual missense predictor
+SIFT,Other coding,67,0,67,0,SIFT_score; SIFT_new,Individual missense predictor
+PROVEAN,Other coding,67,0,67,0,PROVEAN_score_seperated; PROVEAN_score_new; PROVEAN_pred_new,Individual missense predictor
+FATHMM,Other coding,67,0,67,0,FATHMM_score_seperated,Individual missense predictor
+FATHMM-MKL,Other coding,67,0,67,0,fathmm-MKL_coding_score,Meta/ensemble predictor
+FATHMM-XF,Other coding,67,0,67,0,fathmm_XF_coding_score_new; fathmm_XF_coding_pred_new,Modern/deep learning predictor
+PolyPhen-2,Other coding,67,0,67,0,PolyPhen_score; PolyPhen_new,Individual missense predictor
+MutationTaster,Other coding,67,0,67,0,MutationTaster_score; MutationTaster_score_new; MutationTaster_pred_new; MutationTaster_model_new,Individual missense predictor
+DEOGEN2,Other coding,67,0,67,0,DEOGEN2_score_new; DEOGEN2_pred_new,Modern/deep learning predictor
+PrimateAI,Other coding,67,0,67,0,PrimateAI_score_new; PrimateAI_pred_new,Modern/deep learning predictor
+MutPred2,Other coding,67,0,67,0,MutPred_score; MutPred2_score_new; MutPred2_pred_new,Modern/deep learning predictor
+MetaRNN,Other coding,67,0,67,0,MetaRNN_score_new; MetaRNN_pred_new,Modern/deep learning predictor
+REVEL,Other coding,67,0,67,0,REVEL_score; REVEL_score_new; REVEL_new,Meta/ensemble predictor
+ClinPred,Other coding,67,0,67,0,ClinPred_score; ClinPred_score_new; ClinPred_pred_new; ClinPred_new,Meta/ensemble predictor
+MetaSVM,Other coding,67,0,67,0,MetaSVM_score; MetaSVM_score_new; MetaSVM_pred_new,Meta/ensemble predictor
+MetaLR,Other coding,67,0,67,0,MetaLR_score; MetaLR_score_new; MetaLR_pred_new,Meta/ensemble predictor
+BayesDel addAF,Other coding,67,0,67,0,BayesDel_addAF_score; BayesDel_addAF_score_new; BayesDel_addAF_pred_new,Meta/ensemble predictor
+BayesDel noAF,Other coding,67,0,67,0,BayesDel_noAF_score_new; BayesDel_noAF_pred_new,Meta/ensemble predictor
+LIST-S2,Other coding,67,0,67,0,LIST-S2_score_seperated; LIST_S2_score_new; LIST_S2_pred_new,Meta/ensemble predictor
+AlphaMissense,Other coding,67,0,67,0,am_class_new; am_pathogenicity_new,Modern/deep learning predictor
+EVE,Other coding,67,0,67,0,EVE_CLASS_new; EVE_SCORE_new,Modern/deep learning predictor
+popEVE,Other coding,67,0,67,0,popEVE_pred_new; popEVE_score_new; popEVE_SCORE_1_new; popEVE_EVE_new; popEVE_ESM1v_new,Modern/deep learning predictor
+FATHMM-MKL,Stop/start altered,67,65,2,97,fathmm-MKL_coding_score,Meta/ensemble predictor
+MutationTaster,Stop/start altered,67,65,2,97,MutationTaster_score; MutationTaster_score_new; MutationTaster_pred_new; MutationTaster_model_new,Individual missense predictor
+BayesDel addAF,Stop/start altered,67,65,2,97,BayesDel_addAF_score; BayesDel_addAF_score_new; BayesDel_addAF_pred_new,Meta/ensemble predictor
+BayesDel noAF,Stop/start altered,67,65,2,97,BayesDel_noAF_score_new; BayesDel_noAF_pred_new,Meta/ensemble predictor
+FATHMM-XF,Stop/start altered,67,57,10,85.1,fathmm_XF_coding_score_new; fathmm_XF_coding_pred_new,Modern/deep learning predictor
+SIFT,Stop/start altered,67,15,52,22.4,SIFT_score; SIFT_new,Individual missense predictor
+PROVEAN,Stop/start altered,67,15,52,22.4,PROVEAN_score_seperated; PROVEAN_score_new; PROVEAN_pred_new,Individual missense predictor
+FATHMM,Stop/start altered,67,15,52,22.4,FATHMM_score_seperated,Individual missense predictor
+PolyPhen-2,Stop/start altered,67,15,52,22.4,PolyPhen_score; PolyPhen_new,Individual missense predictor
+MutPred2,Stop/start altered,67,15,52,22.4,MutPred_score; MutPred2_score_new; MutPred2_pred_new,Modern/deep learning predictor
+MetaRNN,Stop/start altered,67,15,52,22.4,MetaRNN_score_new; MetaRNN_pred_new,Modern/deep learning predictor
+REVEL,Stop/start altered,67,15,52,22.4,REVEL_score; REVEL_score_new; REVEL_new,Meta/ensemble predictor
+ClinPred,Stop/start altered,67,15,52,22.4,ClinPred_score; ClinPred_score_new; ClinPred_pred_new; ClinPred_new,Meta/ensemble predictor
+MetaSVM,Stop/start altered,67,15,52,22.4,MetaSVM_score; MetaSVM_score_new; MetaSVM_pred_new,Meta/ensemble predictor
+MetaLR,Stop/start altered,67,15,52,22.4,MetaLR_score; MetaLR_score_new; MetaLR_pred_new,Meta/ensemble predictor
+DEOGEN2,Stop/start altered,67,10,57,14.9,DEOGEN2_score_new; DEOGEN2_pred_new,Modern/deep learning predictor
+LIST-S2,Stop/start altered,67,10,57,14.9,LIST-S2_score_seperated; LIST_S2_score_new; LIST_S2_pred_new,Meta/ensemble predictor
+popEVE,Stop/start altered,67,2,65,3,popEVE_pred_new; popEVE_score_new; popEVE_SCORE_1_new; popEVE_EVE_new; popEVE_ESM1v_new,Modern/deep learning predictor
+MutationAssessor,Stop/start altered,67,0,67,0,MutationAssessor_standalone_score; MutationAssessor_score_new; MutationAssessor_pred_new,Individual missense predictor
+PrimateAI,Stop/start altered,67,0,67,0,PrimateAI_score_new; PrimateAI_pred_new,Modern/deep learning predictor
+AlphaMissense,Stop/start altered,67,0,67,0,am_class_new; am_pathogenicity_new,Modern/deep learning predictor
+EVE,Stop/start altered,67,0,67,0,EVE_CLASS_new; EVE_SCORE_new,Modern/deep learning predictor
+MutationAssessor,Synonymous,27,2,25,7.4,MutationAssessor_standalone_score; MutationAssessor_score_new; MutationAssessor_pred_new,Individual missense predictor
+SIFT,Synonymous,27,0,27,0,SIFT_score; SIFT_new,Individual missense predictor
+PROVEAN,Synonymous,27,0,27,0,PROVEAN_score_seperated; PROVEAN_score_new; PROVEAN_pred_new,Individual missense predictor
+FATHMM,Synonymous,27,0,27,0,FATHMM_score_seperated,Individual missense predictor
+FATHMM-MKL,Synonymous,27,0,27,0,fathmm-MKL_coding_score,Meta/ensemble predictor
+FATHMM-XF,Synonymous,27,0,27,0,fathmm_XF_coding_score_new; fathmm_XF_coding_pred_new,Modern/deep learning predictor
+PolyPhen-2,Synonymous,27,0,27,0,PolyPhen_score; PolyPhen_new,Individual missense predictor
+MutationTaster,Synonymous,27,0,27,0,MutationTaster_score; MutationTaster_score_new; MutationTaster_pred_new; MutationTaster_model_new,Individual missense predictor
+DEOGEN2,Synonymous,27,0,27,0,DEOGEN2_score_new; DEOGEN2_pred_new,Modern/deep learning predictor
+PrimateAI,Synonymous,27,0,27,0,PrimateAI_score_new; PrimateAI_pred_new,Modern/deep learning predictor
+MutPred2,Synonymous,27,0,27,0,MutPred_score; MutPred2_score_new; MutPred2_pred_new,Modern/deep learning predictor
+MetaRNN,Synonymous,27,0,27,0,MetaRNN_score_new; MetaRNN_pred_new,Modern/deep learning predictor
+REVEL,Synonymous,27,0,27,0,REVEL_score; REVEL_score_new; REVEL_new,Meta/ensemble predictor
+ClinPred,Synonymous,27,0,27,0,ClinPred_score; ClinPred_score_new; ClinPred_pred_new; ClinPred_new,Meta/ensemble predictor
+MetaSVM,Synonymous,27,0,27,0,MetaSVM_score; MetaSVM_score_new; MetaSVM_pred_new,Meta/ensemble predictor
+MetaLR,Synonymous,27,0,27,0,MetaLR_score; MetaLR_score_new; MetaLR_pred_new,Meta/ensemble predictor
+BayesDel addAF,Synonymous,27,0,27,0,BayesDel_addAF_score; BayesDel_addAF_score_new; BayesDel_addAF_pred_new,Meta/ensemble predictor
+BayesDel noAF,Synonymous,27,0,27,0,BayesDel_noAF_score_new; BayesDel_noAF_pred_new,Meta/ensemble predictor
+LIST-S2,Synonymous,27,0,27,0,LIST-S2_score_seperated; LIST_S2_score_new; LIST_S2_pred_new,Meta/ensemble predictor
+AlphaMissense,Synonymous,27,0,27,0,am_class_new; am_pathogenicity_new,Modern/deep learning predictor
+EVE,Synonymous,27,0,27,0,EVE_CLASS_new; EVE_SCORE_new,Modern/deep learning predictor
+popEVE,Synonymous,27,0,27,0,popEVE_pred_new; popEVE_score_new; popEVE_SCORE_1_new; popEVE_EVE_new; popEVE_ESM1v_new,Modern/deep learning predictor

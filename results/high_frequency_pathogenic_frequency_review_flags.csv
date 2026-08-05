@@ -1,0 +1,6 @@
+HGVS,HGVS_transcript,Gene,Observed_pathogenicity,clinical_group,Effect_function,Consequence,popmax_af_for_BA1_BS1,overall_af_for_PM2,BA1_popmax_ge_0_5_percent,BS1_popmax_ge_0_1_percent,PM2_supporting_overall_af_lt_0_01_percent,appears_absent_or_zero_in_gnomad,gnomad_frequency_status,frequency_evidence_interpretation
+HBB:c.20A>T,NM_000518.4:c.20A>T,HBB,P/LP,P/LP,Missense codons,missense_variant,0.0494874,0.00265235,TRUE,TRUE,FALSE,FALSE,Numerical frequency available,BA1-level frequency flag
+HBB:c.364G>C,NM_000518.4:c.364G>C,HBB,P/LP,P/LP,Missense codons,missense_variant,0.00502855,4.44211e-4,TRUE,TRUE,FALSE,FALSE,Numerical frequency available,BA1-level frequency flag
+HBB:c.79G>A,NM_000518.4:c.79G>A,HBB,P/LP,P/LP,"Missense codons, Cryptic splice site",missense_variant,0.00258015,2.23706e-4,FALSE,TRUE,FALSE,FALSE,Numerical frequency available,BS1-level frequency flag
+HBA1:c.358C>T,NM_000558.5:c.358C>T,HBA1,P/LP,P/LP,Missense codons,missense_variant,0.00131492,3.09947e-5,FALSE,TRUE,TRUE,FALSE,Numerical frequency available,Review: BS1-level POPMAX but PM2-level overall rarity
+HBA2:c.142G>C,NM_000517.4:c.142G>C,HBA2,P/LP,P/LP,Missense codons,missense_variant,0.00117282,4.14125e-5,FALSE,TRUE,TRUE,FALSE,Numerical frequency available,Review: BS1-level POPMAX but PM2-level overall rarity

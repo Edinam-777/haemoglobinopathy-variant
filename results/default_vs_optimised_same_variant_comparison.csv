@@ -1,0 +1,18 @@
+tool,default_prediction_column,score_column,pathogenic_score_direction,optimised_threshold,same_subset_n,default_accuracy_same_subset,default_sensitivity_same_subset,default_specificity_same_subset,default_balanced_accuracy_same_subset,default_mcc_same_subset,optimised_accuracy_same_subset,optimised_sensitivity_same_subset,optimised_specificity_same_subset,optimised_balanced_accuracy_same_subset,optimised_mcc_same_subset,mcc_change_same_subset
+MutPred2,MutPred2_predicted_clean,MutPred2_score_new,higher,0.44281709127033114,291,0.773,0.968,0.145,0.557,0.206,0.863,0.887,0.783,0.835,0.641,0.435
+MutationTaster,MutationTaster_predicted_clean,MutationTaster_score_new,higher,0.955,447,0.805,0.992,0.012,0.502,0.014,0.586,0.503,0.941,0.722,0.353,0.339
+PrimateAI,PrimateAI_predicted_clean,PrimateAI_score_new,higher,0.655839681625,457,0.241,0.012,0.946,0.479,-0.123,0.499,0.414,0.759,0.587,0.154,0.277
+DEOGEN2,DEOGEN2_predicted_clean,DEOGEN2_score_new,higher,0.034258,335,0.224,0.056,0.923,0.489,-0.036,0.803,0.97,0.108,0.539,0.149,0.185
+MetaRNN,MetaRNN_predicted_clean,MetaRNN_score_new,higher,0.8478804,472,0.761,0.981,0.054,0.517,0.089,0.725,0.811,0.446,0.629,0.253,0.164
+BayesDel addAF,BayesDel_addAF_predicted_clean,BayesDel_addAF_score_new,higher,0.218081,522,0.785,0.968,0.116,0.542,0.159,0.776,0.868,0.438,0.653,0.315,0.156
+MutationAssessor,MutationAssessor_predicted_clean,MutationAssessor_score_new,higher,2.52,224,0.871,0.925,0.417,0.671,0.336,0.857,0.875,0.708,0.792,0.462,0.126
+MetaLR,MetaLR_predicted_clean,MetaLR_score_new,higher,0.7827,472,0.78,0.992,0.098,0.545,0.225,0.722,0.753,0.625,0.689,0.34,0.115
+BayesDel noAF,BayesDel_noAF_predicted_clean,BayesDel_noAF_score_new,higher,0.0780227,522,0.782,0.956,0.143,0.549,0.165,0.774,0.883,0.375,0.629,0.28,0.115
+LIST-S2,LIST_S2_predicted_clean,LIST_S2_score_new,higher,0.665433,103,0.65,0.71,0.561,0.635,0.271,0.699,0.968,0.293,0.63,0.372,0.101
+ClinPred,ClinPred_predicted_clean,ClinPred_score_new,higher,0.95785725398097,472,0.761,0.897,0.321,0.609,0.257,0.706,0.708,0.696,0.702,0.353,0.096
+MetaSVM,MetaSVM_predicted_clean,MetaSVM_score_new,higher,0.4833,472,0.767,0.911,0.304,0.607,0.263,0.731,0.764,0.625,0.694,0.352,0.089
+REVEL,REVEL_predicted_clean,REVEL_score_new,higher,0.64,472,0.794,0.978,0.205,0.592,0.315,0.773,0.831,0.589,0.71,0.403,0.088
+PROVEAN,PROVEAN_predicted_clean,PROVEAN_score_new,lower,-1.65,472,0.708,0.833,0.304,0.568,0.146,0.773,0.956,0.188,0.572,0.226,0.08
+popEVE,popEVE_predicted_clean,popEVE_score_new,lower,-4.563,103,0.65,0.726,0.537,0.631,0.265,0.689,0.79,0.537,0.663,0.338,0.073
+ESM1b,ESM1b_predicted_clean,ESM1b_score_new,lower,-7.7203827,514,0.759,0.853,0.42,0.636,0.278,0.768,0.843,0.5,0.672,0.336,0.058
+PolyPhen-2,PolyPhen_predicted_clean,PolyPhen_score,higher,0.098,18,0.833,0.833,NA,NA,NA,0.944,0.944,NA,NA,NA,NA

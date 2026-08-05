@@ -1,0 +1,23 @@
+tool,raw_score_col,prediction_col,total_eligible_binary_variants,variants_with_raw_score,variants_missing_raw_score,variants_with_binary_prediction,variants_with_uncertain_prediction,percent_with_raw_score,percent_with_binary_prediction,percent_uncertain_prediction
+SIFT,SIFT_new,NA,1026,472,554,NA,NA,46,NA,NA
+PolyPhen-2,PolyPhen_new,NA,1026,18,1008,NA,NA,1.8,NA,NA
+PROVEAN,PROVEAN_score_new,PROVEAN_pred_new,1026,472,554,472,0,46,46,0
+FATHMM,FATHMM_score_seperated,NA,1026,481,545,NA,NA,46.9,NA,NA
+FATHMM-MKL,fathmm-MKL_coding_score,NA,1026,531,495,NA,NA,51.8,NA,NA
+FATHMM-XF,fathmm_XF_coding_score_new,fathmm_XF_coding_pred_new,1026,514,512,514,0,50.1,50.1,0
+MutationTaster,MutationTaster_score_new,MutationTaster_pred_new,1026,522,504,447,75,50.9,43.6,7.3
+MutationAssessor,MutationAssessor_score_new,MutationAssessor_pred_new,1026,224,802,146,78,21.8,14.2,7.6
+MutPred2,MutPred2_score_new,MutPred2_pred_new,1026,472,554,291,181,46,28.4,17.6
+DEOGEN2,DEOGEN2_score_new,DEOGEN2_pred_new,1026,335,691,335,0,32.7,32.7,0
+PrimateAI,PrimateAI_score_new,PrimateAI_pred_new,1026,457,569,457,0,44.5,44.5,0
+REVEL,REVEL_score_new,NA,1026,472,554,NA,NA,46,NA,NA
+ClinPred,ClinPred_score_new,ClinPred_pred_new,1026,472,554,472,0,46,46,0
+MetaSVM,MetaSVM_score_new,MetaSVM_pred_new,1026,472,554,472,0,46,46,0
+MetaLR,MetaLR_score_new,MetaLR_pred_new,1026,472,554,472,0,46,46,0
+BayesDel addAF,BayesDel_addAF_score_new,BayesDel_addAF_pred_new,1026,522,504,522,0,50.9,50.9,0
+BayesDel noAF,BayesDel_noAF_score_new,BayesDel_noAF_pred_new,1026,522,504,522,0,50.9,50.9,0
+LIST-S2,LIST_S2_score_new,LIST_S2_pred_new,1026,103,923,103,0,10,10,0
+MetaRNN,MetaRNN_score_new,MetaRNN_pred_new,1026,472,554,472,0,46,46,0
+ESM1b,ESM1b_score_new,ESM1b_pred_new,1026,514,512,514,0,50.1,50.1,0
+EVE,EVE_SCORE_new,EVE_CLASS_new,1026,220,806,75,145,21.4,7.3,14.1
+popEVE,popEVE_SCORE_1_new,popEVE_pred_new,1026,457,569,67,36,44.5,6.5,3.5

@@ -1,0 +1,3 @@
+tool,tool_classification,score_column,prediction_column,score_direction,reason_not_optimised
+MutationTaster,General functional predictor,MutationTaster_score_new,MutationTaster_pred_new,Prediction-label based,Score direction unclear or requires confirmation
+MaxEntScan,Splicing predictor,MaxEntScan_diff_new,NA,Direction depends on score definition,Score direction unclear or requires confirmation

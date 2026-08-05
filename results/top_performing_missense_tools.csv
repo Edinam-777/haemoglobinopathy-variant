@@ -1,0 +1,11 @@
+tool,prediction_column,total_eligible_binary_variants,total_variants_evaluated,variants_not_evaluated,true_positive,true_negative,false_positive,false_negative,accuracy,sensitivity,specificity,ppv,npv,balanced_accuracy,mcc,LR_positive,LR_negative,percent_missense_binary_variants_evaluated
+MutPred2,MutPred2_predicted_clean,468,277,191,183,54,15,25,0.856,0.88,0.783,0.924,0.684,0.832,0.635,4.047,0.154,59.2
+AlphaMissense,AlphaMissense_predicted_clean,468,283,185,195,35,18,35,0.813,0.848,0.66,0.915,0.5,0.754,0.46,2.496,0.23,60.5
+Eigen-PC,Eigen_PC_predicted_clean,468,457,11,300,61,51,45,0.79,0.87,0.545,0.855,0.575,0.708,0.422,1.91,0.239,97.6
+popEVE,popEVE_predicted_clean,468,66,402,22,22,6,16,0.667,0.579,0.786,0.786,0.579,0.682,0.365,2.702,0.536,14.1
+DANN,DANN_predicted_clean,468,457,11,301,53,59,44,0.775,0.872,0.473,0.836,0.546,0.672,0.364,1.656,0.27,97.6
+SIFT,SIFT_predicted_clean,468,457,11,317,41,71,28,0.783,0.919,0.366,0.817,0.594,0.643,0.342,1.449,0.222,97.6
+MutationAssessor,MutationAssessor_predicted_clean,468,224,244,185,10,14,15,0.871,0.925,0.417,0.93,0.4,0.671,0.336,1.586,0.18,47.9
+ESM1b,ESM1b_predicted_clean,468,457,11,297,47,65,48,0.753,0.861,0.42,0.82,0.495,0.64,0.297,1.483,0.332,97.6
+PolyPhen-2,PolyPhen_predicted_clean,468,466,2,249,72,45,100,0.689,0.713,0.615,0.847,0.419,0.664,0.296,1.855,0.466,99.6
+CADD,CADD_predicted_clean,468,467,1,341,23,94,9,0.779,0.974,0.197,0.784,0.719,0.586,0.293,1.213,0.131,99.8

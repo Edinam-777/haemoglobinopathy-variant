@@ -1,0 +1,16 @@
+tool,tool_classification,score_column,default_threshold,default_evaluated,default_accuracy,default_sensitivity,default_specificity,default_balanced_accuracy,default_mcc,default_LR_positive,default_LR_negative,optimised_threshold,optimised_evaluated,optimised_accuracy,optimised_sensitivity,optimised_specificity,optimised_balanced_accuracy,optimised_mcc,optimised_LR_positive,optimised_LR_negative,mcc_change_optimised_minus_default,balanced_accuracy_change_optimised_minus_default,sensitivity_change_optimised_minus_default,specificity_change_optimised_minus_default
+PrimateAI,Missense predictor,PrimateAI_score_new,NA,457,0.241,0.012,0.946,0.479,-0.123,0.216,1.044,0.655839681625,457,0.499,0.414,0.759,0.587,0.154,1.719,0.771,0.277,0.108,0.402,-0.187
+BayesDel addAF,Meta-predictor,BayesDel_addAF_score_new,NA,522,0.785,0.968,0.116,0.542,0.159,1.095,0.273,0.412496,522,0.638,0.578,0.857,0.718,0.357,4.046,0.492,0.198,0.176,-0.39,0.741
+BayesDel noAF,Meta-predictor,BayesDel_noAF_score_new,NA,522,0.782,0.956,0.143,0.549,0.165,1.115,0.307,0.354745,522,0.661,0.617,0.821,0.719,0.36,3.456,0.466,0.195,0.17,-0.339,0.678
+EVE,Missense/evolutionary model,EVE_SCORE_new,NA,75,0.333,0.138,1,0.569,0.187,NA,0.862,0.26978082501779665,220,0.814,0.832,0.667,0.75,0.373,2.495,0.253,0.186,0.181,0.694,-0.333
+DEOGEN2,Missense predictor,DEOGEN2_score_new,NA,335,0.224,0.056,0.923,0.49,-0.036,0.722,1.023,0.034258,335,0.803,0.97,0.108,0.539,0.149,1.087,0.275,0.185,0.049,0.914,-0.815
+MetaRNN,Meta-predictor,MetaRNN_score_new,NA,472,0.761,0.981,0.054,0.517,0.089,1.036,0.363,0.8478804,472,0.725,0.811,0.446,0.629,0.253,1.465,0.423,0.164,0.112,-0.17,0.392
+MutationAssessor,Missense predictor,MutationAssessor_score_new,NA,224,0.871,0.925,0.417,0.671,0.336,1.586,0.18,2.52,224,0.857,0.875,0.708,0.791,0.462,3,0.176,0.126,0.12,-0.05,0.291
+MetaLR,Meta-predictor,MetaLR_score_new,NA,472,0.78,0.992,0.098,0.545,0.225,1.1,0.085,0.7827,472,0.722,0.753,0.625,0.689,0.34,2.007,0.396,0.115,0.144,-0.239,0.527
+LIST-S2,Meta-predictor,LIST_S2_score_new,NA,103,0.65,0.71,0.561,0.635,0.271,1.616,0.518,0.665433,103,0.699,0.968,0.293,0.63,0.372,1.368,0.11,0.101,-0.005,0.258,-0.268
+ClinPred,Meta-predictor,ClinPred_score_new,NA,472,0.761,0.897,0.321,0.609,0.257,1.322,0.32,0.96966141462326,472,0.686,0.667,0.75,0.709,0.358,2.667,0.444,0.101,0.1,-0.23,0.429
+MetaSVM,Meta-predictor,MetaSVM_score_new,NA,472,0.767,0.911,0.304,0.608,0.263,1.308,0.293,0.4833,472,0.731,0.764,0.625,0.695,0.352,2.037,0.378,0.089,0.087,-0.147,0.321
+PROVEAN,Missense predictor,PROVEAN_score_new,NA,472,0.708,0.833,0.304,0.569,0.146,1.197,0.549,-1.65,472,0.773,0.956,0.188,0.572,0.226,1.176,0.237,0.08,0.003,0.123,-0.116
+Eigen-PC,Meta-predictor,Eigen_PC_phred_coding_new,1.3,522,0.81,0.883,0.545,0.714,0.432,1.939,0.215,1.776404,522,0.797,0.822,0.705,0.763,0.476,2.79,0.252,0.044,0.049,-0.061,0.16
+DANN,General deleteriousness predictor,DANN_score_new,0.971,522,0.778,0.861,0.473,0.667,0.336,1.634,0.294,0.9595738270659581,522,0.797,0.905,0.402,0.653,0.343,1.513,0.237,0.007,-0.014,0.044,-0.071
+CADD,General deleteriousness predictor,CADD_PHRED_new,10.44,742,0.819,0.94,0.471,0.706,0.484,1.778,0.127,10.56,742,0.819,0.94,0.471,0.706,0.484,1.778,0.127,0,0,0,0

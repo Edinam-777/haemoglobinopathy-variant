@@ -1,0 +1,53 @@
+tool_column_original,tool_column_updated,comparison_status,n,total_variants,percentage
+BayesDel_addAF_score,BayesDel_addAF_score_new,Different value,436,1627,26.8
+BayesDel_addAF_score,BayesDel_addAF_score_new,Missing in both,571,1627,35.1
+BayesDel_addAF_score,BayesDel_addAF_score_new,"Present originally, missing in updated",14,1627,0.9
+BayesDel_addAF_score,BayesDel_addAF_score_new,Same value,606,1627,37.2
+CADD_PHRED,CADD_PHRED_new,Different value,1286,1627,79
+CADD_PHRED,CADD_PHRED_new,Missing in both,159,1627,9.8
+CADD_PHRED,CADD_PHRED_new,"Missing originally, present in updated",1,1627,0.1
+CADD_PHRED,CADD_PHRED_new,"Present originally, missing in updated",149,1627,9.2
+CADD_PHRED,CADD_PHRED_new,Same value,32,1627,2
+ClinPred_score,ClinPred_score_new,Different value,546,1627,33.6
+ClinPred_score,ClinPred_score_new,Missing in both,621,1627,38.2
+ClinPred_score,ClinPred_score_new,"Present originally, missing in updated",14,1627,0.9
+ClinPred_score,ClinPred_score_new,Same value,446,1627,27.4
+Consequence,Consequence_new,Different value,54,1627,3.3
+Consequence,Consequence_new,Same value,1573,1627,96.7
+DANN_score,DANN_score_new,Different value,1033,1627,63.5
+DANN_score,DANN_score_new,Missing in both,571,1627,35.1
+DANN_score,DANN_score_new,"Present originally, missing in updated",14,1627,0.9
+DANN_score,DANN_score_new,Same value,9,1627,0.6
+Gene,Gene_new,Different value,1604,1627,98.6
+Gene,Gene_new,"Missing originally, present in updated",23,1627,1.4
+Location,Location_new,Different value,1627,1627,100
+MaxEntScan_diff,MaxEntScan_diff_new,Different value,43,1627,2.6
+MaxEntScan_diff,MaxEntScan_diff_new,Missing in both,1533,1627,94.2
+MaxEntScan_diff,MaxEntScan_diff_new,Same value,51,1627,3.1
+MetaLR_score,MetaLR_score_new,Different value,530,1627,32.6
+MetaLR_score,MetaLR_score_new,Missing in both,621,1627,38.2
+MetaLR_score,MetaLR_score_new,"Present originally, missing in updated",14,1627,0.9
+MetaLR_score,MetaLR_score_new,Same value,462,1627,28.4
+MetaSVM_score,MetaSVM_score_new,Different value,447,1627,27.5
+MetaSVM_score,MetaSVM_score_new,Missing in both,621,1627,38.2
+MetaSVM_score,MetaSVM_score_new,"Present originally, missing in updated",14,1627,0.9
+MetaSVM_score,MetaSVM_score_new,Same value,545,1627,33.5
+MutationTaster_score,MutationTaster_score_new,Different value,1042,1627,64
+MutationTaster_score,MutationTaster_score_new,Missing in both,571,1627,35.1
+MutationTaster_score,MutationTaster_score_new,"Present originally, missing in updated",14,1627,0.9
+REVEL_score,REVEL_score_new,Different value,486,1627,29.9
+REVEL_score,REVEL_score_new,Missing in both,621,1627,38.2
+REVEL_score,REVEL_score_new,"Present originally, missing in updated",14,1627,0.9
+REVEL_score,REVEL_score_new,Same value,506,1627,31.1
+ada_score,ada_score_new,Different value,59,1627,3.6
+ada_score,ada_score_new,Missing in both,1534,1627,94.3
+ada_score,ada_score_new,Same value,34,1627,2.1
+phastCons17way_primate,phastCons17way_primate_new,Different value,1042,1627,64
+phastCons17way_primate,phastCons17way_primate_new,Missing in both,571,1627,35.1
+phastCons17way_primate,phastCons17way_primate_new,"Present originally, missing in updated",14,1627,0.9
+phyloP100way_vertebrate,phyloP100way_vertebrate_new,Different value,1042,1627,64
+phyloP100way_vertebrate,phyloP100way_vertebrate_new,Missing in both,571,1627,35.1
+phyloP100way_vertebrate,phyloP100way_vertebrate_new,"Present originally, missing in updated",14,1627,0.9
+rf_score,rf_score_new,Different value,37,1627,2.3
+rf_score,rf_score_new,Missing in both,1534,1627,94.3
+rf_score,rf_score_new,Same value,56,1627,3.4

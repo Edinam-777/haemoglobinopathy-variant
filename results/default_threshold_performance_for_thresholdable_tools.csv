@@ -1,0 +1,23 @@
+tool,tool_classification,score_column,score_direction,default_threshold,total_eligible_binary_variants,total_variants_evaluated,variants_not_evaluated,accuracy,sensitivity,specificity,balanced_accuracy,mcc,LR_positive,LR_negative
+MutPred2,Missense predictor,MutPred2_score_new,Higher score = more pathogenic,NA,1026,291,735,0.863,0.887,0.783,0.835,0.641,4.082,0.144
+CADD,General deleteriousness predictor,CADD_PHRED_new,Higher score = more deleterious,10.44,1026,742,284,0.819,0.94,0.471,0.706,0.484,1.778,0.127
+AlphaMissense,Missense predictor,am_pathogenicity_new,Higher score = more pathogenic,NA,1026,283,743,0.813,0.848,0.66,0.754,0.46,2.496,0.23
+Eigen-PC,Meta-predictor,Eigen_PC_phred_coding_new,Higher score = more deleterious,1.3,1026,522,504,0.81,0.883,0.545,0.714,0.432,1.939,0.215
+popEVE,Population-adjusted evolutionary model,popEVE_SCORE_1_new,Higher/lower direction to confirm,NA,1026,67,959,0.657,0.564,0.786,0.675,0.35,2.632,0.555
+SIFT,Missense predictor,SIFT_score,Lower score = more damaging,NA,1026,472,554,0.79,0.922,0.366,0.644,0.347,1.455,0.212
+MutationAssessor,Missense predictor,MutationAssessor_score_new,Higher score = more damaging,NA,1026,224,802,0.871,0.925,0.417,0.671,0.336,1.586,0.18
+DANN,General deleteriousness predictor,DANN_score_new,Higher score = more deleterious,0.971,1026,522,504,0.778,0.861,0.473,0.667,0.336,1.634,0.294
+PolyPhen-2,Missense predictor,PolyPhen_score,Higher score = more damaging,NA,1026,481,545,0.694,0.72,0.615,0.667,0.299,1.871,0.455
+ESM1b,Protein language model predictor,ESM1b_score_new,Higher/lower direction to confirm,NA,1026,514,512,0.759,0.853,0.42,0.636,0.278,1.47,0.35
+LIST-S2,Meta-predictor,LIST_S2_score_new,Higher score = more pathogenic,NA,1026,103,923,0.65,0.71,0.561,0.635,0.271,1.616,0.518
+MetaSVM,Meta-predictor,MetaSVM_score_new,Higher score = more pathogenic,NA,1026,472,554,0.767,0.911,0.304,0.608,0.263,1.308,0.293
+ClinPred,Meta-predictor,ClinPred_score_new,Higher score = more pathogenic,NA,1026,472,554,0.761,0.897,0.321,0.609,0.257,1.322,0.32
+MetaLR,Meta-predictor,MetaLR_score_new,Higher score = more pathogenic,NA,1026,472,554,0.78,0.992,0.098,0.545,0.225,1.1,0.085
+EVE,Missense/evolutionary model,EVE_SCORE_new,Higher score = more pathogenic,NA,1026,75,951,0.333,0.138,1,0.569,0.187,NA,0.862
+BayesDel noAF,Meta-predictor,BayesDel_noAF_score_new,Higher score = more pathogenic,NA,1026,522,504,0.782,0.956,0.143,0.549,0.165,1.115,0.307
+BayesDel addAF,Meta-predictor,BayesDel_addAF_score_new,Higher score = more pathogenic,NA,1026,522,504,0.785,0.968,0.116,0.542,0.159,1.095,0.273
+PROVEAN,Missense predictor,PROVEAN_score_new,Lower score = more damaging,NA,1026,472,554,0.708,0.833,0.304,0.569,0.146,1.197,0.549
+MetaRNN,Meta-predictor,MetaRNN_score_new,Higher score = more pathogenic,NA,1026,472,554,0.761,0.981,0.054,0.517,0.089,1.036,0.363
+MutationTaster,General functional predictor,MutationTaster_score_new,Prediction-label based,NA,1026,447,579,0.805,0.992,0.012,0.502,0.014,1.004,0.704
+DEOGEN2,Missense predictor,DEOGEN2_score_new,Higher score = more pathogenic,NA,1026,335,691,0.224,0.056,0.923,0.49,-0.036,0.722,1.023
+PrimateAI,Missense predictor,PrimateAI_score_new,Higher score = more pathogenic,NA,1026,457,569,0.241,0.012,0.946,0.479,-0.123,0.216,1.044

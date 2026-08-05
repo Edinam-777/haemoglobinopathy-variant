@@ -1,0 +1,6 @@
+tool_category,tool,total_variants,variants_with_tool_output,variants_without_tool_output,percent_with_tool_output
+Gene-level intolerance / LoF metric,LoFtool,1627,1042,585,64
+Gene-level intolerance / LoF metric,HIPred,1627,1042,585,64
+Gene-level intolerance / LoF metric,GDI,1627,1042,585,64
+Gene-level intolerance / LoF metric,GHIS,1627,1042,585,64
+Gene-level intolerance / LoF metric,Aloft,1627,42,1585,2.6

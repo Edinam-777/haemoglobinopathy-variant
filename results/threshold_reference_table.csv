@@ -1,0 +1,4 @@
+tool,score_column,score_direction,threshold_used,threshold_rule,threshold_source,final_for_thesis
+CADD,CADD_PHRED_new,Higher score = more deleterious,10.44,Score > 10.44 classified as pathogenic-like,Haemoglobinopathy predictor evaluation,Yes
+DANN,DANN_score_new,Higher score = more deleterious,NA,Threshold to be confirmed from original haemoglobinopathy evaluation,To confirm,No - provisional until confirmed
+Eigen-PC,Eigen_PC_phred_coding_new,Higher score = more deleterious,NA,Threshold to be confirmed from original haemoglobinopathy evaluation,To confirm,No - provisional until confirmed

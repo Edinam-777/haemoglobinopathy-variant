@@ -1,0 +1,91 @@
+tool_classification,variant_group,number_of_tools,mean_percent_with_score,median_percent_with_score,min_percent_with_score,max_percent_with_score
+Amino-acid substitution/conservation score,All variants,1,61,61,61,61
+Amino-acid substitution/conservation score,Frameshift,1,0,0,0,0
+Amino-acid substitution/conservation score,Inframe indel,1,0,0,0,0
+Amino-acid substitution/conservation score,Initiation codon,1,78.9,78.9,78.9,78.9
+Amino-acid substitution/conservation score,Missense,1,98,98,98,98
+Amino-acid substitution/conservation score,Nonsense / stop,1,0,0,0,0
+Amino-acid substitution/conservation score,Regulatory / non-coding,1,0,0,0,0
+Amino-acid substitution/conservation score,Splice / cryptic splice,1,29.9,29.9,29.9,29.9
+Amino-acid substitution/conservation score,Synonymous,1,0,0,0,0
+Conservation score,All variants,4,64.2,64,64,64.9
+Conservation score,Frameshift,4,0,0,0,0
+Conservation score,Inframe indel,4,0,0,0,0
+Conservation score,Initiation codon,4,78.9,78.9,78.9,78.9
+Conservation score,Missense,4,98.2,97.9,97.9,99.3
+Conservation score,Nonsense / stop,4,73.5,73.5,73.5,73.5
+Conservation score,Regulatory / non-coding,4,0,0,0,0
+Conservation score,Splice / cryptic splice,4,30.7,30.7,30.7,30.7
+Conservation score,Synonymous,4,0,0,0,0
+General deleteriousness predictor,All variants,2,72.6,72.6,64,81.1
+General deleteriousness predictor,Frameshift,2,2.1,2.1,0,4.2
+General deleteriousness predictor,Inframe indel,2,0.7,0.7,0,1.4
+General deleteriousness predictor,Initiation codon,2,78.9,78.9,78.9,78.9
+General deleteriousness predictor,Missense,2,98.7,98.7,97.9,99.5
+General deleteriousness predictor,Nonsense / stop,2,73.5,73.5,73.5,73.5
+General deleteriousness predictor,Regulatory / non-coding,2,42.8,42.8,0,85.5
+General deleteriousness predictor,Splice / cryptic splice,2,57.9,57.9,30.7,85
+General deleteriousness predictor,Synonymous,2,50,50,0,100
+General functional predictor,All variants,1,64,64,64,64
+General functional predictor,Frameshift,1,0,0,0,0
+General functional predictor,Inframe indel,1,0,0,0,0
+General functional predictor,Initiation codon,1,78.9,78.9,78.9,78.9
+General functional predictor,Missense,1,97.9,97.9,97.9,97.9
+General functional predictor,Nonsense / stop,1,73.5,73.5,73.5,73.5
+General functional predictor,Regulatory / non-coding,1,0,0,0,0
+General functional predictor,Splice / cryptic splice,1,30.7,30.7,30.7,30.7
+General functional predictor,Synonymous,1,0,0,0,0
+Meta-predictor,All variants,11,57.6,61,10.9,64
+Meta-predictor,Frameshift,11,0,0,0,0
+Meta-predictor,Inframe indel,11,0,0,0,0
+Meta-predictor,Initiation codon,11,72.7,78.9,10.5,78.9
+Meta-predictor,Missense,11,90.7,97.9,17.6,99.4
+Meta-predictor,Nonsense / stop,11,26.7,0,0,73.5
+Meta-predictor,Regulatory / non-coding,11,0,0,0,0
+Meta-predictor,Splice / cryptic splice,11,28,29.9,6.3,30.7
+Meta-predictor,Synonymous,11,0,0,0,0
+Missense predictor,All variants,12,52.9,60.5,24.8,64.9
+Missense predictor,Frameshift,12,0,0,0,0
+Missense predictor,Inframe indel,12,0,0,0,0
+Missense predictor,Initiation codon,12,46.9,65.8,0,78.9
+Missense predictor,Missense,12,85,97.9,39.7,99.4
+Missense predictor,Nonsense / stop,12,6.1,0,0,73.5
+Missense predictor,Regulatory / non-coding,12,0,0,0,0
+Missense predictor,Splice / cryptic splice,12,25.8,29.9,13.4,30.7
+Missense predictor,Synonymous,12,0,0,0,0
+Missense/evolutionary model,All variants,1,35.5,35.5,35.5,35.5
+Missense/evolutionary model,Frameshift,1,0,0,0,0
+Missense/evolutionary model,Inframe indel,1,0,0,0,0
+Missense/evolutionary model,Initiation codon,1,0,0,0,0
+Missense/evolutionary model,Missense,1,57.8,57.8,57.8,57.8
+Missense/evolutionary model,Nonsense / stop,1,0,0,0,0
+Missense/evolutionary model,Regulatory / non-coding,1,0,0,0,0
+Missense/evolutionary model,Splice / cryptic splice,1,12.6,12.6,12.6,12.6
+Missense/evolutionary model,Synonymous,1,0,0,0,0
+Population-adjusted evolutionary model,All variants,1,60,60,60,60
+Population-adjusted evolutionary model,Frameshift,1,0,0,0,0
+Population-adjusted evolutionary model,Inframe indel,1,0,0,0,0
+Population-adjusted evolutionary model,Initiation codon,1,0,0,0,0
+Population-adjusted evolutionary model,Missense,1,97.9,97.9,97.9,97.9
+Population-adjusted evolutionary model,Nonsense / stop,1,0,0,0,0
+Population-adjusted evolutionary model,Regulatory / non-coding,1,0,0,0,0
+Population-adjusted evolutionary model,Splice / cryptic splice,1,29.9,29.9,29.9,29.9
+Population-adjusted evolutionary model,Synonymous,1,0,0,0,0
+Protein language model predictor,All variants,1,63.6,63.6,63.6,63.6
+Protein language model predictor,Frameshift,1,0,0,0,0
+Protein language model predictor,Inframe indel,1,0,0,0,0
+Protein language model predictor,Initiation codon,1,78.9,78.9,78.9,78.9
+Protein language model predictor,Missense,1,97.9,97.9,97.9,97.9
+Protein language model predictor,Nonsense / stop,1,61.8,61.8,61.8,61.8
+Protein language model predictor,Regulatory / non-coding,1,0,0,0,0
+Protein language model predictor,Splice / cryptic splice,1,30.7,30.7,30.7,30.7
+Protein language model predictor,Synonymous,1,0,0,0,0
+Splicing predictor,All variants,8,55.5,80.6,5.7,88.5
+Splicing predictor,Frameshift,8,47.8,71.2,0,80
+Splicing predictor,Inframe indel,8,18.9,30,0,31.4
+Splicing predictor,Initiation codon,8,61.2,94.8,0,100
+Splicing predictor,Missense,8,60.3,89.4,2.9,98.2
+Splicing predictor,Nonsense / stop,8,52.2,76.5,1.5,86.8
+Splicing predictor,Regulatory / non-coding,8,42,57.7,9.5,62.7
+Splicing predictor,Splice / cryptic splice,8,81.1,82.7,68.5,91.3
+Splicing predictor,Synonymous,8,64.9,90.3,12.9,100

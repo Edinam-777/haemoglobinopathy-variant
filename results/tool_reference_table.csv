@@ -1,0 +1,43 @@
+tool,tool_classification,score_column,prediction_column,score_type,score_direction,default_threshold,threshold_source,include_in_coverage,include_in_binary_analysis,notes
+SIFT,Missense predictor,SIFT_score,SIFT_new,score + prediction,Lower score = more damaging,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Original score with updated VEP SIFT annotation available
+PolyPhen-2,Missense predictor,PolyPhen_score,PolyPhen_new,score + prediction,Higher score = more damaging,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Original score with updated VEP PolyPhen annotation available
+PROVEAN,Missense predictor,PROVEAN_score_new,PROVEAN_pred_new,score + prediction,Lower score = more damaging,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+MutationTaster,General functional predictor,MutationTaster_score_new,MutationTaster_pred_new,score + prediction,Prediction-label based,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+MutationAssessor,Missense predictor,MutationAssessor_score_new,MutationAssessor_pred_new,score + prediction,Higher score = more damaging,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+MutPred2,Missense predictor,MutPred2_score_new,MutPred2_pred_new,score + prediction,Higher score = more pathogenic,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+DEOGEN2,Missense predictor,DEOGEN2_score_new,DEOGEN2_pred_new,score + prediction,Higher score = more pathogenic,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+PrimateAI,Missense predictor,PrimateAI_score_new,PrimateAI_pred_new,score + prediction,Higher score = more pathogenic,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+REVEL,Meta-predictor,REVEL_score_new,NA,continuous score,Higher score = more pathogenic,NA,Threshold to document,TRUE,TRUE,Updated dbNSFP score available
+ClinPred,Meta-predictor,ClinPred_score_new,ClinPred_pred_new,score + prediction,Higher score = more pathogenic,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+MetaSVM,Meta-predictor,MetaSVM_score_new,MetaSVM_pred_new,score + prediction,Higher score = more pathogenic,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+MetaLR,Meta-predictor,MetaLR_score_new,MetaLR_pred_new,score + prediction,Higher score = more pathogenic,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+MetaRNN,Meta-predictor,MetaRNN_score_new,MetaRNN_pred_new,score + prediction,Higher score = more pathogenic,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+BayesDel addAF,Meta-predictor,BayesDel_addAF_score_new,BayesDel_addAF_pred_new,score + prediction,Higher score = more pathogenic,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+BayesDel noAF,Meta-predictor,BayesDel_noAF_score_new,BayesDel_noAF_pred_new,score + prediction,Higher score = more pathogenic,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+LIST-S2,Meta-predictor,LIST_S2_score_new,LIST_S2_pred_new,score + prediction,Higher score = more pathogenic,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+CADD,General deleteriousness predictor,CADD_PHRED_new,NA,continuous score,Higher score = more deleterious,10.44,Haemoglobinopathy evaluation threshold,TRUE,TRUE,Converted to binary using threshold >10.44
+DANN,General deleteriousness predictor,DANN_score_new,NA,continuous score,Higher score = more deleterious,0.971,Exploratory dataset-optimised threshold,TRUE,TRUE,Exploratory threshold selected by maximum MCC
+Eigen-PC,Meta-predictor,Eigen_PC_phred_coding_new,NA,continuous score,Higher score = more deleterious,1.3,Exploratory dataset-optimised threshold,TRUE,TRUE,Exploratory threshold selected by maximum MCC
+Eigen,Meta-predictor,Eigen_phred_coding_new,NA,continuous score,Higher score = more deleterious,NA,Threshold to document,TRUE,FALSE,Coverage/descriptive analysis first
+MVP,Missense predictor,MVP_score_new,NA,continuous score,Higher score = more pathogenic,NA,Threshold to document,TRUE,FALSE,Coverage/descriptive analysis first
+MPC,Missense predictor,MPC_score_new,NA,continuous score,Higher score = more pathogenic,NA,Threshold to document,TRUE,FALSE,Coverage/descriptive analysis first
+gMVP,Missense predictor,gMVP_score_new,NA,continuous score,Higher score = more pathogenic,NA,Threshold to document,TRUE,FALSE,Coverage/descriptive analysis first
+VEST4,Missense predictor,VEST4_score_seperated,NA,continuous score,Higher score = more pathogenic,NA,Threshold to document,TRUE,FALSE,Original score column available
+Condel,Meta-predictor,Condel_score,NA,continuous score,Higher score = more pathogenic,NA,Threshold to document,TRUE,FALSE,Original score column available
+AlphaMissense,Missense predictor,am_pathogenicity_new,am_class_new,score + prediction,Higher score = more pathogenic,NA,Tool class label,TRUE,TRUE,Check missense-only coverage carefully
+EVE,Missense/evolutionary model,EVE_SCORE_new,EVE_CLASS_new,score + prediction,Higher score = more pathogenic,NA,Tool class label,TRUE,TRUE,Check missense-only coverage carefully
+ESM1b,Protein language model predictor,ESM1b_score_new,ESM1b_pred_new,score + prediction,Higher/lower direction to confirm,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated dbNSFP score and prediction available
+popEVE,Population-adjusted evolutionary model,popEVE_SCORE_1_new,popEVE_pred_new,score + prediction,Higher/lower direction to confirm,NA,Tool/dbNSFP prediction label,TRUE,TRUE,Updated popEVE score and prediction available
+SpliceAI,Splicing predictor,SpliceAI_DS,NA,continuous score,Higher score = stronger splice impact,NA,SpliceAI threshold to document,TRUE,FALSE,Original SpliceAI summary score available
+SpliceAI acceptor gain,Splicing predictor,SpliceAI_pred_DS_AG_new,NA,continuous score,Higher score = stronger splice impact,NA,SpliceAI threshold to document,TRUE,FALSE,Updated SpliceAI delta score
+SpliceAI acceptor loss,Splicing predictor,SpliceAI_pred_DS_AL_new,NA,continuous score,Higher score = stronger splice impact,NA,SpliceAI threshold to document,TRUE,FALSE,Updated SpliceAI delta score
+SpliceAI donor gain,Splicing predictor,SpliceAI_pred_DS_DG_new,NA,continuous score,Higher score = stronger splice impact,NA,SpliceAI threshold to document,TRUE,FALSE,Updated SpliceAI delta score
+SpliceAI donor loss,Splicing predictor,SpliceAI_pred_DS_DL_new,NA,continuous score,Higher score = stronger splice impact,NA,SpliceAI threshold to document,TRUE,FALSE,Updated SpliceAI delta score
+MaxEntScan,Splicing predictor,MaxEntScan_diff_new,NA,continuous score,Direction depends on score definition,NA,Threshold to document,TRUE,FALSE,Splicing-specific descriptive/coverage analysis
+ada_score,Splicing predictor,ada_score_new,NA,continuous score,Higher score = stronger splice impact,NA,Threshold to document,TRUE,FALSE,Splicing-specific descriptive/coverage analysis
+rf_score,Splicing predictor,rf_score_new,NA,continuous score,Higher score = stronger splice impact,NA,Threshold to document,TRUE,FALSE,Splicing-specific descriptive/coverage analysis
+GERP++,Conservation score,GERP__RS_new,NA,continuous score,Higher score = more conserved/constrained,NA,Not a direct pathogenicity threshold,TRUE,FALSE,"Use for coverage/descriptive analysis, not main binary pathogenicity benchmark"
+phyloP100way,Conservation score,phyloP100way_vertebrate_new,NA,continuous score,Higher score = more conserved,NA,Not a direct pathogenicity threshold,TRUE,FALSE,Use for coverage/descriptive analysis
+phastCons100way,Conservation score,phastCons100way_vertebrate_new,NA,continuous score,Higher score = more conserved,NA,Not a direct pathogenicity threshold,TRUE,FALSE,Use for coverage/descriptive analysis
+SiPhy,Conservation score,SiPhy_29way_logOdds,NA,continuous score,Higher score = more conserved,NA,Not a direct pathogenicity threshold,TRUE,FALSE,Original score column available
+BLOSUM62,Amino-acid substitution/conservation score,BLOSUM62_new,NA,continuous score,Lower scores usually indicate less tolerated substitution,NA,Not a direct pathogenicity threshold,TRUE,FALSE,Use cautiously; not a standalone pathogenicity predictor

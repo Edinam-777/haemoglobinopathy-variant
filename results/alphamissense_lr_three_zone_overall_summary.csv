@@ -1,0 +1,4 @@
+alphamissense_lr_category,n_variants,total_variants,percent_of_evaluable_variants
+Benign-supporting,120,325,36.9
+Pathogenic-supporting,184,325,56.6
+Uncertain interval,21,325,6.5

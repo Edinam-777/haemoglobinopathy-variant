@@ -1,0 +1,7 @@
+clinical_group,af_status_resolved,n_variants,clinical_group_total,percent,label
+B/LB,Not assessable from VEP/dbNSFP output,153,194,78.9,153/194
+B/LB,Numerical positive AF,41,194,21.1,41/194
+P/LP,Not assessable from VEP/dbNSFP output,742,832,89.2,742/832
+P/LP,Numerical positive AF,90,832,10.8,90/832
+VUS,Not assessable from VEP/dbNSFP output,510,601,84.9,510/601
+VUS,Numerical positive AF,91,601,15.1,91/601

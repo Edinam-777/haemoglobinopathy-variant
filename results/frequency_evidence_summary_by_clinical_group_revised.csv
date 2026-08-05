@@ -1,0 +1,4 @@
+clinical_group,n_variants,n_numerical_frequency_available,n_appears_absent_or_zero_in_gnomad,n_frequency_not_assessable,n_BA1_popmax_ge_0_5_percent,n_BS1_popmax_ge_0_1_percent,n_PM2_supporting_overall_af_lt_0_01_percent,n_review_due_to_overlapping_frequency_signals
+B/LB,194,41,0,153,2,2,38,0
+P/LP,832,90,1,742,2,5,86,2
+VUS,601,91,3,510,0,1,90,0

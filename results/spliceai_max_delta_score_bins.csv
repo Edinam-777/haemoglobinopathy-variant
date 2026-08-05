@@ -1,0 +1,7 @@
+SpliceAI_max_delta_bin,n,percentage
+0,23,18.1
+0.2 to <0.5,13,10.2
+0.5 to <0.8,12,9.4
+>0 to <0.2,18,14.2
+>=0.8,50,39.4
+Missing,11,8.7

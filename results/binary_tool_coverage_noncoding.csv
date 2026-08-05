@@ -1,0 +1,23 @@
+tool,variant_group,total_variants_in_group,variants_with_tool_output,variants_without_tool_output,percent_with_tool_output,columns_present,tool_category
+SIFT,Non-coding/regulatory,143,14,129,9.8,SIFT_score; SIFT_new,Individual missense predictor
+PROVEAN,Non-coding/regulatory,143,14,129,9.8,PROVEAN_score_seperated; PROVEAN_score_new; PROVEAN_pred_new,Individual missense predictor
+FATHMM,Non-coding/regulatory,143,14,129,9.8,FATHMM_score_seperated,Individual missense predictor
+FATHMM-MKL,Non-coding/regulatory,143,14,129,9.8,fathmm-MKL_coding_score,Meta/ensemble predictor
+PolyPhen-2,Non-coding/regulatory,143,14,129,9.8,PolyPhen_score; PolyPhen_new,Individual missense predictor
+MutationTaster,Non-coding/regulatory,143,14,129,9.8,MutationTaster_score; MutationTaster_score_new; MutationTaster_pred_new; MutationTaster_model_new,Individual missense predictor
+MutPred2,Non-coding/regulatory,143,14,129,9.8,MutPred_score; MutPred2_score_new; MutPred2_pred_new,Modern/deep learning predictor
+REVEL,Non-coding/regulatory,143,14,129,9.8,REVEL_score; REVEL_score_new; REVEL_new,Meta/ensemble predictor
+ClinPred,Non-coding/regulatory,143,14,129,9.8,ClinPred_score; ClinPred_score_new; ClinPred_pred_new; ClinPred_new,Meta/ensemble predictor
+MetaSVM,Non-coding/regulatory,143,14,129,9.8,MetaSVM_score; MetaSVM_score_new; MetaSVM_pred_new,Meta/ensemble predictor
+MetaLR,Non-coding/regulatory,143,14,129,9.8,MetaLR_score; MetaLR_score_new; MetaLR_pred_new,Meta/ensemble predictor
+BayesDel addAF,Non-coding/regulatory,143,14,129,9.8,BayesDel_addAF_score; BayesDel_addAF_score_new; BayesDel_addAF_pred_new,Meta/ensemble predictor
+LIST-S2,Non-coding/regulatory,143,14,129,9.8,LIST-S2_score_seperated; LIST_S2_score_new; LIST_S2_pred_new,Meta/ensemble predictor
+MutationAssessor,Non-coding/regulatory,143,11,132,7.7,MutationAssessor_standalone_score; MutationAssessor_score_new; MutationAssessor_pred_new,Individual missense predictor
+FATHMM-XF,Non-coding/regulatory,143,0,143,0,fathmm_XF_coding_score_new; fathmm_XF_coding_pred_new,Modern/deep learning predictor
+DEOGEN2,Non-coding/regulatory,143,0,143,0,DEOGEN2_score_new; DEOGEN2_pred_new,Modern/deep learning predictor
+PrimateAI,Non-coding/regulatory,143,0,143,0,PrimateAI_score_new; PrimateAI_pred_new,Modern/deep learning predictor
+MetaRNN,Non-coding/regulatory,143,0,143,0,MetaRNN_score_new; MetaRNN_pred_new,Modern/deep learning predictor
+BayesDel noAF,Non-coding/regulatory,143,0,143,0,BayesDel_noAF_score_new; BayesDel_noAF_pred_new,Meta/ensemble predictor
+AlphaMissense,Non-coding/regulatory,143,0,143,0,am_class_new; am_pathogenicity_new,Modern/deep learning predictor
+EVE,Non-coding/regulatory,143,0,143,0,EVE_CLASS_new; EVE_SCORE_new,Modern/deep learning predictor
+popEVE,Non-coding/regulatory,143,0,143,0,popEVE_pred_new; popEVE_score_new; popEVE_SCORE_1_new; popEVE_EVE_new; popEVE_ESM1v_new,Modern/deep learning predictor

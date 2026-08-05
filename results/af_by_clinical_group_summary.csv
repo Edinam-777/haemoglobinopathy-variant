@@ -1,0 +1,4 @@
+clinical_group,n_variants,n_with_popmax_af,median_popmax_af,mean_popmax_af,min_popmax_af,max_popmax_af,n_af_zero,n_af_above_0_001,n_af_above_0_01,percent_af_above_0_001,percent_af_above_0_01
+B/LB,194,41,2.22856e-5,8.877430729512195e-4,8.47443e-7,0.0181407,0,2,2,4.9,4.9
+P/LP,832,90,1.67062e-5,7.297025693777778e-4,0,0.0494874,1,5,1,5.6,1.1
+VUS,601,91,1.09789e-5,7.556809184615384e-5,0,0.00329554,3,1,0,1.1,0

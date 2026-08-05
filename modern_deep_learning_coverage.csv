@@ -1,0 +1,10 @@
+tool_category,tool,total_variants,variants_with_tool_output,variants_without_tool_output,percent_with_tool_output
+Modern/deep learning predictor,FATHMM-XF,1627,1034,593,63.6
+Modern/deep learning predictor,ESM1b,1627,1034,593,63.6
+Modern/deep learning predictor,MutPred / MutPred2,1627,1006,621,61.8
+Modern/deep learning predictor,MetaRNN,1627,992,635,61
+Modern/deep learning predictor,popEVE,1627,979,648,60.2
+Modern/deep learning predictor,PrimateAI,1627,977,650,60
+Modern/deep learning predictor,DEOGEN2,1627,767,860,47.1
+Modern/deep learning predictor,AlphaMissense,1627,757,870,46.5
+Modern/deep learning predictor,EVE,1627,577,1050,35.5

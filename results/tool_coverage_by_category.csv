@@ -1,0 +1,56 @@
+tool_category,tool,total_variants,variants_with_tool_output,variants_without_tool_output,percent_with_tool_output
+Conservation score,GERP++,1627,1056,571,64.9
+Conservation score,phyloP,1627,1056,571,64.9
+Conservation score,phastCons,1627,1056,571,64.9
+Conservation score,SiPhy,1627,1056,571,64.9
+Conservation score,fitCons,1627,1056,571,64.9
+Conservation score,Eigen-PC,1627,0,1627,0
+Continuous deleteriousness / constraint score,CADD,1627,1468,159,90.2
+Continuous deleteriousness / constraint score,DANN,1627,1056,571,64.9
+Continuous deleteriousness / constraint score,MVP,1627,992,635,61
+Continuous deleteriousness / constraint score,MutFormer,1627,992,635,61
+Continuous deleteriousness / constraint score,MisFit-D,1627,977,650,60
+Continuous deleteriousness / constraint score,MisFit-S,1627,977,650,60
+Continuous deleteriousness / constraint score,PHACTboost,1627,972,655,59.7
+Continuous deleteriousness / constraint score,MPC,1627,801,826,49.2
+Continuous deleteriousness / constraint score,VARITY-R,1627,767,860,47.1
+Continuous deleteriousness / constraint score,VARITY-ER,1627,767,860,47.1
+Continuous deleteriousness / constraint score,VARITY-R-LOO,1627,767,860,47.1
+Continuous deleteriousness / constraint score,VARITY-ER-LOO,1627,767,860,47.1
+Continuous deleteriousness / constraint score,gMVP,1627,403,1224,24.8
+Gene-level intolerance / LoF metric,LoFtool,1627,1042,585,64
+Gene-level intolerance / LoF metric,HIPred,1627,1042,585,64
+Gene-level intolerance / LoF metric,GDI,1627,1042,585,64
+Gene-level intolerance / LoF metric,GHIS,1627,1042,585,64
+Gene-level intolerance / LoF metric,Aloft,1627,42,1585,2.6
+Individual missense predictor,MutationTaster,1627,1056,571,64.9
+Individual missense predictor,VEST4,1627,1056,571,64.9
+Individual missense predictor,SIFT,1627,1007,620,61.9
+Individual missense predictor,PolyPhen-2,1627,1007,620,61.9
+Individual missense predictor,PROVEAN,1627,1006,621,61.8
+Individual missense predictor,FATHMM,1627,1006,621,61.8
+Individual missense predictor,MutationAssessor,1627,813,814,50
+Individual missense predictor,LRT,1627,439,1188,27
+Meta/ensemble predictor,FATHMM-MKL,1627,1056,571,64.9
+Meta/ensemble predictor,BayesDel addAF,1627,1056,571,64.9
+Meta/ensemble predictor,BayesDel noAF,1627,1042,585,64
+Meta/ensemble predictor,Condel,1627,1007,620,61.9
+Meta/ensemble predictor,REVEL,1627,1006,621,61.8
+Meta/ensemble predictor,ClinPred,1627,1006,621,61.8
+Meta/ensemble predictor,MetaSVM,1627,1006,621,61.8
+Meta/ensemble predictor,MetaLR,1627,1006,621,61.8
+Meta/ensemble predictor,LIST-S2,1627,781,846,48
+Modern/deep learning predictor,FATHMM-XF,1627,1034,593,63.6
+Modern/deep learning predictor,ESM1b,1627,1034,593,63.6
+Modern/deep learning predictor,MutPred / MutPred2,1627,1006,621,61.8
+Modern/deep learning predictor,MetaRNN,1627,992,635,61
+Modern/deep learning predictor,popEVE,1627,979,648,60.2
+Modern/deep learning predictor,PrimateAI,1627,977,650,60
+Modern/deep learning predictor,DEOGEN2,1627,767,860,47.1
+Modern/deep learning predictor,AlphaMissense,1627,757,870,46.5
+Modern/deep learning predictor,EVE,1627,577,1050,35.5
+Splicing predictor,SpliceAI,1627,1440,187,88.5
+Splicing predictor,MaxEntScan,1627,94,1533,5.8
+Splicing predictor,ada_score,1627,93,1534,5.7
+Splicing predictor,rf_score,1627,93,1534,5.7
+Substitution matrix / descriptive feature,BLOSUM62,1627,993,634,61

@@ -1,0 +1,4 @@
+clinical_group,n_variants,n_PM2_AC_AN_valid,percent_PM2_AC_AN_valid,n_BA1_BS1_AC_AN_valid,percent_BA1_BS1_AC_AN_valid
+B/LB,194,41,21.1,41,21.1
+P/LP,832,90,10.8,90,10.8
+VUS,601,91,15.1,91,15.1

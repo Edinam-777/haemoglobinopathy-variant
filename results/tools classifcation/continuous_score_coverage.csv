@@ -1,0 +1,14 @@
+tool_category,tool,total_variants,variants_with_tool_output,variants_without_tool_output,percent_with_tool_output
+Continuous deleteriousness / constraint score,CADD,1627,1468,159,90.2
+Continuous deleteriousness / constraint score,DANN,1627,1056,571,64.9
+Continuous deleteriousness / constraint score,MVP,1627,992,635,61
+Continuous deleteriousness / constraint score,MutFormer,1627,992,635,61
+Continuous deleteriousness / constraint score,MisFit-D,1627,977,650,60
+Continuous deleteriousness / constraint score,MisFit-S,1627,977,650,60
+Continuous deleteriousness / constraint score,PHACTboost,1627,972,655,59.7
+Continuous deleteriousness / constraint score,MPC,1627,801,826,49.2
+Continuous deleteriousness / constraint score,VARITY-R,1627,767,860,47.1
+Continuous deleteriousness / constraint score,VARITY-ER,1627,767,860,47.1
+Continuous deleteriousness / constraint score,VARITY-R-LOO,1627,767,860,47.1
+Continuous deleteriousness / constraint score,VARITY-ER-LOO,1627,767,860,47.1
+Continuous deleteriousness / constraint score,gMVP,1627,403,1224,24.8

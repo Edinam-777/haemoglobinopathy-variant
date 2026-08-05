@@ -1,0 +1,9 @@
+HGVS,HGVS_transcript,Effect_function,Observed_pathogenicity,observed_binary,CADD_predicted_clean,CADD_status,AlphaMissense_predicted_clean,AlphaMissense_status,MutPred2_predicted_clean,MutPred2_status,Eigen_PC_predicted_clean,Eigen_PC_status,DANN_predicted_clean,DANN_status,SIFT_predicted_clean,SIFT_status
+HBB:c.1A>G,NM_000518.4:c.1A>G,Initiation codon,P/LP,Pathogenic,Pathogenic,TP,NA,NA,Pathogenic,TP,Pathogenic,TP,Pathogenic,TP,Pathogenic,TP
+HBB:c.1A>C,NM_000518.4:c.1A>C,Initiation codon,P/LP,Pathogenic,Pathogenic,TP,NA,NA,Pathogenic,TP,Pathogenic,TP,Benign,FN,Pathogenic,TP
+HBA1:c.30C>A,NM_000558.5:c.30C>A,Missense codons,B/LB,Benign,Pathogenic,FP,NA,NA,Benign,TN,Benign,TN,Benign,TN,Benign,TN
+HBA1:c.30C>G,NM_000558.5:c.30C>G,Missense codons,B/LB,Benign,Pathogenic,FP,NA,NA,Benign,TN,Benign,TN,Benign,TN,Benign,TN
+HBA1:c.8T>G,NM_000558.5:c.8T>G,Missense codons,B/LB,Benign,Pathogenic,FP,Pathogenic,FP,NA,NA,Pathogenic,FP,Pathogenic,FP,Pathogenic,FP
+HBA2:c.38C>A,NM_000517.4:c.38C>A,Missense codons,B/LB,Benign,Pathogenic,FP,NA,NA,Benign,TN,Benign,TN,Benign,TN,Pathogenic,FP
+HBB:c.82G>T,NM_000518.4:c.82G>T,"Missense codons, Cryptic splice site",P/LP,Pathogenic,Pathogenic,TP,Benign,FN,NA,NA,Pathogenic,TP,Pathogenic,TP,Benign,FN
+HBA2:c.64G>T,NM_000517.4:c.64G>T,Missense codons,P/LP,Pathogenic,Pathogenic,TP,NA,NA,Benign,FN,Benign,FN,Benign,FN,Benign,FN

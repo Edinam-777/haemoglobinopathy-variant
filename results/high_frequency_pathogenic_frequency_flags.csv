@@ -1,0 +1,6 @@
+HGVS,HGVS_transcript,Gene,Observed_pathogenicity,clinical_group,Effect_function,Consequence,popmax_af_for_BA1_BS1,overall_af_for_PM2,af_gnomad4_afr,af_dbnsfp_popmax,frequency_flag,BA1_popmax_above_0_5_percent,BS1_popmax_above_0_1_percent,PM2_supporting_overall_af_below_0_01_percent
+HBB:c.20A>T,NM_000518.4:c.20A>T,HBB,P/LP,P/LP,Missense codons,missense_variant,0.0494874,0.00265235,0.0494874,0.09985,BA1-level POPMAX AF > 0.5%,TRUE,TRUE,FALSE
+HBB:c.364G>C,NM_000518.4:c.364G>C,HBB,P/LP,P/LP,Missense codons,missense_variant,0.00502855,4.44211e-4,6.66436e-5,0.005029,BA1-level POPMAX AF > 0.5%,TRUE,TRUE,FALSE
+HBB:c.79G>A,NM_000518.4:c.79G>A,HBB,P/LP,P/LP,"Missense codons, Cryptic splice site",missense_variant,0.00258015,2.23706e-4,6.66382e-5,0.007937,BS1-level POPMAX AF > 0.1%,FALSE,TRUE,FALSE
+HBA1:c.358C>T,NM_000558.5:c.358C>T,HBA1,P/LP,P/LP,Missense codons,missense_variant,0.00131492,3.09947e-5,0,0.003817,BS1-level POPMAX AF > 0.1%,FALSE,TRUE,TRUE
+HBA2:c.142G>C,NM_000517.4:c.142G>C,HBA2,P/LP,P/LP,Missense codons,missense_variant,0.00117282,4.14125e-5,0,0.001634,BS1-level POPMAX AF > 0.1%,FALSE,TRUE,TRUE

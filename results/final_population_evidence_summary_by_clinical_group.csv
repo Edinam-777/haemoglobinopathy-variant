@@ -1,0 +1,14 @@
+clinical_group,final_population_evidence_category,n_variants,clinical_group_total,percent,label
+B/LB,BA1-level frequency,2,194,1,2/194
+B/LB,Frequency not assessable,153,194,78.9,153/194
+B/LB,No population-frequency criterion met,1,194,0.5,1/194
+B/LB,PM2_Supporting-level rarity,38,194,19.6,38/194
+P/LP,BA1-level frequency,2,832,0.2,2/832
+P/LP,BS1-level frequency,1,832,0.1,1/832
+P/LP,Frequency not assessable,742,832,89.2,742/832
+P/LP,No population-frequency criterion met,1,832,0.1,1/832
+P/LP,PM2_Supporting-level rarity,84,832,10.1,84/832
+P/LP,Requires review: POPMAX high but overall AF rare,2,832,0.2,2/832
+VUS,BS1-level frequency,1,601,0.2,1/601
+VUS,Frequency not assessable,510,601,84.9,510/601
+VUS,PM2_Supporting-level rarity,90,601,15,90/601

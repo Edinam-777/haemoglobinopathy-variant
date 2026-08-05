@@ -1,0 +1,43 @@
+tool,tool_classification,score_column,total_variants,variants_with_score,variants_without_score,percent_with_score
+SpliceAI acceptor gain,Splicing predictor,SpliceAI_pred_DS_AG_new,1627,1440,187,88.5
+SpliceAI acceptor loss,Splicing predictor,SpliceAI_pred_DS_AL_new,1627,1440,187,88.5
+SpliceAI donor gain,Splicing predictor,SpliceAI_pred_DS_DG_new,1627,1440,187,88.5
+SpliceAI donor loss,Splicing predictor,SpliceAI_pred_DS_DL_new,1627,1440,187,88.5
+CADD,General deleteriousness predictor,CADD_PHRED_new,1627,1319,308,81.1
+SpliceAI,Splicing predictor,SpliceAI_DS,1627,1182,445,72.6
+SiPhy,Conservation score,SiPhy_29way_logOdds,1627,1056,571,64.9
+VEST4,Missense predictor,VEST4_score_seperated,1627,1056,571,64.9
+BayesDel addAF,Meta-predictor,BayesDel_addAF_score_new,1627,1042,585,64
+BayesDel noAF,Meta-predictor,BayesDel_noAF_score_new,1627,1042,585,64
+DANN,General deleteriousness predictor,DANN_score_new,1627,1042,585,64
+Eigen,Meta-predictor,Eigen_phred_coding_new,1627,1042,585,64
+Eigen-PC,Meta-predictor,Eigen_PC_phred_coding_new,1627,1042,585,64
+GERP++,Conservation score,GERP__RS_new,1627,1042,585,64
+MutationTaster,General functional predictor,MutationTaster_score_new,1627,1042,585,64
+phastCons100way,Conservation score,phastCons100way_vertebrate_new,1627,1042,585,64
+phyloP100way,Conservation score,phyloP100way_vertebrate_new,1627,1042,585,64
+ESM1b,Protein language model predictor,ESM1b_score_new,1627,1034,593,63.6
+Condel,Meta-predictor,Condel_score,1627,1007,620,61.9
+PolyPhen-2,Missense predictor,PolyPhen_score,1627,1007,620,61.9
+SIFT,Missense predictor,SIFT_score,1627,1007,620,61.9
+BLOSUM62,Amino-acid substitution/conservation score,BLOSUM62_new,1627,993,634,61
+ClinPred,Meta-predictor,ClinPred_score_new,1627,992,635,61
+MVP,Missense predictor,MVP_score_new,1627,992,635,61
+MetaLR,Meta-predictor,MetaLR_score_new,1627,992,635,61
+MetaRNN,Meta-predictor,MetaRNN_score_new,1627,992,635,61
+MetaSVM,Meta-predictor,MetaSVM_score_new,1627,992,635,61
+MutPred2,Missense predictor,MutPred2_score_new,1627,992,635,61
+PROVEAN,Missense predictor,PROVEAN_score_new,1627,992,635,61
+REVEL,Meta-predictor,REVEL_score_new,1627,992,635,61
+PrimateAI,Missense predictor,PrimateAI_score_new,1627,977,650,60
+popEVE,Population-adjusted evolutionary model,popEVE_SCORE_1_new,1627,977,650,60
+MPC,Missense predictor,MPC_score_new,1627,801,826,49.2
+DEOGEN2,Missense predictor,DEOGEN2_score_new,1627,767,860,47.1
+AlphaMissense,Missense predictor,am_pathogenicity_new,1627,757,870,46.5
+MutationAssessor,Missense predictor,MutationAssessor_score_new,1627,581,1046,35.7
+EVE,Missense/evolutionary model,EVE_SCORE_new,1627,577,1050,35.5
+gMVP,Missense predictor,gMVP_score_new,1627,403,1224,24.8
+LIST-S2,Meta-predictor,LIST_S2_score_new,1627,178,1449,10.9
+MaxEntScan,Splicing predictor,MaxEntScan_diff_new,1627,94,1533,5.8
+ada_score,Splicing predictor,ada_score_new,1627,93,1534,5.7
+rf_score,Splicing predictor,rf_score_new,1627,93,1534,5.7

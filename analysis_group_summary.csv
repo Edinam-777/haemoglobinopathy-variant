@@ -1,0 +1,7 @@
+analysis_group,number_of_tools,mean_coverage_percent,median_coverage_percent,highest_coverage_percent,lowest_coverage_percent
+Descriptive only,1,61,61,61,61
+Binary performance analysis,24,57.3,61.8,64.9,27
+Continuous score analysis,15,56.5,60,90.2,24.8
+Conservation/supporting analysis,6,54.1,64.9,64.9,0
+Gene-level/LoF supporting analysis,5,51.7,64,64,2.6
+Splicing-specific analysis,4,26.4,5.8,88.5,5.7
