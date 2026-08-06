@@ -220,3 +220,27 @@ The notebook expects this file at:
 
 ```text
 data/raw/ENSEMBL_VEP_OUTPUT.csv
+
+
+## Final results for reviewers
+
+A curated set of the main thesis outputs is available in:
+
+- [Final result tables](results/final/tables/)
+- [Final result plots](results/final/plots/)
+
+### Final tables
+
+- [Whole binary tool performance](results/final/tables/binary_performance_summary_with_coverage.csv)
+- [Corrected missense-only tool performance](results/final/tables/corrected_missense_binary_performance_summary_with_coverage_after_polyphen_fix.csv)
+- [Common missense subset performance](results/final/tables/common_missense_subset_performance_selected_tools.csv)
+- [Default versus optimised threshold comparison](results/final/tables/default_vs_corrected_optimised_threshold_comparison_after_polyphen_fix.csv)
+- [Main analysis comparison summary](results/final/tables/main_analysis_comparison_summary.csv)
+
+### Final plots
+
+- [Whole-dataset MCC by tool](results/final/plots/whole_dataset_mcc_by_tool.png)
+- [Missense-only MCC by tool](results/final/plots/missense_only_mcc_by_tool.png)
+- [Common missense subset MCC by tool](results/final/plots/common_missense_subset_mcc_by_tool.png)
+- [Missense coverage versus MCC](results/final/plots/missense_coverage_vs_mcc.png)
+- [Default versus optimised MCC change](results/final/plots/default_vs_optimised_mcc_change.png)
