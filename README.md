@@ -194,3 +194,20 @@ haemoglobinopathy-variant/
 ├── LICENSE
 ├── README.md
 └── haemoglobinopathy-variant.Rproj
+
+## Main analysis and key outputs
+
+The complete reproducible analysis is available in:
+
+- [R Markdown analysis notebook](notebooks/haemoglobinopathy_variant_analysis.Rmd)
+- [Rendered HTML analysis report](notebooks/haemoglobinopathy_variant_analysis.html)
+
+Key performance summaries include:
+
+- [Overall binary tool-performance summary](results/tables/binary_tool_performance_summary_with_coverage.csv)
+- [Missense-specific binary tool-performance summary](results/tables/missense_binary_tool_performance_summary_with_coverage.csv)
+
+Additional tables and figures are available in:
+
+- [`results/tables/`](results/tables/)
+- [`results/plots/`](results/plots/)
