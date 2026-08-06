@@ -1,68 +1,12 @@
 ---
-title: "Assessment of In Silico Tools for Variant-Effect Prediction in Haemoglobinopathies"
-author: "Edinam"
-date: "`r format(Sys.Date(), '%d %B %Y')`"
-output:
-  html_document:
-    toc: true
-    toc_float: true
-    number_sections: true
-    code_folding: show
-    df_print: paged
+title: "Assessment of In Silico Tools for Variant Effect Prediction in Haemoglobinopathies"
+output: html_document
 ---
 
 
 # Assessment of In Silico Tools for Variant Effect Prediction in Haemoglobinopathies
 
-
-# Project overview
-
-This notebook documents the data-processing, annotation, quality-control,
-coverage, and performance-analysis workflow used to assess in silico
-variant-effect prediction tools for variants in HBA1, HBA2, and HBB.
-
-The original variant dataset was standardised and converted from GRCh37 to
-GRCh38 before annotation using Ensembl Variant Effect Predictor. Appropriate
-MANE Select transcript annotations were retained before computational
-predictions were compared with observed clinical classifications.
-
 ## Setup
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE,
-  warning = FALSE,
-  message = FALSE,
-  fig.width = 8,
-  fig.height = 6
-)
-
-required_packages <- c(
-  "tidyverse",
-  "readxl",
-  "readr",
-  "janitor",
-  "stringr",
-  "ggplot2"
-)
-
-missing_packages <- required_packages[
-  !required_packages %in% rownames(installed.packages())
-]
-
-if (length(missing_packages) > 0) {
-  stop(
-    "Install the following packages before running the notebook: ",
-    paste(missing_packages, collapse = ", ")
-  )
-}
-
-invisible(
-  lapply(required_packages, library, character.only = TRUE)
-)
-```
-
-
 
 ```{r setup, message=FALSE, warning=FALSE}
 library(readxl)
@@ -76,17 +20,56 @@ library(tidyr)
 library(tidyverse)
 ```
 
-```{r define-output-directory}
-output_directory <- "C:/Users/HP/Documents/ASSESSMENT OF IN SILICO TOOLS FOR VARIANT EFFECT PREDICTION IN HAEMOGLOBINOPATHIES/haemoglobinopathy-variant/results"
+```{r define-output-directories}
 
-if (!dir.exists(output_directory)) {
-  dir.create(output_directory, recursive = TRUE)
-}
+output_directory <- "results"
 
-output_directory
+results_directory <- output_directory
+
+tables_directory <- file.path(
+  output_directory,
+  "tables"
+)
+
+figures_directory <- file.path(
+  output_directory,
+  "figures"
+)
+
+processed_data_directory <- file.path(
+  "data",
+  "processed"
+)
+
+dir.create(
+  output_directory,
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+dir.create(
+  tables_directory,
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+dir.create(
+  figures_directory,
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+dir.create(
+  processed_data_directory,
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+cat("Output directory:", output_directory, "\n")
+cat("Tables directory:", tables_directory, "\n")
+cat("Figures directory:", figures_directory, "\n")
+cat("Processed data directory:", processed_data_directory, "\n")
 ```
-
-
 ```{r notebook-audit, eval=FALSE}
 rmd_lines <- readLines("WORKING NOTEBOOK.Rmd", warn = FALSE)
 
@@ -2912,86 +2895,622 @@ ANALYSIS_DATASET %>%
 
 ##creating a tool refernce table to help calculate coverage systematically
 
-```{r create-tool-reference-table}
+```{r create-tool-reference-table, message=FALSE, warning=FALSE}
+
+# Create a reference table describing every prediction tool included
+# in the coverage, descriptive, and binary-performance analyses.
+
 tool_reference_table <- tibble::tribble(
-  ~tool, ~tool_classification, ~score_column, ~prediction_column, ~score_type, ~score_direction, ~default_threshold, ~threshold_source, ~include_in_coverage, ~include_in_binary_analysis, ~notes,
-  
-  # Missense / protein-impact predictors
-  "SIFT", "Missense predictor", "SIFT_score", "SIFT_new", "score + prediction", "Lower score = more damaging", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Original score with updated VEP SIFT annotation available",
-  "PolyPhen-2", "Missense predictor", "PolyPhen_score", "PolyPhen_new", "score + prediction", "Higher score = more damaging", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Original score with updated VEP PolyPhen annotation available",
-  "PROVEAN", "Missense predictor", "PROVEAN_score_new", "PROVEAN_pred_new", "score + prediction", "Lower score = more damaging", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  "MutationTaster", "General functional predictor", "MutationTaster_score_new", "MutationTaster_pred_new", "score + prediction", "Prediction-label based", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  "MutationAssessor", "Missense predictor", "MutationAssessor_score_new", "MutationAssessor_pred_new", "score + prediction", "Higher score = more damaging", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  "MutPred2", "Missense predictor", "MutPred2_score_new", "MutPred2_pred_new", "score + prediction", "Higher score = more pathogenic", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  "DEOGEN2", "Missense predictor", "DEOGEN2_score_new", "DEOGEN2_pred_new", "score + prediction", "Higher score = more pathogenic", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  "PrimateAI", "Missense predictor", "PrimateAI_score_new", "PrimateAI_pred_new", "score + prediction", "Higher score = more pathogenic", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  
-  # Ensemble / meta-predictors
-  "REVEL", "Meta-predictor", "REVEL_score_new", NA_character_, "continuous score", "Higher score = more pathogenic", NA_real_, "Threshold to document", TRUE, TRUE, "Updated dbNSFP score available",
-  "ClinPred", "Meta-predictor", "ClinPred_score_new", "ClinPred_pred_new", "score + prediction", "Higher score = more pathogenic", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  "MetaSVM", "Meta-predictor", "MetaSVM_score_new", "MetaSVM_pred_new", "score + prediction", "Higher score = more pathogenic", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  "MetaLR", "Meta-predictor", "MetaLR_score_new", "MetaLR_pred_new", "score + prediction", "Higher score = more pathogenic", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  "MetaRNN", "Meta-predictor", "MetaRNN_score_new", "MetaRNN_pred_new", "score + prediction", "Higher score = more pathogenic", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  "BayesDel addAF", "Meta-predictor", "BayesDel_addAF_score_new", "BayesDel_addAF_pred_new", "score + prediction", "Higher score = more pathogenic", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  "BayesDel noAF", "Meta-predictor", "BayesDel_noAF_score_new", "BayesDel_noAF_pred_new", "score + prediction", "Higher score = more pathogenic", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  "LIST-S2", "Meta-predictor", "LIST_S2_score_new", "LIST_S2_pred_new", "score + prediction", "Higher score = more pathogenic", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  
-  # Continuous-score tools requiring thresholding
-  "CADD", "General deleteriousness predictor", "CADD_PHRED_new", NA_character_, "continuous score", "Higher score = more deleterious", 10.44, "Haemoglobinopathy evaluation threshold", TRUE, TRUE, "Converted to binary using threshold >10.44",
-  "DANN", "General deleteriousness predictor", "DANN_score_new", NA_character_, "continuous score", "Higher score = more deleterious", 0.971, "Exploratory dataset-optimised threshold", TRUE, TRUE, "Exploratory threshold selected by maximum MCC",
-  "Eigen-PC", "Meta-predictor", "Eigen_PC_phred_coding_new", NA_character_, "continuous score", "Higher score = more deleterious", 1.3, "Exploratory dataset-optimised threshold", TRUE, TRUE, "Exploratory threshold selected by maximum MCC",
-  "Eigen", "Meta-predictor", "Eigen_phred_coding_new", NA_character_, "continuous score", "Higher score = more deleterious", NA_real_, "Threshold to document", TRUE, FALSE, "Coverage/descriptive analysis first",
-  "MVP", "Missense predictor", "MVP_score_new", NA_character_, "continuous score", "Higher score = more pathogenic", NA_real_, "Threshold to document", TRUE, FALSE, "Coverage/descriptive analysis first",
-  "MPC", "Missense predictor", "MPC_score_new", NA_character_, "continuous score", "Higher score = more pathogenic", NA_real_, "Threshold to document", TRUE, FALSE, "Coverage/descriptive analysis first",
-  "gMVP", "Missense predictor", "gMVP_score_new", NA_character_, "continuous score", "Higher score = more pathogenic", NA_real_, "Threshold to document", TRUE, FALSE, "Coverage/descriptive analysis first",
-  "VEST4", "Missense predictor", "VEST4_score_seperated", NA_character_, "continuous score", "Higher score = more pathogenic", NA_real_, "Threshold to document", TRUE, FALSE, "Original score column available",
-  "Condel", "Meta-predictor", "Condel_score", NA_character_, "continuous score", "Higher score = more pathogenic", NA_real_, "Threshold to document", TRUE, FALSE, "Original score column available",
-  
-  # Newer missense / protein language model tools
-  "AlphaMissense", "Missense predictor", "am_pathogenicity_new", "am_class_new", "score + prediction", "Higher score = more pathogenic", NA_real_, "Tool class label", TRUE, TRUE, "Check missense-only coverage carefully",
-  "EVE", "Missense/evolutionary model", "EVE_SCORE_new", "EVE_CLASS_new", "score + prediction", "Higher score = more pathogenic", NA_real_, "Tool class label", TRUE, TRUE, "Check missense-only coverage carefully",
-  "ESM1b", "Protein language model predictor", "ESM1b_score_new", "ESM1b_pred_new", "score + prediction", "Higher/lower direction to confirm", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated dbNSFP score and prediction available",
-  "popEVE", "Population-adjusted evolutionary model", "popEVE_SCORE_1_new", "popEVE_pred_new", "score + prediction", "Higher/lower direction to confirm", NA_real_, "Tool/dbNSFP prediction label", TRUE, TRUE, "Updated popEVE score and prediction available",
-  
+
+  ~tool,
+  ~tool_classification,
+  ~score_column,
+  ~prediction_column,
+  ~score_type,
+  ~score_direction,
+  ~default_threshold,
+  ~threshold_source,
+  ~include_in_coverage,
+  ~include_in_binary_analysis,
+  ~notes,
+
+  # ---------------------------------------------------------------------------
+  # Individual missense and protein-impact predictors
+  # ---------------------------------------------------------------------------
+
+  "SIFT",
+  "Missense predictor",
+  "SIFT_score",
+  "SIFT_new",
+  "score + prediction",
+  "Lower score = more damaging",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Original score with updated VEP SIFT annotation available",
+
+  "PolyPhen-2",
+  "Missense predictor",
+  "PolyPhen_score",
+  "PolyPhen_new",
+  "score + prediction",
+  "Higher score = more damaging",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Original score with updated VEP PolyPhen annotation available",
+
+  "PROVEAN",
+  "Missense predictor",
+  "PROVEAN_score_new",
+  "PROVEAN_pred_new",
+  "score + prediction",
+  "Lower score = more damaging",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  "MutationTaster",
+  "General functional predictor",
+  "MutationTaster_score_new",
+  "MutationTaster_pred_new",
+  "score + prediction",
+  "Prediction-label based",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  "MutationAssessor",
+  "Missense predictor",
+  "MutationAssessor_score_new",
+  "MutationAssessor_pred_new",
+  "score + prediction",
+  "Higher score = more damaging",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  "MutPred2",
+  "Missense predictor",
+  "MutPred2_score_new",
+  "MutPred2_pred_new",
+  "score + prediction",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  "DEOGEN2",
+  "Missense predictor",
+  "DEOGEN2_score_new",
+  "DEOGEN2_pred_new",
+  "score + prediction",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  "PrimateAI",
+  "Missense predictor",
+  "PrimateAI_score_new",
+  "PrimateAI_pred_new",
+  "score + prediction",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  # ---------------------------------------------------------------------------
+  # Ensemble and meta-predictors
+  # ---------------------------------------------------------------------------
+
+  "REVEL",
+  "Meta-predictor",
+  "REVEL_score_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Threshold to document",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score available",
+
+  "ClinPred",
+  "Meta-predictor",
+  "ClinPred_score_new",
+  "ClinPred_pred_new",
+  "score + prediction",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  "MetaSVM",
+  "Meta-predictor",
+  "MetaSVM_score_new",
+  "MetaSVM_pred_new",
+  "score + prediction",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  "MetaLR",
+  "Meta-predictor",
+  "MetaLR_score_new",
+  "MetaLR_pred_new",
+  "score + prediction",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  "MetaRNN",
+  "Meta-predictor",
+  "MetaRNN_score_new",
+  "MetaRNN_pred_new",
+  "score + prediction",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  "BayesDel addAF",
+  "Meta-predictor",
+  "BayesDel_addAF_score_new",
+  "BayesDel_addAF_pred_new",
+  "score + prediction",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  "BayesDel noAF",
+  "Meta-predictor",
+  "BayesDel_noAF_score_new",
+  "BayesDel_noAF_pred_new",
+  "score + prediction",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  "LIST-S2",
+  "Meta-predictor",
+  "LIST_S2_score_new",
+  "LIST_S2_pred_new",
+  "score + prediction",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  # ---------------------------------------------------------------------------
+  # Continuous-score predictors requiring explicit thresholds
+  # ---------------------------------------------------------------------------
+
+  "CADD",
+  "General deleteriousness predictor",
+  "CADD_PHRED_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = more deleterious",
+  10.44,
+  "Haemoglobinopathy evaluation threshold",
+  TRUE,
+  TRUE,
+  "Converted to binary using a threshold greater than 10.44",
+
+  "DANN",
+  "General deleteriousness predictor",
+  "DANN_score_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = more deleterious",
+  0.971,
+  "Exploratory dataset-optimised threshold",
+  TRUE,
+  TRUE,
+  "Exploratory threshold selected by maximum MCC",
+
+  "Eigen-PC",
+  "Meta-predictor",
+  "Eigen_PC_phred_coding_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = more deleterious",
+  1.3,
+  "Exploratory dataset-optimised threshold",
+  TRUE,
+  TRUE,
+  "Exploratory threshold selected by maximum MCC",
+
+  "Eigen",
+  "Meta-predictor",
+  "Eigen_phred_coding_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = more deleterious",
+  NA_real_,
+  "Threshold to document",
+  TRUE,
+  FALSE,
+  "Coverage and descriptive analysis first",
+
+  "MVP",
+  "Missense predictor",
+  "MVP_score_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Threshold to document",
+  TRUE,
+  FALSE,
+  "Coverage and descriptive analysis first",
+
+  "MPC",
+  "Missense predictor",
+  "MPC_score_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Threshold to document",
+  TRUE,
+  FALSE,
+  "Coverage and descriptive analysis first",
+
+  "gMVP",
+  "Missense predictor",
+  "gMVP_score_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Threshold to document",
+  TRUE,
+  FALSE,
+  "Coverage and descriptive analysis first",
+
+  "VEST4",
+  "Missense predictor",
+  "VEST4_score_seperated",
+  NA_character_,
+  "continuous score",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Threshold to document",
+  TRUE,
+  FALSE,
+  "Original score column available",
+
+  "Condel",
+  "Meta-predictor",
+  "Condel_score",
+  NA_character_,
+  "continuous score",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Threshold to document",
+  TRUE,
+  FALSE,
+  "Original score column available",
+
+  # ---------------------------------------------------------------------------
+  # Newer missense and protein-language-model predictors
+  # ---------------------------------------------------------------------------
+
+  "AlphaMissense",
+  "Missense predictor",
+  "am_pathogenicity_new",
+  "am_class_new",
+  "score + prediction",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Tool class label",
+  TRUE,
+  TRUE,
+  "Check missense-only coverage carefully",
+
+  "EVE",
+  "Missense/evolutionary model",
+  "EVE_SCORE_new",
+  "EVE_CLASS_new",
+  "score + prediction",
+  "Higher score = more pathogenic",
+  NA_real_,
+  "Tool class label",
+  TRUE,
+  TRUE,
+  "Check missense-only coverage carefully",
+
+  "ESM1b",
+  "Protein language model predictor",
+  "ESM1b_score_new",
+  "ESM1b_pred_new",
+  "score + prediction",
+  "Score direction requires confirmation",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated dbNSFP score and prediction available",
+
+  "popEVE",
+  "Population-adjusted evolutionary model",
+  "popEVE_SCORE_1_new",
+  "popEVE_pred_new",
+  "score + prediction",
+  "Score direction requires confirmation",
+  NA_real_,
+  "Tool/dbNSFP prediction label",
+  TRUE,
+  TRUE,
+  "Updated popEVE score and prediction available",
+
+  # ---------------------------------------------------------------------------
   # Splicing predictors
-  "SpliceAI", "Splicing predictor", "SpliceAI_DS", NA_character_, "continuous score", "Higher score = stronger splice impact", NA_real_, "SpliceAI threshold to document", TRUE, FALSE, "Original SpliceAI summary score available",
-  "SpliceAI acceptor gain", "Splicing predictor", "SpliceAI_pred_DS_AG_new", NA_character_, "continuous score", "Higher score = stronger splice impact", NA_real_, "SpliceAI threshold to document", TRUE, FALSE, "Updated SpliceAI delta score",
-  "SpliceAI acceptor loss", "Splicing predictor", "SpliceAI_pred_DS_AL_new", NA_character_, "continuous score", "Higher score = stronger splice impact", NA_real_, "SpliceAI threshold to document", TRUE, FALSE, "Updated SpliceAI delta score",
-  "SpliceAI donor gain", "Splicing predictor", "SpliceAI_pred_DS_DG_new", NA_character_, "continuous score", "Higher score = stronger splice impact", NA_real_, "SpliceAI threshold to document", TRUE, FALSE, "Updated SpliceAI delta score",
-  "SpliceAI donor loss", "Splicing predictor", "SpliceAI_pred_DS_DL_new", NA_character_, "continuous score", "Higher score = stronger splice impact", NA_real_, "SpliceAI threshold to document", TRUE, FALSE, "Updated SpliceAI delta score",
-  "MaxEntScan", "Splicing predictor", "MaxEntScan_diff_new", NA_character_, "continuous score", "Direction depends on score definition", NA_real_, "Threshold to document", TRUE, FALSE, "Splicing-specific descriptive/coverage analysis",
-  "ada_score", "Splicing predictor", "ada_score_new", NA_character_, "continuous score", "Higher score = stronger splice impact", NA_real_, "Threshold to document", TRUE, FALSE, "Splicing-specific descriptive/coverage analysis",
-  "rf_score", "Splicing predictor", "rf_score_new", NA_character_, "continuous score", "Higher score = stronger splice impact", NA_real_, "Threshold to document", TRUE, FALSE, "Splicing-specific descriptive/coverage analysis",
-  
-  # Conservation / constraint scores
-  "GERP++", "Conservation score", "GERP__RS_new", NA_character_, "continuous score", "Higher score = more conserved/constrained", NA_real_, "Not a direct pathogenicity threshold", TRUE, FALSE, "Use for coverage/descriptive analysis, not main binary pathogenicity benchmark",
-  "phyloP100way", "Conservation score", "phyloP100way_vertebrate_new", NA_character_, "continuous score", "Higher score = more conserved", NA_real_, "Not a direct pathogenicity threshold", TRUE, FALSE, "Use for coverage/descriptive analysis",
-  "phastCons100way", "Conservation score", "phastCons100way_vertebrate_new", NA_character_, "continuous score", "Higher score = more conserved", NA_real_, "Not a direct pathogenicity threshold", TRUE, FALSE, "Use for coverage/descriptive analysis",
-  "SiPhy", "Conservation score", "SiPhy_29way_logOdds", NA_character_, "continuous score", "Higher score = more conserved", NA_real_, "Not a direct pathogenicity threshold", TRUE, FALSE, "Original score column available",
-  "BLOSUM62", "Amino-acid substitution/conservation score", "BLOSUM62_new", NA_character_, "continuous score", "Lower scores usually indicate less tolerated substitution", NA_real_, "Not a direct pathogenicity threshold", TRUE, FALSE, "Use cautiously; not a standalone pathogenicity predictor"
+  # ---------------------------------------------------------------------------
+
+  "SpliceAI",
+  "Splicing predictor",
+  "SpliceAI_DS",
+  NA_character_,
+  "continuous score",
+  "Higher score = stronger splice impact",
+  NA_real_,
+  "SpliceAI threshold to document",
+  TRUE,
+  FALSE,
+  "Original SpliceAI summary score available",
+
+  "SpliceAI acceptor gain",
+  "Splicing predictor",
+  "SpliceAI_pred_DS_AG_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = stronger splice impact",
+  NA_real_,
+  "SpliceAI threshold to document",
+  TRUE,
+  FALSE,
+  "Updated SpliceAI delta score",
+
+  "SpliceAI acceptor loss",
+  "Splicing predictor",
+  "SpliceAI_pred_DS_AL_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = stronger splice impact",
+  NA_real_,
+  "SpliceAI threshold to document",
+  TRUE,
+  FALSE,
+  "Updated SpliceAI delta score",
+
+  "SpliceAI donor gain",
+  "Splicing predictor",
+  "SpliceAI_pred_DS_DG_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = stronger splice impact",
+  NA_real_,
+  "SpliceAI threshold to document",
+  TRUE,
+  FALSE,
+  "Updated SpliceAI delta score",
+
+  "SpliceAI donor loss",
+  "Splicing predictor",
+  "SpliceAI_pred_DS_DL_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = stronger splice impact",
+  NA_real_,
+  "SpliceAI threshold to document",
+  TRUE,
+  FALSE,
+  "Updated SpliceAI delta score",
+
+  "MaxEntScan",
+  "Splicing predictor",
+  "MaxEntScan_diff_new",
+  NA_character_,
+  "continuous score",
+  "Direction depends on score definition",
+  NA_real_,
+  "Threshold to document",
+  TRUE,
+  FALSE,
+  "Splicing-specific descriptive and coverage analysis",
+
+  "ada_score",
+  "Splicing predictor",
+  "ada_score_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = stronger splice impact",
+  NA_real_,
+  "Threshold to document",
+  TRUE,
+  FALSE,
+  "Splicing-specific descriptive and coverage analysis",
+
+  "rf_score",
+  "Splicing predictor",
+  "rf_score_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = stronger splice impact",
+  NA_real_,
+  "Threshold to document",
+  TRUE,
+  FALSE,
+  "Splicing-specific descriptive and coverage analysis",
+
+  # ---------------------------------------------------------------------------
+  # Conservation and constraint scores
+  # ---------------------------------------------------------------------------
+
+  "GERP++",
+  "Conservation score",
+  "GERP__RS_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = more conserved or constrained",
+  NA_real_,
+  "Not a direct pathogenicity threshold",
+  TRUE,
+  FALSE,
+  "Use for coverage and descriptive analysis, not the main binary benchmark",
+
+  "phyloP100way",
+  "Conservation score",
+  "phyloP100way_vertebrate_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = more conserved",
+  NA_real_,
+  "Not a direct pathogenicity threshold",
+  TRUE,
+  FALSE,
+  "Use for coverage and descriptive analysis",
+
+  "phastCons100way",
+  "Conservation score",
+  "phastCons100way_vertebrate_new",
+  NA_character_,
+  "continuous score",
+  "Higher score = more conserved",
+  NA_real_,
+  "Not a direct pathogenicity threshold",
+  TRUE,
+  FALSE,
+  "Use for coverage and descriptive analysis",
+
+  "SiPhy",
+  "Conservation score",
+  "SiPhy_29way_logOdds",
+  NA_character_,
+  "continuous score",
+  "Higher score = more conserved",
+  NA_real_,
+  "Not a direct pathogenicity threshold",
+  TRUE,
+  FALSE,
+  "Original score column available",
+
+  "BLOSUM62",
+  "Amino-acid substitution/conservation score",
+  "BLOSUM62_new",
+  NA_character_,
+  "continuous score",
+  "Lower scores usually indicate a less tolerated substitution",
+  NA_real_,
+  "Not a direct pathogenicity threshold",
+  TRUE,
+  FALSE,
+  "Use cautiously; not a standalone pathogenicity predictor"
+)
+
+# -----------------------------------------------------------------------------
+# Validate the structure of the reference table
+# -----------------------------------------------------------------------------
+
+expected_columns <- c(
+  "tool",
+  "tool_classification",
+  "score_column",
+  "prediction_column",
+  "score_type",
+  "score_direction",
+  "default_threshold",
+  "threshold_source",
+  "include_in_coverage",
+  "include_in_binary_analysis",
+  "notes"
+)
+
+missing_columns <- setdiff(
+  expected_columns,
+  names(tool_reference_table)
+)
+
+unexpected_columns <- setdiff(
+  names(tool_reference_table),
+  expected_columns
+)
+
+if (length(missing_columns) > 0) {
+  stop(
+    "The tool reference table is missing these columns: ",
+    paste(missing_columns, collapse = ", ")
+  )
+}
+
+if (length(unexpected_columns) > 0) {
+  stop(
+    "The tool reference table contains unexpected columns: ",
+    paste(unexpected_columns, collapse = ", ")
+  )
+}
+
+if (nrow(tool_reference_table) == 0) {
+  stop("The tool reference table was created but contains no tool records.")
+}
+
+if (anyDuplicated(tool_reference_table$tool) > 0) {
+  duplicated_tools <- unique(
+    tool_reference_table$tool[
+      duplicated(tool_reference_table$tool)
+    ]
+  )
+
+  stop(
+    "Duplicate tool names were found: ",
+    paste(duplicated_tools, collapse = ", ")
+  )
+}
+
+# Confirm successful creation
+cat(
+  "Tool reference table created successfully.\n",
+  "Number of tools:", nrow(tool_reference_table), "\n",
+  "Number of variables:", ncol(tool_reference_table), "\n"
 )
 
 tool_reference_table
 ```
-
-##verifying if the columns in reference table exist
-
-```{r qc-tool-reference-columns}
-tool_reference_column_qc <- tool_reference_table %>%
-  mutate(
-    score_column_exists = score_column %in% names(ANALYSIS_DATASET),
-    prediction_column_exists = ifelse(
-      is.na(prediction_column),
-      NA,
-      prediction_column %in% names(ANALYSIS_DATASET)
-    )
-  )
-
-tool_reference_column_qc %>%
-  filter(score_column_exists == FALSE | prediction_column_exists == FALSE) %>%
-  print(n = Inf, width = Inf)
-```
-
 ```{r missing-qc-tool-reference-columns}
 tool_reference_column_qc <- tool_reference_table %>%
   mutate(
@@ -3742,76 +4261,627 @@ Eigen_PC_threshold <- tool_reference_table %>%
 
 ```  
  
- # Create binary performance dataset
  
-```{r create-clean-binary-tool-predictions-final}
-classify_polyphen_label_or_score <- function(polyphen_label, polyphen_score) {
-  
-  label_clean <- classify_prediction_label(polyphen_label)
-  score_numeric <- as.numeric(polyphen_score)
-  
-  dplyr::case_when(
-    !is.na(label_clean) ~ label_clean,
-    is.na(label_clean) & !is.na(score_numeric) & score_numeric >= 0.453 ~ "Pathogenic",
-    is.na(label_clean) & !is.na(score_numeric) & score_numeric < 0.453 ~ "Benign",
-    TRUE ~ NA_character_
-  )}
+```{r create-observed-binary-classification}
 
-BINARY_PERFORMANCE_DATASET <- ANALYSIS_DATASET_WITH_VARIANT_GROUPS %>%
-  filter(
-    observed_binary %in% c("Pathogenic", "Benign")
-  ) %>%
-  mutate(
-    SIFT_predicted_clean = classify_prediction_label(SIFT_new),
+# Check that the original clinical-classification column exists
+if (!"Observed_pathogenicity" %in% names(FINAL_MERGED_DATASET)) {
+  stop(
+    "The column 'Observed_pathogenicity' was not found in FINAL_MERGED_DATASET.\n",
+    "Available columns include:\n",
+    paste(names(FINAL_MERGED_DATASET), collapse = ", ")
+  )
+}
 
-    PolyPhen_predicted_clean = classify_polyphen_label_or_score(
-      polyphen_label = PolyPhen_new,
-      polyphen_score = PolyPhen_score
+FINAL_MERGED_DATASET <- FINAL_MERGED_DATASET %>%
+  dplyr::mutate(
+    observed_classification = stringr::str_squish(
+      as.character(Observed_pathogenicity)
     ),
 
-    PROVEAN_predicted_clean = classify_prediction_label(PROVEAN_pred_new),
-    MutationTaster_predicted_clean = classify_prediction_label(MutationTaster_pred_new),
-    MutationAssessor_predicted_clean = classify_mutationassessor_label(MutationAssessor_pred_new),
-    MutPred2_predicted_clean = classify_prediction_label(MutPred2_pred_new),
-    DEOGEN2_predicted_clean = classify_prediction_label(DEOGEN2_pred_new),
-    PrimateAI_predicted_clean = classify_prediction_label(PrimateAI_pred_new),
-    ClinPred_predicted_clean = classify_prediction_label(ClinPred_pred_new),
-    MetaSVM_predicted_clean = classify_prediction_label(MetaSVM_pred_new),
-    MetaLR_predicted_clean = classify_prediction_label(MetaLR_pred_new),
-    MetaRNN_predicted_clean = classify_prediction_label(MetaRNN_pred_new),
-    BayesDel_addAF_predicted_clean = classify_prediction_label(BayesDel_addAF_pred_new),
-    BayesDel_noAF_predicted_clean = classify_prediction_label(BayesDel_noAF_pred_new),
-    LIST_S2_predicted_clean = classify_prediction_label(LIST_S2_pred_new),
-    AlphaMissense_predicted_clean = classify_prediction_label(am_class_new),
-    EVE_predicted_clean = classify_prediction_label(EVE_CLASS_new),
-    ESM1b_predicted_clean = classify_prediction_label(ESM1b_pred_new),
+    observed_binary = dplyr::case_when(
+      observed_classification %in% c(
+        "P",
+        "LP",
+        "P/LP",
+        "Pathogenic",
+        "Likely pathogenic",
+        "Pathogenic/Likely pathogenic",
+        "Pathogenic or likely pathogenic"
+      ) ~ "Pathogenic",
 
-    popEVE_predicted_clean = classify_popeve_label(popEVE_pred_new),
+      observed_classification %in% c(
+        "B",
+        "LB",
+        "B/LB",
+        "Benign",
+        "Likely benign",
+        "Benign/Likely benign",
+        "Benign or likely benign"
+      ) ~ "Benign",
+
+      observed_classification %in% c(
+        "VUS",
+        "Uncertain significance",
+        "Variant of uncertain significance"
+      ) ~ "VUS",
+
+      TRUE ~ NA_character_
+    )
+  )
+
+# Summarise the recoded classifications
+observed_binary_summary <- FINAL_MERGED_DATASET %>%
+  dplyr::count(
+    observed_classification,
+    observed_binary,
+    name = "n"
+  ) %>%
+  dplyr::arrange(
+    observed_binary,
+    dplyr::desc(n)
+  )
+
+observed_binary_summary
+```
+ 
+ 
+Then create the binary-analysis dataset with:
+
+## create binary analysis dataset
+```{r create-binary-analysis-dataset}
+
+BINARY_ANALYSIS_DATASET <- FINAL_MERGED_DATASET %>%
+  dplyr::filter(
+    observed_binary %in% c("Pathogenic", "Benign")
+  ) %>%
+  dplyr::mutate(
+    observed_binary = factor(
+      observed_binary,
+      levels = c("Benign", "Pathogenic")
+    )
+  )
+
+cat(
+  "Binary analysis dataset created successfully.\n",
+  "Rows:", nrow(BINARY_ANALYSIS_DATASET), "\n",
+  "Columns:", ncol(BINARY_ANALYSIS_DATASET), "\n"
+)
+
+BINARY_ANALYSIS_DATASET %>%
+  dplyr::count(
+    observed_binary,
+    name = "n"
+  )
+```
+
+```{r prepare-binary-tool-reference}
+
+binary_tool_reference <- binary_prediction_column_qc %>%
+  dplyr::filter(
+    include_in_binary_analysis == TRUE
+  ) %>%
+  dplyr::mutate(
+    prediction_column_exists =
+      !is.na(prediction_column) &
+      prediction_column %in% names(BINARY_ANALYSIS_DATASET),
+
+    score_column_exists =
+      !is.na(score_column) &
+      score_column %in% names(BINARY_ANALYSIS_DATASET),
+
+    threshold_available =
+      !is.na(default_threshold),
+
+    analysis_method = dplyr::case_when(
+      prediction_column_exists ~ "Prediction label",
+      score_column_exists & threshold_available ~ "Score threshold",
+      TRUE ~ "Not currently analysable"
+    )
+  )
+
+binary_tool_reference %>%
+  dplyr::select(
+    tool,
+    score_column,
+    prediction_column,
+    prediction_column_exists,
+    score_column_exists,
+    default_threshold,
+    analysis_method
+  ) %>%
+  print(n = Inf)
+```
+ 
+ 
+ 
+
+ 
+ # Create binary performance dataset
+ 
+```{r create-binary-performance-dataset, message=FALSE, warning=FALSE}
+
+# =============================================================================
+# 1. Validate the source dataset
+# =============================================================================
+
+if (!exists("FINAL_MERGED_DATASET")) {
+  stop(
+    "FINAL_MERGED_DATASET does not exist. ",
+    "Run the final merge and classification chunks first."
+  )
+}
+
+if (!"observed_binary" %in% names(FINAL_MERGED_DATASET)) {
+  stop(
+    "The column 'observed_binary' is missing from FINAL_MERGED_DATASET."
+  )
+}
+
+
+# =============================================================================
+# 2. Validate the helper classification functions
+# =============================================================================
+
+required_functions <- c(
+  "classify_prediction_label",
+  "classify_mutationassessor_label",
+  "classify_popeve_label"
+)
+
+missing_functions <- required_functions[
+  !vapply(
+    required_functions,
+    exists,
+    logical(1),
+    mode = "function"
+  )
+]
+
+if (length(missing_functions) > 0) {
+  stop(
+    "The following classification functions have not been created: ",
+    paste(missing_functions, collapse = ", "),
+    ". Run their definition chunks first."
+  )
+}
+
+
+# =============================================================================
+# 3. Validate the required predictor columns
+# =============================================================================
+
+required_predictor_columns <- c(
+  "SIFT_new",
+  "PolyPhen_new",
+  "PolyPhen_score",
+  "PROVEAN_pred_new",
+  "MutationTaster_pred_new",
+  "MutationAssessor_pred_new",
+  "MutPred2_pred_new",
+  "DEOGEN2_pred_new",
+  "PrimateAI_pred_new",
+  "ClinPred_pred_new",
+  "MetaSVM_pred_new",
+  "MetaLR_pred_new",
+  "MetaRNN_pred_new",
+  "BayesDel_addAF_pred_new",
+  "BayesDel_noAF_pred_new",
+  "LIST_S2_pred_new",
+  "am_class_new",
+  "EVE_CLASS_new",
+  "ESM1b_pred_new",
+  "popEVE_pred_new",
+  "CADD_PHRED_new",
+  "DANN_score_new",
+  "Eigen_PC_phred_coding_new"
+)
+
+missing_predictor_columns <- setdiff(
+  required_predictor_columns,
+  names(FINAL_MERGED_DATASET)
+)
+
+if (length(missing_predictor_columns) > 0) {
+  stop(
+    "The following required predictor columns are missing:\n",
+    paste(missing_predictor_columns, collapse = "\n")
+  )
+}
+
+
+# =============================================================================
+# 4. PolyPhen-2 classification helper
+# =============================================================================
+# The categorical label is used first.
+# The score threshold is used only when the label is missing.
+
+classify_polyphen_label_or_score <- function(
+  polyphen_label,
+  polyphen_score
+) {
+
+  label_clean <- classify_prediction_label(
+    polyphen_label
+  )
+
+  score_numeric <- suppressWarnings(
+    as.numeric(
+      as.character(polyphen_score)
+    )
+  )
+
+  dplyr::case_when(
+    !is.na(label_clean) ~ label_clean,
+
+    is.na(label_clean) &
+      !is.na(score_numeric) &
+      score_numeric >= 0.453 ~ "Pathogenic",
+
+    is.na(label_clean) &
+      !is.na(score_numeric) &
+      score_numeric < 0.453 ~ "Benign",
+
+    TRUE ~ NA_character_
+  )
+}
+
+
+# =============================================================================
+# 5. Create the binary performance dataset
+# =============================================================================
+
+BINARY_PERFORMANCE_DATASET <- FINAL_MERGED_DATASET %>%
+
+  dplyr::filter(
+    observed_binary %in% c(
+      "Pathogenic",
+      "Benign"
+    )
+  ) %>%
+
+  dplyr::mutate(
+
+    # -------------------------------------------------------------------------
+    # Prediction-label tools
+    # -------------------------------------------------------------------------
+
+    SIFT_predicted_clean =
+      classify_prediction_label(
+        SIFT_new
+      ),
+
+    PolyPhen_predicted_clean =
+      classify_polyphen_label_or_score(
+        polyphen_label = PolyPhen_new,
+        polyphen_score = PolyPhen_score
+      ),
+
+    PROVEAN_predicted_clean =
+      classify_prediction_label(
+        PROVEAN_pred_new
+      ),
+
+    MutationTaster_predicted_clean =
+      classify_prediction_label(
+        MutationTaster_pred_new
+      ),
+
+    MutationAssessor_predicted_clean =
+      classify_mutationassessor_label(
+        MutationAssessor_pred_new
+      ),
+
+    MutPred2_predicted_clean =
+      classify_prediction_label(
+        MutPred2_pred_new
+      ),
+
+    DEOGEN2_predicted_clean =
+      classify_prediction_label(
+        DEOGEN2_pred_new
+      ),
+
+    PrimateAI_predicted_clean =
+      classify_prediction_label(
+        PrimateAI_pred_new
+      ),
+
+    ClinPred_predicted_clean =
+      classify_prediction_label(
+        ClinPred_pred_new
+      ),
+
+    MetaSVM_predicted_clean =
+      classify_prediction_label(
+        MetaSVM_pred_new
+      ),
+
+    MetaLR_predicted_clean =
+      classify_prediction_label(
+        MetaLR_pred_new
+      ),
+
+    MetaRNN_predicted_clean =
+      classify_prediction_label(
+        MetaRNN_pred_new
+      ),
+
+    BayesDel_addAF_predicted_clean =
+      classify_prediction_label(
+        BayesDel_addAF_pred_new
+      ),
+
+    BayesDel_noAF_predicted_clean =
+      classify_prediction_label(
+        BayesDel_noAF_pred_new
+      ),
+
+    LIST_S2_predicted_clean =
+      classify_prediction_label(
+        LIST_S2_pred_new
+      ),
+
+    AlphaMissense_predicted_clean =
+      classify_prediction_label(
+        am_class_new
+      ),
+
+    EVE_predicted_clean =
+      classify_prediction_label(
+        EVE_CLASS_new
+      ),
+
+    ESM1b_predicted_clean =
+      classify_prediction_label(
+        ESM1b_pred_new
+      ),
+
+    popEVE_predicted_clean =
+      classify_popeve_label(
+        popEVE_pred_new
+      ),
+
+
+    # -------------------------------------------------------------------------
+    # Convert continuous scores to numeric
+    # -------------------------------------------------------------------------
+
+    CADD_score_numeric = suppressWarnings(
+      as.numeric(
+        as.character(CADD_PHRED_new)
+      )
+    ),
+
+    DANN_score_numeric = suppressWarnings(
+      as.numeric(
+        as.character(DANN_score_new)
+      )
+    ),
+
+    Eigen_PC_score_numeric = suppressWarnings(
+      as.numeric(
+        as.character(Eigen_PC_phred_coding_new)
+      )
+    ),
+
+
+    # -------------------------------------------------------------------------
+    # Continuous-score tools using the thresholds from your original analysis
+    # -------------------------------------------------------------------------
 
     CADD_predicted_clean = dplyr::case_when(
-      !is.na(CADD_PHRED_new) & as.numeric(CADD_PHRED_new) >= 10.44 ~ "Pathogenic",
-      !is.na(CADD_PHRED_new) & as.numeric(CADD_PHRED_new) < 10.44 ~ "Benign",
+      !is.na(CADD_score_numeric) &
+        CADD_score_numeric >= 10.44 ~ "Pathogenic",
+
+      !is.na(CADD_score_numeric) &
+        CADD_score_numeric < 10.44 ~ "Benign",
+
       TRUE ~ NA_character_
     ),
 
     DANN_predicted_clean = dplyr::case_when(
-      !is.na(DANN_score_new) & as.numeric(DANN_score_new) >= 0.971 ~ "Pathogenic",
-      !is.na(DANN_score_new) & as.numeric(DANN_score_new) < 0.971 ~ "Benign",
+      !is.na(DANN_score_numeric) &
+        DANN_score_numeric >= 0.971 ~ "Pathogenic",
+
+      !is.na(DANN_score_numeric) &
+        DANN_score_numeric < 0.971 ~ "Benign",
+
       TRUE ~ NA_character_
     ),
 
     Eigen_PC_predicted_clean = dplyr::case_when(
-      !is.na(Eigen_PC_phred_coding_new) & as.numeric(Eigen_PC_phred_coding_new) >= 1.3 ~ "Pathogenic",
-      !is.na(Eigen_PC_phred_coding_new) & as.numeric(Eigen_PC_phred_coding_new) < 1.3 ~ "Benign",
-      TRUE ~ NA_character_))
+      !is.na(Eigen_PC_score_numeric) &
+        Eigen_PC_score_numeric >= 1.3 ~ "Pathogenic",
 
-BINARY_PERFORMANCE_DATASET %>%
-  summarise(
-    total_binary_variants = n(),
-    pathogenic = sum(observed_binary == "Pathogenic", na.rm = TRUE),
-    benign = sum(observed_binary == "Benign", na.rm = TRUE),
-    polyphen_clean_available = sum(!is.na(PolyPhen_predicted_clean), na.rm = TRUE),
-    popeve_clean_available = sum(!is.na(popEVE_predicted_clean), na.rm = TRUE))
+      !is.na(Eigen_PC_score_numeric) &
+        Eigen_PC_score_numeric < 1.3 ~ "Benign",
+
+      TRUE ~ NA_character_
+    )
+  )
+
+
+# =============================================================================
+# 6. Validate the cleaned prediction columns
+# =============================================================================
+
+required_clean_prediction_columns <- c(
+  "SIFT_predicted_clean",
+  "PolyPhen_predicted_clean",
+  "PROVEAN_predicted_clean",
+  "MutationTaster_predicted_clean",
+  "MutationAssessor_predicted_clean",
+  "MutPred2_predicted_clean",
+  "DEOGEN2_predicted_clean",
+  "PrimateAI_predicted_clean",
+  "ClinPred_predicted_clean",
+  "MetaSVM_predicted_clean",
+  "MetaLR_predicted_clean",
+  "MetaRNN_predicted_clean",
+  "BayesDel_addAF_predicted_clean",
+  "BayesDel_noAF_predicted_clean",
+  "LIST_S2_predicted_clean",
+  "AlphaMissense_predicted_clean",
+  "EVE_predicted_clean",
+  "ESM1b_predicted_clean",
+  "popEVE_predicted_clean",
+  "CADD_predicted_clean",
+  "DANN_predicted_clean",
+  "Eigen_PC_predicted_clean"
+)
+
+missing_clean_prediction_columns <- setdiff(
+  required_clean_prediction_columns,
+  names(BINARY_PERFORMANCE_DATASET)
+)
+
+if (length(missing_clean_prediction_columns) > 0) {
+  stop(
+    "The following cleaned prediction columns were not created:\n",
+    paste(
+      missing_clean_prediction_columns,
+      collapse = "\n"
+    )
+  )
+}
+
+
+# =============================================================================
+# 7. Confirm that the cleaned predictions contain valid values
+# =============================================================================
+
+valid_binary_predictions <- c(
+  "Pathogenic",
+  "Benign"
+)
+
+invalid_prediction_values <- BINARY_PERFORMANCE_DATASET %>%
+  dplyr::select(
+    dplyr::all_of(
+      required_clean_prediction_columns
+    )
+  ) %>%
+  tidyr::pivot_longer(
+    cols = dplyr::everything(),
+    names_to = "prediction_column",
+    values_to = "prediction"
+  ) %>%
+  dplyr::filter(
+    !is.na(prediction),
+    !prediction %in% valid_binary_predictions
+  ) %>%
+  dplyr::distinct(
+    prediction_column,
+    prediction
+  )
+
+if (nrow(invalid_prediction_values) > 0) {
+  warning(
+    "Some cleaned prediction columns contain values other than ",
+    "'Pathogenic', 'Benign', or NA. ",
+    "Inspect invalid_prediction_values."
+  )
+}
+
+
+# =============================================================================
+# 8. Create a dataset-level summary
+# =============================================================================
+
+binary_performance_dataset_summary <-
+  BINARY_PERFORMANCE_DATASET %>%
+  dplyr::summarise(
+    total_binary_variants = dplyr::n(),
+
+    pathogenic = sum(
+      observed_binary == "Pathogenic",
+      na.rm = TRUE
+    ),
+
+    benign = sum(
+      observed_binary == "Benign",
+      na.rm = TRUE
+    ),
+
+    polyphen_clean_available = sum(
+      !is.na(PolyPhen_predicted_clean)
+    ),
+
+    popeve_clean_available = sum(
+      !is.na(popEVE_predicted_clean)
+    ),
+
+    cadd_clean_available = sum(
+      !is.na(CADD_predicted_clean)
+    ),
+
+    dann_clean_available = sum(
+      !is.na(DANN_predicted_clean)
+    ),
+
+    eigen_pc_clean_available = sum(
+      !is.na(Eigen_PC_predicted_clean)
+    )
+  )
+
+
+# =============================================================================
+# 9. Create availability counts for all tools
+# =============================================================================
+
+binary_prediction_availability <-
+  BINARY_PERFORMANCE_DATASET %>%
+  dplyr::summarise(
+    dplyr::across(
+      dplyr::all_of(
+        required_clean_prediction_columns
+      ),
+      ~ sum(!is.na(.x))
+    )
+  ) %>%
+  tidyr::pivot_longer(
+    cols = dplyr::everything(),
+    names_to = "prediction_column",
+    values_to = "n_with_prediction"
+  ) %>%
+  dplyr::mutate(
+    total_binary_variants =
+      nrow(BINARY_PERFORMANCE_DATASET),
+
+    coverage_percent = round(
+      n_with_prediction /
+        total_binary_variants *
+        100,
+      2
+    )
+  ) %>%
+  dplyr::arrange(
+    dplyr::desc(coverage_percent)
+  )
+
+
+# =============================================================================
+# 10. Display confirmation and summaries
+# =============================================================================
+
+cat(
+  "BINARY_PERFORMANCE_DATASET created successfully.\n",
+  "Rows:",
+  nrow(BINARY_PERFORMANCE_DATASET),
+  "\n",
+  "Columns:",
+  ncol(BINARY_PERFORMANCE_DATASET),
+  "\n",
+  "Cleaned prediction columns:",
+  length(required_clean_prediction_columns),
+  "\n"
+)
+
+binary_performance_dataset_summary
+
+binary_prediction_availability
+```
 ```
  
 ```{r define-polyphen-specific-classifier}
@@ -3897,147 +4967,577 @@ BINARY_PERFORMANCE_DATASET %>%
   print(n = Inf, width = Inf)
 ```
 
+```{r define-safe-binary-performance-function}
 
-## calculating binary performance metrics
-
-```{r define-binary-performance-function}
 safe_divide <- function(numerator, denominator) {
-  ifelse(denominator == 0, NA_real_, numerator / denominator)
+  ifelse(
+    denominator == 0,
+    NA_real_,
+    numerator / denominator
+  )
 }
 
-calculate_binary_tool_performance <- function(data, observed_col, predicted_col, tool_name) {
-  
+calculate_binary_tool_performance <- function(
+  data,
+  observed_col,
+  predicted_col,
+  tool_name
+) {
+
   performance_data <- data %>%
-    filter(
+    dplyr::filter(
       !is.na(.data[[observed_col]]),
       !is.na(.data[[predicted_col]])
     )
-  
+
   TP <- sum(
     performance_data[[observed_col]] == "Pathogenic" &
       performance_data[[predicted_col]] == "Pathogenic",
     na.rm = TRUE
   )
-  
+
   TN <- sum(
     performance_data[[observed_col]] == "Benign" &
       performance_data[[predicted_col]] == "Benign",
     na.rm = TRUE
   )
-  
+
   FP <- sum(
     performance_data[[observed_col]] == "Benign" &
       performance_data[[predicted_col]] == "Pathogenic",
     na.rm = TRUE
   )
-  
+
   FN <- sum(
     performance_data[[observed_col]] == "Pathogenic" &
       performance_data[[predicted_col]] == "Benign",
     na.rm = TRUE
   )
-  
+
+  # Convert counts to numeric before multiplication
   TP <- as.numeric(TP)
   TN <- as.numeric(TN)
   FP <- as.numeric(FP)
   FN <- as.numeric(FN)
-  
+
   n_evaluated <- TP + TN + FP + FN
-  
+
   sensitivity <- safe_divide(TP, TP + FN)
   specificity <- safe_divide(TN, TN + FP)
-  
+
   mcc_denominator <- sqrt(
     (TP + FP) *
       (TP + FN) *
       (TN + FP) *
       (TN + FN)
   )
-  
+
   mcc <- safe_divide(
     (TP * TN) - (FP * FN),
     mcc_denominator
   )
-  
-  LR_positive <- safe_divide(sensitivity, 1 - specificity)
-  LR_negative <- safe_divide(1 - sensitivity, specificity)
-  
+
+  LR_positive <- safe_divide(
+    sensitivity,
+    1 - specificity
+  )
+
+  LR_negative <- safe_divide(
+    1 - sensitivity,
+    specificity
+  )
+
   tibble::tibble(
     tool = tool_name,
     prediction_column = predicted_col,
     total_eligible_binary_variants = nrow(data),
-    total_variants_evaluated = n_evaluated,
-    variants_not_evaluated = nrow(data) - n_evaluated,
+    n_evaluated = n_evaluated,
+    variants_not_evaluated =
+      nrow(data) - n_evaluated,
     true_positive = TP,
     true_negative = TN,
     false_positive = FP,
     false_negative = FN,
-    accuracy = round(safe_divide(TP + TN, n_evaluated), 3),
-    sensitivity = round(sensitivity, 3),
-    specificity = round(specificity, 3),
-    ppv = round(safe_divide(TP, TP + FP), 3),
-    npv = round(safe_divide(TN, TN + FN), 3),
-    balanced_accuracy = round(
-      ifelse(
-        is.na(sensitivity) | is.na(specificity),
-        NA_real_,
-        mean(c(sensitivity, specificity), na.rm = TRUE)
+    accuracy = round(
+      safe_divide(
+        TP + TN,
+        n_evaluated
       ),
       3
     ),
-    mcc = round(mcc, 3),
-    LR_positive = round(LR_positive, 3),
-    LR_negative = round(LR_negative, 3)
+    sensitivity = round(
+      sensitivity,
+      3
+    ),
+    specificity = round(
+      specificity,
+      3
+    ),
+    ppv = round(
+      safe_divide(
+        TP,
+        TP + FP
+      ),
+      3
+    ),
+    npv = round(
+      safe_divide(
+        TN,
+        TN + FN
+      ),
+      3
+    ),
+    balanced_accuracy = round(
+      ifelse(
+        is.na(sensitivity) |
+          is.na(specificity),
+        NA_real_,
+        mean(
+          c(
+            sensitivity,
+            specificity
+          ),
+          na.rm = TRUE
+        )
+      ),
+      3
+    ),
+    mcc = round(
+      mcc,
+      3
+    ),
+    LR_positive = round(
+      LR_positive,
+      3
+    ),
+    LR_negative = round(
+      LR_negative,
+      3
+    )
   )
 }
+
+cat(
+  "Safe binary performance function created successfully.\n"
+)
+
 ```
+
+
+
+
+
+```{r validate-binary-performance-inputs}
+
+required_clean_prediction_columns <- c(
+  "SIFT_predicted_clean",
+  "PolyPhen_predicted_clean",
+  "PROVEAN_predicted_clean",
+  "MutationTaster_predicted_clean",
+  "MutationAssessor_predicted_clean",
+  "MutPred2_predicted_clean",
+  "DEOGEN2_predicted_clean",
+  "PrimateAI_predicted_clean",
+  "ClinPred_predicted_clean",
+  "MetaSVM_predicted_clean",
+  "MetaLR_predicted_clean",
+  "MetaRNN_predicted_clean",
+  "BayesDel_addAF_predicted_clean",
+  "BayesDel_noAF_predicted_clean",
+  "LIST_S2_predicted_clean",
+  "AlphaMissense_predicted_clean",
+  "EVE_predicted_clean",
+  "ESM1b_predicted_clean",
+  "popEVE_predicted_clean",
+  "CADD_predicted_clean",
+  "DANN_predicted_clean",
+  "Eigen_PC_predicted_clean"
+)
+
+if (!exists("BINARY_PERFORMANCE_DATASET")) {
+  stop(
+    "BINARY_PERFORMANCE_DATASET does not exist. ",
+    "Run the chunk that creates the cleaned binary prediction columns first."
+  )
+}
+
+if (!exists("calculate_binary_tool_performance")) {
+  stop(
+    "The function 'calculate_binary_tool_performance' does not exist. ",
+    "Run the function-definition chunk first."
+  )
+}
+
+if (!"observed_binary" %in% names(BINARY_PERFORMANCE_DATASET)) {
+  stop(
+    "The column 'observed_binary' is missing from ",
+    "BINARY_PERFORMANCE_DATASET."
+  )
+}
+
+missing_prediction_columns <- setdiff(
+  required_clean_prediction_columns,
+  names(BINARY_PERFORMANCE_DATASET)
+)
+
+if (length(missing_prediction_columns) > 0) {
+  stop(
+    "The following cleaned prediction columns are missing:\n",
+    paste(missing_prediction_columns, collapse = "\n")
+  )
+}
+
+cat(
+  "Binary performance inputs validated successfully.\n",
+  "Rows:", nrow(BINARY_PERFORMANCE_DATASET), "\n",
+  "Prediction columns:", length(required_clean_prediction_columns), "\n")
+```
+
 
 ##determinig binary tool performance 
 
-```{r calculate-binary-tool-performance}
-binary_tool_performance_summary <- bind_rows(
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "SIFT_predicted_clean", "SIFT"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "PolyPhen_predicted_clean", "PolyPhen-2"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "PROVEAN_predicted_clean", "PROVEAN"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "MutationTaster_predicted_clean", "MutationTaster"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "MutationAssessor_predicted_clean", "MutationAssessor"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "MutPred2_predicted_clean", "MutPred2"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "DEOGEN2_predicted_clean", "DEOGEN2"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "PrimateAI_predicted_clean", "PrimateAI"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "ClinPred_predicted_clean", "ClinPred"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "MetaSVM_predicted_clean", "MetaSVM"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "MetaLR_predicted_clean", "MetaLR"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "MetaRNN_predicted_clean", "MetaRNN"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "BayesDel_addAF_predicted_clean", "BayesDel addAF"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "BayesDel_noAF_predicted_clean", "BayesDel noAF"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "LIST_S2_predicted_clean", "LIST-S2"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "AlphaMissense_predicted_clean", "AlphaMissense"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "EVE_predicted_clean", "EVE"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "ESM1b_predicted_clean", "ESM1b"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "popEVE_predicted_clean", "popEVE"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "CADD_predicted_clean", "CADD"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "DANN_predicted_clean", "DANN"),
-  calculate_binary_tool_performance(BINARY_PERFORMANCE_DATASET, "observed_binary", "Eigen_PC_predicted_clean", "Eigen-PC")
-) %>%
-  arrange(desc(mcc))
 
-binary_tool_performance_summary %>%
-  print(n = Inf, width = Inf)
+This will identify exactly what is missing instead of failing later with an unclear object-not-found error.
+
+## 2. Use this cleaned version of your original summary chunk
+
+```{r calculate-binary-tool-performance-summary, message=FALSE, warning=FALSE}
+
+# =============================================================================
+# Validate required objects
+# =============================================================================
+
+if (!exists("BINARY_PERFORMANCE_DATASET")) {
+  stop(
+    "BINARY_PERFORMANCE_DATASET does not exist. ",
+    "Run the binary performance dataset chunk first."
+  )
+}
+
+if (!exists(
+  "calculate_binary_tool_performance",
+  mode = "function"
+)) {
+  stop(
+    "The function 'calculate_binary_tool_performance' does not exist. ",
+    "Run the function-definition chunk first."
+  )
+}
+
+required_prediction_columns <- c(
+  "SIFT_predicted_clean",
+  "PolyPhen_predicted_clean",
+  "PROVEAN_predicted_clean",
+  "MutationTaster_predicted_clean",
+  "MutationAssessor_predicted_clean",
+  "MutPred2_predicted_clean",
+  "DEOGEN2_predicted_clean",
+  "PrimateAI_predicted_clean",
+  "ClinPred_predicted_clean",
+  "MetaSVM_predicted_clean",
+  "MetaLR_predicted_clean",
+  "MetaRNN_predicted_clean",
+  "BayesDel_addAF_predicted_clean",
+  "BayesDel_noAF_predicted_clean",
+  "LIST_S2_predicted_clean",
+  "AlphaMissense_predicted_clean",
+  "EVE_predicted_clean",
+  "ESM1b_predicted_clean",
+  "popEVE_predicted_clean",
+  "CADD_predicted_clean",
+  "DANN_predicted_clean",
+  "Eigen_PC_predicted_clean"
+)
+
+missing_prediction_columns <- setdiff(
+  required_prediction_columns,
+  names(BINARY_PERFORMANCE_DATASET)
+)
+
+if (length(missing_prediction_columns) > 0) {
+  stop(
+    "The following cleaned prediction columns are missing:\n",
+    paste(
+      missing_prediction_columns,
+      collapse = "\n"
+    )
+  )
+}
+
+if (!"observed_binary" %in% names(BINARY_PERFORMANCE_DATASET)) {
+  stop(
+    "The column 'observed_binary' is missing from ",
+    "BINARY_PERFORMANCE_DATASET."
+  )
+}
+
+
+# =============================================================================
+# Calculate performance for all tools
+# =============================================================================
+
+binary_tool_performance_summary <- dplyr::bind_rows(
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "SIFT_predicted_clean",
+    tool_name = "SIFT"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "PolyPhen_predicted_clean",
+    tool_name = "PolyPhen-2"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "PROVEAN_predicted_clean",
+    tool_name = "PROVEAN"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "MutationTaster_predicted_clean",
+    tool_name = "MutationTaster"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "MutationAssessor_predicted_clean",
+    tool_name = "MutationAssessor"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "MutPred2_predicted_clean",
+    tool_name = "MutPred2"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "DEOGEN2_predicted_clean",
+    tool_name = "DEOGEN2"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "PrimateAI_predicted_clean",
+    tool_name = "PrimateAI"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "ClinPred_predicted_clean",
+    tool_name = "ClinPred"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "MetaSVM_predicted_clean",
+    tool_name = "MetaSVM"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "MetaLR_predicted_clean",
+    tool_name = "MetaLR"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "MetaRNN_predicted_clean",
+    tool_name = "MetaRNN"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "BayesDel_addAF_predicted_clean",
+    tool_name = "BayesDel addAF"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "BayesDel_noAF_predicted_clean",
+    tool_name = "BayesDel noAF"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "LIST_S2_predicted_clean",
+    tool_name = "LIST-S2"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "AlphaMissense_predicted_clean",
+    tool_name = "AlphaMissense"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "EVE_predicted_clean",
+    tool_name = "EVE"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "ESM1b_predicted_clean",
+    tool_name = "ESM1b"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "popEVE_predicted_clean",
+    tool_name = "popEVE"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "CADD_predicted_clean",
+    tool_name = "CADD"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "DANN_predicted_clean",
+    tool_name = "DANN"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "Eigen_PC_predicted_clean",
+    tool_name = "Eigen-PC"
+  )
+) %>%
+
+  # Keep valid MCC values above missing MCC values
+  dplyr::arrange(
+    is.na(mcc),
+    dplyr::desc(mcc)
+  )
+
+
+# =============================================================================
+# Validate the final summary
+# =============================================================================
+
+if (nrow(binary_tool_performance_summary) == 0) {
+  stop(
+    "The binary tool performance summary was created but contains no rows."
+  )
+}
+
+if (nrow(binary_tool_performance_summary) != 22) {
+  warning(
+    "Expected 22 tools, but the summary contains ",
+    nrow(binary_tool_performance_summary),
+    " rows."
+  )
+}
+
+required_metric_columns <- c(
+  "tool",
+  "prediction_column",
+  "total_eligible_binary_variants",
+  "n_evaluated",
+  "variants_not_evaluated",
+  "true_positive",
+  "true_negative",
+  "false_positive",
+  "false_negative",
+  "accuracy",
+  "sensitivity",
+  "specificity",
+  "ppv",
+  "npv",
+  "balanced_accuracy",
+  "mcc",
+  "LR_positive",
+  "LR_negative"
+)
+
+missing_metric_columns <- setdiff(
+  required_metric_columns,
+  names(binary_tool_performance_summary)
+)
+
+if (length(missing_metric_columns) > 0) {
+  stop(
+    "The performance summary is missing these metric columns:\n",
+    paste(
+      missing_metric_columns,
+      collapse = "\n"
+    )
+  )
+}
+
+
+# =============================================================================
+# Display results
+# =============================================================================
+
+cat(
+  "Binary tool performance summary created successfully.\n",
+  "Tools evaluated:",
+  nrow(binary_tool_performance_summary),
+  "\n"
+)
+
+print(
+  binary_tool_performance_summary,
+  n = Inf,
+  width = Inf
+)
 ```
+
+
+
+
+
+
 
 
 ```{r save-binary-tool-performance-summary}
 readr::write_csv(
   binary_tool_performance_summary,
-  file.path(output_directory, "binary_tool_performance_summary.csv"))
+  file.path(
+    tables_directory,
+    "binary_tool_performance_summary.csv"
+  ))
 ```
+
+
+
 
 ## fixing od CADD and polyphen2 missing figures
 ```{r regenerate-binary-performance-summary-after-polyphen-fix}
 binary_performance_summary_with_coverage <- binary_tool_performance_summary %>%
   mutate(
     percent_binary_variants_evaluated = round(
-      total_variants_evaluated / total_eligible_binary_variants * 100,
+      n_evaluated / total_eligible_binary_variants * 100,
       1
     )
   ) %>%
@@ -4047,7 +5547,7 @@ binary_performance_summary_with_coverage %>%
   select(
     tool,
     total_eligible_binary_variants,
-    total_variants_evaluated,
+    n_evaluated,
     percent_binary_variants_evaluated,
     accuracy,
     sensitivity,
@@ -4066,41 +5566,7 @@ readr::write_csv(
 
 
 
-
-
-```{r create-binary-performance-summary-with-coverage}
-binary_performance_summary_with_coverage <- binary_tool_performance_summary %>%
-  mutate(
-    percent_binary_variants_evaluated = round(
-      total_variants_evaluated / total_eligible_binary_variants * 100,
-      1
-    )
-  ) %>%
-  arrange(desc(mcc))
-
-binary_performance_summary_with_coverage %>%
-  select(
-    tool,
-    total_eligible_binary_variants,
-    total_variants_evaluated,
-    percent_binary_variants_evaluated,
-    accuracy,
-    sensitivity,
-    specificity,
-    balanced_accuracy,
-    mcc,
-    LR_positive,
-    LR_negative
-  ) %>%
-  print(n = Inf, width = Inf)
-```  
   
-
-```{r save-binary-performance-summary-with-coverage}
-readr::write_csv(
-  binary_performance_summary_with_coverage,
-  file.path(output_directory, "binary_performance_summary_with_coverage.csv"))
-``` 
 
 
 
@@ -4108,7 +5574,7 @@ readr::write_csv(
 ```{r create-top-performing-binary-tools}
 top_performing_binary_tools <- binary_performance_summary_with_coverage %>%
   filter(
-    total_variants_evaluated >= 100
+    n_evaluated >= 100
   ) %>%
   arrange(desc(mcc)) %>%
   slice_head(n = 10)
@@ -4123,159 +5589,7 @@ readr::write_csv(
   file.path(output_directory, "top_performing_binary_tools.csv"))
 ```  
 
-## missense only binary performance analysis
 
-## create a missense only bnary dataset
-
-```{r create-missense-binary-performance-dataset}
-MISSENSE_BINARY_PERFORMANCE_DATASET <- BINARY_PERFORMANCE_DATASET %>%
-  mutate(
-    effect_function_lower = stringr::str_to_lower(Effect_function),
-    is_missense_variant = stringr::str_detect(effect_function_lower, "missense")
-  ) %>%
-  filter(is_missense_variant)
-
-MISSENSE_BINARY_PERFORMANCE_DATASET %>%
-  summarise(
-    total_missense_binary_variants = n(),
-    pathogenic_reference = sum(observed_binary == "Pathogenic", na.rm = TRUE),
-    benign_reference = sum(observed_binary == "Benign", na.rm = TRUE)
-  )
-```
-
-
-
-## recreate binary performance Dataset
-
-```{r recreate-locked-missense-binary-dataset-468, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# RECREATE LOCKED CORRECTED MISSENSE BINARY DATASET
-# ============================================================
-# This chunk recreates the agreed missense binary cohort from
-# BINARY_PERFORMANCE_DATASET.
-#
-# Expected agreed cohort:
-# 468 binary missense variants
-# ============================================================
-
-cat("\n==============================\n")
-cat("RECREATE LOCKED MISSENSE BINARY DATASET\n")
-cat("==============================\n\n")
-
-# Recreate observed_binary safely if missing
-if (!"observed_binary" %in% names(BINARY_PERFORMANCE_DATASET)) {
-  BINARY_PERFORMANCE_DATASET <- BINARY_PERFORMANCE_DATASET %>%
-    mutate(
-      observed_binary = dplyr::case_when(
-        Observed_pathogenicity %in% c(
-          "Pathogenic",
-          "Likely pathogenic",
-          "Pathogenic/Likely pathogenic",
-          "P/LP",
-          "P",
-          "LP"
-        ) ~ "Pathogenic",
-        
-        Observed_pathogenicity %in% c(
-          "Benign",
-          "Likely benign",
-          "Benign/Likely benign",
-          "B/LB",
-          "B",
-          "LB"
-        ) ~ "Benign",
-        
-        TRUE ~ NA_character_
-      )
-    )
-}
-
-# Recreate corrected missense flags directly from Effect_function and Consequence
-BINARY_PERFORMANCE_DATASET <- BINARY_PERFORMANCE_DATASET %>%
-  mutate(
-    effect_function_lower = stringr::str_to_lower(as.character(Effect_function)),
-    consequence_lower = stringr::str_to_lower(as.character(Consequence)),
-    
-    variant_group_missense = !is.na(effect_function_lower) &
-      !is.na(consequence_lower) &
-      stringr::str_detect(effect_function_lower, "missense") &
-      !stringr::str_detect(
-        consequence_lower,
-        "intron|utr|upstream|downstream|non_coding|regulatory|promoter"
-      ),
-    
-    variant_group_missense_splice_overlap = variant_group_missense &
-      stringr::str_detect(effect_function_lower, "splice"),
-    
-    variant_group_pure_missense = variant_group_missense &
-      !variant_group_missense_splice_overlap
-  )
-
-# Create locked corrected missense binary dataset
-MISSENSE_BINARY_PERFORMANCE_DATASET <- BINARY_PERFORMANCE_DATASET %>%
-  filter(
-    observed_binary %in% c("Pathogenic", "Benign"),
-    variant_group_missense == TRUE
-  )
-
-cat("Rows in BINARY_PERFORMANCE_DATASET:", nrow(BINARY_PERFORMANCE_DATASET), "\n")
-cat("Rows in locked MISSENSE_BINARY_PERFORMANCE_DATASET:", nrow(MISSENSE_BINARY_PERFORMANCE_DATASET), "\n\n")
-
-cat("Observed binary counts:\n")
-print(
-  MISSENSE_BINARY_PERFORMANCE_DATASET %>%
-    count(observed_binary, name = "n")
-)
-
-cat("\nObserved_pathogenicity counts:\n")
-print(
-  MISSENSE_BINARY_PERFORMANCE_DATASET %>%
-    count(Observed_pathogenicity, observed_binary, name = "n") %>%
-    arrange(observed_binary, Observed_pathogenicity),
-  n = Inf
-)
-
-cat("\nMissense subtype counts:\n")
-print(
-  MISSENSE_BINARY_PERFORMANCE_DATASET %>%
-    summarise(
-      total_missense_binary = n(),
-      pure_missense = sum(variant_group_pure_missense, na.rm = TRUE),
-      missense_splice_overlap = sum(variant_group_missense_splice_overlap, na.rm = TRUE)
-    )
-)
-
-cat("\nConsequence counts in locked missense binary dataset:\n")
-print(
-  MISSENSE_BINARY_PERFORMANCE_DATASET %>%
-    count(Consequence, name = "n") %>%
-    arrange(desc(n)),
-  n = Inf
-)
-
-cat("\nEffect_function counts in locked missense binary dataset:\n")
-print(
-  MISSENSE_BINARY_PERFORMANCE_DATASET %>%
-    count(Effect_function, name = "n") %>%
-    arrange(desc(n)),
-  n = Inf
-)
-
-readr::write_csv(
-  MISSENSE_BINARY_PERFORMANCE_DATASET,
-  file.path(output_directory, "locked_missense_binary_performance_dataset.csv")
-)
-
-cat("\nSaved: locked_missense_binary_performance_dataset.csv\n")
-cat("==============================\n")
-```
-
-cat(
-  "\nConclusion: The agreed corrected missense binary cohort contains 468 variants ",
-  "(351 P/LP and 117 B/LB). The previous 511 count was caused by using a broader ",
-  "or non-locked missense object. The locked cohort will be used for all final ",
-  "missense-only performance analyses.\n"
-)
 
 
 ```{r create-binary-prediction-tool-map}
@@ -4315,77 +5629,98 @@ binary_prediction_tool_map_available %>%
 ```
 
 
+```{r create-missense-binary-performance-dataset}
 
-## recalculating missense performance dataset using the locked dataset
-```{r recalculate-locked-missense-binary-performance, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# RECALCULATE MISSENSE-ONLY PERFORMANCE USING LOCKED 468 DATASET
-# ============================================================
-
-missense_binary_tool_performance_summary <- purrr::map2_dfr(
-  binary_prediction_tool_map_available$prediction_column,
-  binary_prediction_tool_map_available$tool,
-  ~ calculate_binary_tool_performance(
-    data = MISSENSE_BINARY_PERFORMANCE_DATASET,
-    observed_col = "observed_binary",
-    predicted_col = .x,
-    tool_name = .y
+if (!exists("BINARY_PERFORMANCE_DATASET")) {
+  stop(
+    "BINARY_PERFORMANCE_DATASET does not exist. ",
+    "Run the binary performance dataset chunk first."
   )
-)
+}
 
-missense_binary_performance_summary_with_coverage <- missense_binary_tool_performance_summary %>%
-  mutate(
-    missense_binary_cohort_n = nrow(MISSENSE_BINARY_PERFORMANCE_DATASET),
-    coverage_percent = round(
-      total_variants_evaluated / missense_binary_cohort_n * 100,
-      1
-    )
+if (!"Effect_function" %in%
+    names(BINARY_PERFORMANCE_DATASET)) {
+  stop(
+    "Effect_function is missing from ",
+    "BINARY_PERFORMANCE_DATASET."
+  )
+}
+
+MISSENSE_BINARY_PERFORMANCE_DATASET <-
+  BINARY_PERFORMANCE_DATASET %>%
+  dplyr::mutate(
+    effect_function_lower =
+      stringr::str_to_lower(Effect_function)
   ) %>%
-  arrange(desc(mcc))
+  dplyr::filter(
+    stringr::str_detect(
+      effect_function_lower,
+      "missense"
+    )
+  )
 
-missense_binary_performance_summary_with_coverage %>%
-  print(n = Inf, width = Inf)
+if (nrow(MISSENSE_BINARY_PERFORMANCE_DATASET) == 0) {
+  stop(
+    "No missense variants were found in ",
+    "BINARY_PERFORMANCE_DATASET."
+  )
+}
 
-readr::write_csv(
-  missense_binary_performance_summary_with_coverage,
-  file.path(output_directory, "missense_binary_performance_summary_with_coverage.csv")
-)
-
-cat("\nSaved: missense_binary_performance_summary_with_coverage.csv\n")
+MISSENSE_BINARY_PERFORMANCE_DATASET %>%
+  dplyr::summarise(
+    total_missense_binary_variants = dplyr::n(),
+    pathogenic_reference = sum(
+      observed_binary == "Pathogenic",
+      na.rm = TRUE
+    ),
+    benign_reference = sum(
+      observed_binary == "Benign",
+      na.rm = TRUE
+    ))
 ```
 
 
-##calculate missense only binary performance
+
+##calculate missense only bianary performance
 
 ```{r calculate-corrected-missense-only-binary-performance}
-# Create missense-specific available tool map immediately before using it
-missense_binary_prediction_tool_map_available <- binary_prediction_tool_map %>%
-  filter(
-    prediction_column %in% names(MISSENSE_BINARY_PERFORMANCE_DATASET)
+
+if (!exists("MISSENSE_BINARY_PERFORMANCE_DATASET")) {
+  stop(
+    "MISSENSE_BINARY_PERFORMANCE_DATASET does not exist."
+  )
+}
+
+available_missense_tool_map <-
+  binary_prediction_tool_map %>%
+  dplyr::filter(
+    prediction_column %in%
+      names(MISSENSE_BINARY_PERFORMANCE_DATASET)
   )
 
-missense_binary_prediction_tool_map_available %>%
-  print(n = Inf, width = Inf)
-
-# Calculate corrected missense-only binary performance
-missense_binary_tool_performance_summary <- purrr::map2_dfr(
-  missense_binary_prediction_tool_map_available$prediction_column,
-  missense_binary_prediction_tool_map_available$tool,
-  ~ calculate_binary_tool_performance(
-    data = MISSENSE_BINARY_PERFORMANCE_DATASET,
-    observed_col = "observed_binary",
-    predicted_col = .x,
-    tool_name = .y
+missense_binary_tool_performance_summary <-
+  purrr::map2_dfr(
+    available_missense_tool_map$tool,
+    available_missense_tool_map$prediction_column,
+    ~ calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = .y,
+      tool_name = .x
+    )
+  ) %>%
+  dplyr::arrange(
+    is.na(mcc),
+    dplyr::desc(mcc),
+    dplyr::desc(n_evaluated)
   )
-) %>%
-  arrange(desc(mcc))
 
-missense_binary_tool_performance_summary %>%
-  print(n = Inf, width = Inf)
+missense_binary_tool_performance_summary
 ```
 
 
-##adding coverage and interpretation
+
+  
 
 
 ## Chunk 3: Add coverage and interpretation notes
@@ -4393,7 +5728,7 @@ missense_binary_tool_performance_summary %>%
 missense_binary_performance_summary_with_coverage <- missense_binary_tool_performance_summary %>%
   mutate(
     percent_missense_binary_variants_evaluated = round(
-      total_variants_evaluated / total_eligible_binary_variants * 100,
+      n_evaluated / total_eligible_binary_variants * 100,
       1
     )
   ) %>%
@@ -4403,7 +5738,7 @@ missense_binary_performance_summary_with_coverage %>%
   select(
     tool,
     total_eligible_binary_variants,
-    total_variants_evaluated,
+    n_evaluated,
     percent_missense_binary_variants_evaluated,
     accuracy,
     sensitivity,
@@ -4419,7 +5754,7 @@ missense_binary_performance_summary_with_coverage %>%
 ```{r create-corrected-top-performing-missense-tools}
 top_performing_missense_tools <- missense_binary_performance_summary_with_coverage %>%
   filter(
-    total_variants_evaluated >= 50,
+    n_evaluated >= 50,
     !is.na(mcc)
   ) %>%
   arrange(desc(mcc)) %>%
@@ -4429,7 +5764,7 @@ top_performing_missense_tools %>%
   select(
     tool,
     total_eligible_binary_variants,
-    total_variants_evaluated,
+    n_evaluated,
     percent_missense_binary_variants_evaluated,
     accuracy,
     sensitivity,
@@ -4502,7 +5837,7 @@ common_missense_subset_performance %>%
   select(
     tool,
     total_eligible_binary_variants,
-    total_variants_evaluated,
+    n_evaluated,
     accuracy,
     sensitivity,
     specificity,
@@ -4582,7 +5917,7 @@ readr::write_csv(
 whole_dataset_summary_for_comparison <- binary_performance_summary_with_coverage %>%
   select(
     tool,
-    whole_n_evaluated = total_variants_evaluated,
+    whole_n_evaluated = n_evaluated,
     whole_coverage_percent = percent_binary_variants_evaluated,
     whole_accuracy = accuracy,
     whole_sensitivity = sensitivity,
@@ -4594,7 +5929,7 @@ whole_dataset_summary_for_comparison <- binary_performance_summary_with_coverage
 missense_summary_for_comparison <- missense_binary_performance_summary_with_coverage %>%
   select(
     tool,
-    missense_n_evaluated = total_variants_evaluated,
+    missense_n_evaluated = n_evaluated,
     missense_coverage_percent = percent_missense_binary_variants_evaluated,
     missense_accuracy = accuracy,
     missense_sensitivity = sensitivity,
@@ -4606,7 +5941,7 @@ missense_summary_for_comparison <- missense_binary_performance_summary_with_cove
 common_subset_summary_for_comparison <- common_missense_subset_performance %>%
   select(
     tool,
-    common_subset_n_evaluated = total_variants_evaluated,
+    common_subset_n_evaluated = n_evaluated,
     common_subset_accuracy = accuracy,
     common_subset_sensitivity = sensitivity,
     common_subset_specificity = specificity,
@@ -4643,7 +5978,7 @@ readr::write_csv(
 whole_vs_missense_performance_comparison <- binary_performance_summary_with_coverage %>%
   select(
     tool,
-    whole_dataset_evaluated = total_variants_evaluated,
+    whole_dataset_evaluated = n_evaluated,
     whole_dataset_mcc = mcc,
     whole_dataset_balanced_accuracy = balanced_accuracy,
     whole_dataset_sensitivity = sensitivity,
@@ -4653,7 +5988,7 @@ whole_vs_missense_performance_comparison <- binary_performance_summary_with_cove
     missense_binary_performance_summary_with_coverage %>%
       select(
         tool,
-        missense_evaluated = total_variants_evaluated,
+        missense_evaluated = n_evaluated,
         missense_mcc = mcc,
         missense_balanced_accuracy = balanced_accuracy,
         missense_sensitivity = sensitivity,
@@ -4681,7 +6016,7 @@ whole_vs_missense_performance_comparison %>%
 ```{r create-top-performing-missense-tools}
 top_performing_missense_tools <- missense_binary_performance_summary_with_coverage %>%
   filter(
-    total_variants_evaluated >= 50,
+    n_evaluated >= 50,
     !is.na(mcc)
   ) %>%
   arrange(desc(mcc)) %>%
@@ -5580,124 +6915,742 @@ readr::write_csv(
 )
 ```
 
-```{r define-safe-binary-performance-function}
-safe_divide <- function(numerator, denominator) {
-  ifelse(denominator == 0, NA_real_, numerator / denominator)
-}
-
-calculate_binary_tool_performance <- function(data, observed_col, predicted_col, tool_name) {
-  
-  performance_data <- data %>%
-    filter(
-      !is.na(.data[[observed_col]]),
-      !is.na(.data[[predicted_col]])
-    )
-  
-  TP <- sum(
-    performance_data[[observed_col]] == "Pathogenic" &
-      performance_data[[predicted_col]] == "Pathogenic",
-    na.rm = TRUE
-  )
-  
-  TN <- sum(
-    performance_data[[observed_col]] == "Benign" &
-      performance_data[[predicted_col]] == "Benign",
-    na.rm = TRUE
-  )
-  
-  FP <- sum(
-    performance_data[[observed_col]] == "Benign" &
-      performance_data[[predicted_col]] == "Pathogenic",
-    na.rm = TRUE
-  )
-  
-  FN <- sum(
-    performance_data[[observed_col]] == "Pathogenic" &
-      performance_data[[predicted_col]] == "Benign",
-    na.rm = TRUE
-  )
-  
-  n_evaluated <- TP + TN + FP + FN
-  
-  sensitivity <- safe_divide(TP, TP + FN)
-  specificity <- safe_divide(TN, TN + FP)
-  
-  mcc_denominator <- sqrt(
-    as.numeric(TP + FP) *
-      as.numeric(TP + FN) *
-      as.numeric(TN + FP) *
-      as.numeric(TN + FN)
-  )
-  
-  mcc <- safe_divide(
-    as.numeric((TP * TN) - (FP * FN)),
-    mcc_denominator
-  )
-  
-  LR_positive <- safe_divide(sensitivity, 1 - specificity)
-  LR_negative <- safe_divide(1 - sensitivity, specificity)
-  
-  tibble::tibble(
-    tool = tool_name,
-    prediction_column = predicted_col,
-    total_eligible_binary_variants = nrow(data),
-    total_variants_evaluated = n_evaluated,
-    variants_not_evaluated = nrow(data) - n_evaluated,
-    true_positive = TP,
-    true_negative = TN,
-    false_positive = FP,
-    false_negative = FN,
-    accuracy = round(safe_divide(TP + TN, n_evaluated), 3),
-    sensitivity = round(sensitivity, 3),
-    specificity = round(specificity, 3),
-    ppv = round(safe_divide(TP, TP + FP), 3),
-    npv = round(safe_divide(TN, TN + FN), 3),
-    balanced_accuracy = round(
-      ifelse(
-        is.na(sensitivity) | is.na(specificity),
-        NA_real_,
-        mean(c(sensitivity, specificity), na.rm = TRUE)
-      ),
-      3
-    ),
-    mcc = round(mcc, 3),
-    LR_positive = round(LR_positive, 3),
-    LR_negative = round(LR_negative, 3)
-  )
-}
-```
-   
-  
-  
-  
-    
-    
-    
-
-
 
 ```{r check-binary-performance-function}
 args(calculate_binary_tool_performance)
 ```
 
+## Binary performance analysis
 
-## calculate binary tool perfromance
-```{r calculate-clean-binary-tool-performance}
-binary_tool_performance_summary <- purrr::map2_dfr(
-  binary_prediction_tool_map_available$prediction_column,
-  binary_prediction_tool_map_available$tool,
-  ~ calculate_binary_tool_performance(
+
+
+```{r create-binary-tool-performance-summary}
+
+binary_tool_performance_summary <- dplyr::bind_rows(
+
+  calculate_binary_tool_performance(
     data = BINARY_PERFORMANCE_DATASET,
     observed_col = "observed_binary",
-    predicted_col = .x,
-    tool_name = .y
+    predicted_col = "SIFT_predicted_clean",
+    tool_name = "SIFT"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "PolyPhen_predicted_clean",
+    tool_name = "PolyPhen-2"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "PROVEAN_predicted_clean",
+    tool_name = "PROVEAN"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "MutationTaster_predicted_clean",
+    tool_name = "MutationTaster"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "MutationAssessor_predicted_clean",
+    tool_name = "MutationAssessor"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "MutPred2_predicted_clean",
+    tool_name = "MutPred2"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "DEOGEN2_predicted_clean",
+    tool_name = "DEOGEN2"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "PrimateAI_predicted_clean",
+    tool_name = "PrimateAI"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "ClinPred_predicted_clean",
+    tool_name = "ClinPred"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "MetaSVM_predicted_clean",
+    tool_name = "MetaSVM"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "MetaLR_predicted_clean",
+    tool_name = "MetaLR"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "MetaRNN_predicted_clean",
+    tool_name = "MetaRNN"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "BayesDel_addAF_predicted_clean",
+    tool_name = "BayesDel addAF"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "BayesDel_noAF_predicted_clean",
+    tool_name = "BayesDel noAF"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "LIST_S2_predicted_clean",
+    tool_name = "LIST-S2"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "AlphaMissense_predicted_clean",
+    tool_name = "AlphaMissense"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "EVE_predicted_clean",
+    tool_name = "EVE"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "ESM1b_predicted_clean",
+    tool_name = "ESM1b"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "popEVE_predicted_clean",
+    tool_name = "popEVE"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "CADD_predicted_clean",
+    tool_name = "CADD"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "DANN_predicted_clean",
+    tool_name = "DANN"
+  ),
+
+  calculate_binary_tool_performance(
+    data = BINARY_PERFORMANCE_DATASET,
+    observed_col = "observed_binary",
+    predicted_col = "Eigen_PC_predicted_clean",
+    tool_name = "Eigen-PC"
   )
 ) %>%
-  arrange(desc(mcc))
+  dplyr::arrange(
+    is.na(mcc),
+    dplyr::desc(mcc),
+    dplyr::desc(n_evaluated)
+  )
 
-binary_tool_performance_summary %>%
-  print(n = Inf, width = Inf)
+if (nrow(binary_tool_performance_summary) != 22) {
+  stop(
+    "Expected 22 tools, but found ",
+    nrow(binary_tool_performance_summary),
+    "."
+  )
+}
+
+print(
+  binary_tool_performance_summary,
+  n = Inf,
+  width = Inf
+)
 ```
+
+```{r create-binary-performance-summary-with-coverage}
+
+binary_performance_summary_with_coverage <-
+  binary_tool_performance_summary %>%
+  dplyr::mutate(
+    percent_binary_variants_evaluated = round(
+      n_evaluated /
+        total_eligible_binary_variants *
+        100,
+      1
+    )
+  ) %>%
+  dplyr::arrange(
+    is.na(mcc),
+    dplyr::desc(mcc),
+    dplyr::desc(n_evaluated)
+  )
+
+print(
+  binary_performance_summary_with_coverage,
+  n = Inf,
+  width = Inf
+)
+```
+
+
+
+```{r display-binary-performance-summary}
+
+binary_performance_summary_with_coverage %>%
+  dplyr::select(
+    tool,
+    total_eligible_binary_variants,
+    n_evaluated,
+    percent_binary_variants_evaluated,
+    accuracy,
+    sensitivity,
+    specificity,
+    balanced_accuracy,
+    mcc,
+    LR_positive,
+    LR_negative
+  ) %>%
+  print(
+    n = Inf,
+    width = Inf
+  )
+```
+
+
+
+```{r save-binary-performance-summary-with-coverage}
+
+if (!exists("binary_performance_summary_with_coverage")) {
+  stop(
+    "binary_performance_summary_with_coverage does not exist. ",
+    "Run the coverage-summary chunk first."
+  )
+}
+
+dir.create(
+  tables_directory,
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+binary_performance_output_file <- file.path(
+  tables_directory,
+  "binary_performance_summary_with_coverage.csv"
+)
+
+readr::write_csv(
+  binary_performance_summary_with_coverage,
+  binary_performance_output_file
+)
+
+if (!file.exists(binary_performance_output_file)) {
+  stop(
+    "The binary performance summary was not saved."
+  )
+}
+
+cat(
+  "Binary performance summary saved to:\n",
+  binary_performance_output_file,
+  "\n")
+```
+
+
+```{r validate-binary-performance-summary}
+
+required_binary_columns <- c(
+  "tool",
+  "prediction_column",
+  "total_eligible_binary_variants",
+  "n_evaluated",
+  "variants_not_evaluated",
+  "true_positive",
+  "true_negative",
+  "false_positive",
+  "false_negative",
+  "accuracy",
+  "sensitivity",
+  "specificity",
+  "ppv",
+  "npv",
+  "balanced_accuracy",
+  "mcc",
+  "LR_positive",
+  "LR_negative",
+  "percent_binary_variants_evaluated"
+)
+
+missing_binary_columns <- setdiff(
+  required_binary_columns,
+  names(binary_performance_summary_with_coverage)
+)
+
+if (length(missing_binary_columns) > 0) {
+  stop(
+    "The binary performance summary is missing: ",
+    paste(
+      missing_binary_columns,
+      collapse = ", "
+    )
+  )
+}
+
+stopifnot(
+  exists("binary_performance_summary_with_coverage"),
+  nrow(binary_performance_summary_with_coverage) == 22
+)
+
+cat(
+  "Binary performance summary validated successfully.\n"
+)
+```
+
+```{r save-binary-performance-summary}
+
+dir.create(
+  tables_directory,
+  recursive = TRUE,
+  showWarnings = FALSE
+)
+
+binary_performance_output_file <- file.path(
+  tables_directory,
+  "binary_tool_performance_summary_with_coverage.csv"
+)
+
+readr::write_csv(
+  binary_performance_summary_with_coverage,
+  binary_performance_output_file
+)
+
+if (!file.exists(binary_performance_output_file)) {
+  stop(
+    "Binary performance summary was not saved."
+  )
+}
+
+cat(
+  "Binary performance summary saved to:\n",
+  binary_performance_output_file,
+  "\n"
+)
+```
+
+
+
+```{r validate-missense-prediction-columns}
+
+required_missense_prediction_columns <- c(
+  "SIFT_predicted_clean",
+  "PolyPhen_predicted_clean",
+  "PROVEAN_predicted_clean",
+  "MutationTaster_predicted_clean",
+  "MutationAssessor_predicted_clean",
+  "MutPred2_predicted_clean",
+  "DEOGEN2_predicted_clean",
+  "PrimateAI_predicted_clean",
+  "ClinPred_predicted_clean",
+  "MetaSVM_predicted_clean",
+  "MetaLR_predicted_clean",
+  "MetaRNN_predicted_clean",
+  "BayesDel_addAF_predicted_clean",
+  "BayesDel_noAF_predicted_clean",
+  "LIST_S2_predicted_clean",
+  "AlphaMissense_predicted_clean",
+  "EVE_predicted_clean",
+  "ESM1b_predicted_clean",
+  "popEVE_predicted_clean",
+  "CADD_predicted_clean",
+  "DANN_predicted_clean",
+  "Eigen_PC_predicted_clean"
+)
+
+missing_missense_prediction_columns <- setdiff(
+  required_missense_prediction_columns,
+  names(MISSENSE_BINARY_PERFORMANCE_DATASET)
+)
+
+if (length(missing_missense_prediction_columns) > 0) {
+  stop(
+    "Missing missense prediction columns: ",
+    paste(
+      missing_missense_prediction_columns,
+      collapse = ", "
+    )
+  )
+}
+
+cat(
+  "All required missense prediction columns are present.\n"
+)
+```
+
+```{r create-missense-binary-tool-performance-summary}
+
+missense_binary_tool_performance_summary <-
+  dplyr::bind_rows(
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "SIFT_predicted_clean",
+      tool_name = "SIFT"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "PolyPhen_predicted_clean",
+      tool_name = "PolyPhen-2"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "PROVEAN_predicted_clean",
+      tool_name = "PROVEAN"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "MutationTaster_predicted_clean",
+      tool_name = "MutationTaster"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "MutationAssessor_predicted_clean",
+      tool_name = "MutationAssessor"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "MutPred2_predicted_clean",
+      tool_name = "MutPred2"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "DEOGEN2_predicted_clean",
+      tool_name = "DEOGEN2"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "PrimateAI_predicted_clean",
+      tool_name = "PrimateAI"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "ClinPred_predicted_clean",
+      tool_name = "ClinPred"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "MetaSVM_predicted_clean",
+      tool_name = "MetaSVM"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "MetaLR_predicted_clean",
+      tool_name = "MetaLR"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "MetaRNN_predicted_clean",
+      tool_name = "MetaRNN"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "BayesDel_addAF_predicted_clean",
+      tool_name = "BayesDel addAF"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "BayesDel_noAF_predicted_clean",
+      tool_name = "BayesDel noAF"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "LIST_S2_predicted_clean",
+      tool_name = "LIST-S2"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "AlphaMissense_predicted_clean",
+      tool_name = "AlphaMissense"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "EVE_predicted_clean",
+      tool_name = "EVE"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "ESM1b_predicted_clean",
+      tool_name = "ESM1b"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "popEVE_predicted_clean",
+      tool_name = "popEVE"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "CADD_predicted_clean",
+      tool_name = "CADD"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "DANN_predicted_clean",
+      tool_name = "DANN"
+    ),
+
+    calculate_binary_tool_performance(
+      data = MISSENSE_BINARY_PERFORMANCE_DATASET,
+      observed_col = "observed_binary",
+      predicted_col = "Eigen_PC_predicted_clean",
+      tool_name = "Eigen-PC"
+    )
+  ) %>%
+  dplyr::arrange(
+    is.na(mcc),
+    dplyr::desc(mcc),
+    dplyr::desc(n_evaluated)
+  )
+
+if (nrow(missense_binary_tool_performance_summary) != 22) {
+  stop(
+    "Expected 22 missense tool results, but found ",
+    nrow(missense_binary_tool_performance_summary),
+    "."
+  )
+}
+
+print(
+  missense_binary_tool_performance_summary,
+  n = Inf,
+  width = Inf
+)
+```
+
+```{r create-missense-performance-summary-with-coverage}
+
+missense_binary_performance_summary_with_coverage <-
+  missense_binary_tool_performance_summary %>%
+  dplyr::mutate(
+    percent_missense_binary_variants_evaluated = round(
+      n_evaluated /
+        total_eligible_binary_variants *
+        100,
+      1
+    )
+  ) %>%
+  dplyr::arrange(
+    is.na(mcc),
+    dplyr::desc(mcc),
+    dplyr::desc(n_evaluated)
+  )
+
+print(
+  missense_binary_performance_summary_with_coverage,
+  n = Inf,
+  width = Inf
+)
+```
+
+```{r validate-missense-performance-summary}
+
+required_missense_metric_columns <- c(
+  "tool",
+  "prediction_column",
+  "total_eligible_binary_variants",
+  "n_evaluated",
+  "variants_not_evaluated",
+  "true_positive",
+  "true_negative",
+  "false_positive",
+  "false_negative",
+  "accuracy",
+  "sensitivity",
+  "specificity",
+  "ppv",
+  "npv",
+  "balanced_accuracy",
+  "mcc",
+  "LR_positive",
+  "LR_negative",
+  "percent_missense_binary_variants_evaluated"
+)
+
+missing_missense_metric_columns <- setdiff(
+  required_missense_metric_columns,
+  names(
+    missense_binary_performance_summary_with_coverage
+  )
+)
+
+if (length(missing_missense_metric_columns) > 0) {
+  stop(
+    "The missense summary is missing: ",
+    paste(
+      missing_missense_metric_columns,
+      collapse = ", "
+    )
+  )
+}
+
+stopifnot(
+  exists(
+    "missense_binary_performance_summary_with_coverage"
+  ),
+  nrow(
+    missense_binary_performance_summary_with_coverage
+  ) == 22
+)
+
+cat(
+  "Missense performance summary validated successfully.\n"
+)
+```
+
+```{r save-missense-performance-summary}
+
+missense_performance_output_file <- file.path(
+  tables_directory,
+  "missense_binary_tool_performance_summary_with_coverage.csv"
+)
+
+readr::write_csv(
+  missense_binary_performance_summary_with_coverage,
+  missense_performance_output_file
+)
+
+if (!file.exists(missense_performance_output_file)) {
+  stop(
+    "Missense performance summary was not saved."
+  )
+}
+
+cat(
+  "Missense performance summary saved to:\n",
+  missense_performance_output_file,
+  "\n"
+)
+```
+
+## Final binary-analysis checks
+
+```{r final-binary-analysis-checks}
+
+binary_analysis_checks <- tibble::tibble(
+  object = c(
+    "binary_tool_performance_summary",
+    "binary_performance_summary_with_coverage",
+    "MISSENSE_BINARY_PERFORMANCE_DATASET",
+    "missense_binary_tool_performance_summary",
+    "missense_binary_performance_summary_with_coverage"
+  ),
+  exists = c(
+    exists("binary_tool_performance_summary"),
+    exists(
+      "binary_performance_summary_with_coverage"
+    ),
+    exists(
+      "MISSENSE_BINARY_PERFORMANCE_DATASET"
+    ),
+    exists(
+      "missense_binary_tool_performance_summary"
+    ),
+    exists(
+      "missense_binary_performance_summary_with_coverage"
+    )
+  )
+)
+
+binary_analysis_checks
+
+if (!all(binary_analysis_checks$exists)) {
+  stop(
+    "One or more binary-analysis objects are missing."
+  )
+}
+
+cat(
+  "Full binary and missense-only analyses completed successfully.\n"
+)
+```
+
+
+
+
 
 
 ```{r save-clean-binary-tool-performance}
@@ -5713,30 +7666,7 @@ readr::write_csv(
 
 
 
-```{r fix-mcc-in-binary-performance-summary}
-binary_tool_performance_summary <- binary_tool_performance_summary %>%
-  mutate(
-    mcc_denominator = sqrt(
-      as.numeric(true_positive + false_positive) *
-        as.numeric(true_positive + false_negative) *
-        as.numeric(true_negative + false_positive) *
-        as.numeric(true_negative + false_negative)
-    ),
-    
-    mcc = round(
-      safe_divide(
-        as.numeric((true_positive * true_negative) - (false_positive * false_negative)),
-        mcc_denominator
-      ),
-      3
-    )
-  ) %>%
-  select(-mcc_denominator)
 
-binary_tool_performance_summary %>%
-  filter(tool == "CADD") %>%
-  print(width = Inf)
-```
 
 ```{r default-threshold-performance-for-thresholdable-tools}
 default_threshold_performance_for_thresholdable_tools <- binary_tool_performance_summary %>%
@@ -5762,7 +7692,7 @@ default_threshold_performance_for_thresholdable_tools <- binary_tool_performance
     score_direction,
     default_threshold,
     total_eligible_binary_variants,
-    total_variants_evaluated,
+    n_evaluated,
     variants_not_evaluated,
     accuracy,
     sensitivity,
@@ -6128,7 +8058,7 @@ optimise_threshold_for_tool <- function(data, tool_name, score_column, pathogeni
       score_column,
       pathogenic_score_direction,
       optimised_threshold,
-      total_variants_evaluated,
+      n_evaluated,
       accuracy,
       sensitivity,
       specificity,
@@ -6184,7 +8114,7 @@ optimised_thresholds_confirmed_tools_whole_dataset %>%
     score_column,
     pathogenic_score_direction,
     optimised_threshold,
-    total_variants_evaluated,
+    n_evaluated,
     accuracy,
     sensitivity,
     specificity,
@@ -6271,7 +8201,7 @@ calculate_threshold_performance <- function(data, observed_col, score_col, thres
     score_column = score_col,
     threshold = threshold,
     direction = direction,
-    total_variants_evaluated = n_evaluated,
+    n_evaluated = n_evaluated,
     true_positive = TP,
     true_negative = TN,
     false_positive = FP,
@@ -6318,7 +8248,7 @@ optimise_threshold_for_tool <- function(data, observed_col, score_col, direction
           tool_name = tool_name)}))
   
   threshold_results %>%
-    filter(total_variants_evaluated >= 50) %>%
+    filter(n_evaluated >= 50) %>%
     arrange(
       desc(mcc),
       desc(balanced_accuracy),
@@ -6364,7 +8294,7 @@ optimised_thresholds_all_tools_whole_dataset <- bind_rows(
     default_threshold,
     optimised_threshold = threshold,
     direction,
-    total_variants_evaluated,
+    n_evaluated,
     accuracy,
     sensitivity,
     specificity,
@@ -6482,7 +8412,7 @@ default_vs_corrected_optimised_threshold_comparison <- binary_tool_performance_s
   select(
     tool,
     default_prediction_column = prediction_column,
-    default_n_evaluated = total_variants_evaluated,
+    default_n_evaluated = n_evaluated,
     default_accuracy = accuracy,
     default_sensitivity = sensitivity,
     default_specificity = specificity,
@@ -6496,7 +8426,7 @@ default_vs_corrected_optimised_threshold_comparison <- binary_tool_performance_s
         score_column,
         pathogenic_score_direction,
         optimised_threshold,
-        optimised_n_evaluated = total_variants_evaluated,
+        optimised_n_evaluated = n_evaluated,
         optimised_accuracy = accuracy,
         optimised_sensitivity = sensitivity,
         optimised_specificity = specificity,
@@ -6559,7 +8489,7 @@ optimised_thresholds_confirmed_tools_whole_dataset %>%
     score_column,
     pathogenic_score_direction,
     optimised_threshold,
-    total_variants_evaluated,
+    n_evaluated,
     accuracy,
     sensitivity,
     specificity,
@@ -7092,7 +9022,7 @@ default_vs_corrected_optimised_threshold_comparison <- binary_tool_performance_s
   select(
     tool,
     default_prediction_column = prediction_column,
-    default_n_evaluated = total_variants_evaluated,
+    default_n_evaluated = n_evaluated,
     default_accuracy = accuracy,
     default_sensitivity = sensitivity,
     default_specificity = specificity,
@@ -7106,7 +9036,7 @@ default_vs_corrected_optimised_threshold_comparison <- binary_tool_performance_s
         score_column,
         pathogenic_score_direction,
         optimised_threshold,
-        optimised_n_evaluated = total_variants_evaluated,
+        optimised_n_evaluated = n_evaluated,
         optimised_accuracy = accuracy,
         optimised_sensitivity = sensitivity,
         optimised_specificity = specificity,
@@ -7230,572 +9160,6 @@ binary_tool_performance_summary %>%
   print(n = Inf, width = Inf)
 ```
 
-## likelihood ratio analysis of AlphaMissense
-```{r lr-step-1-confirm-alphamissense-score-direction, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# STEP 1: CONFIRM ALPHAMISSENSE SCORE DIRECTION
-# ============================================================
-# AlphaMissense pathogenicity score is expected to be higher
-# for more pathogenic variants.
-# This chunk checks whether P/LP variants have higher scores
-# than B/LB variants in this dataset.
-# ============================================================
-
-score_col <- "am_pathogenicity_new"
-tool_name <- "AlphaMissense"
-score_direction <- "higher"
-
-ALPHAMISSENSE_DIRECTION_CHECK <- BINARY_PERFORMANCE_DATASET %>%
-  mutate(
-    score_numeric = clean_numeric_score(.data[[score_col]])
-  ) %>%
-  filter(
-    observed_binary %in% c("Pathogenic", "Benign"),
-    !is.na(score_numeric)
-  )
-
-cat("\n==============================\n")
-cat("STEP 1: SCORE DIRECTION CHECK\n")
-cat("==============================\n\n")
-
-cat("Tool:", tool_name, "\n")
-cat("Score column:", score_col, "\n")
-cat("Expected score direction: higher score = more pathogenic\n\n")
-
-cat("Number of binary variants with AlphaMissense score:\n")
-print(
-  ALPHAMISSENSE_DIRECTION_CHECK %>%
-    count(observed_binary, name = "n")
-)
-
-alphamissense_score_direction_summary <- ALPHAMISSENSE_DIRECTION_CHECK %>%
-  group_by(observed_binary) %>%
-  summarise(
-    n = n(),
-    min_score = min(score_numeric, na.rm = TRUE),
-    q1_score = quantile(score_numeric, 0.25, na.rm = TRUE),
-    median_score = median(score_numeric, na.rm = TRUE),
-    mean_score = mean(score_numeric, na.rm = TRUE),
-    q3_score = quantile(score_numeric, 0.75, na.rm = TRUE),
-    max_score = max(score_numeric, na.rm = TRUE),
-    .groups = "drop"
-  )
-
-cat("\nAlphaMissense score summary by observed clinical group:\n")
-print(alphamissense_score_direction_summary, width = Inf)
-
-benign_median <- alphamissense_score_direction_summary %>%
-  filter(observed_binary == "Benign") %>%
-  pull(median_score)
-
-pathogenic_median <- alphamissense_score_direction_summary %>%
-  filter(observed_binary == "Pathogenic") %>%
-  pull(median_score)
-
-cat("\nDirection check conclusion:\n")
-
-if (length(benign_median) == 1 && length(pathogenic_median) == 1) {
-  if (pathogenic_median > benign_median) {
-    cat("Confirmed: P/LP variants have a higher median AlphaMissense score than B/LB variants.\n")
-    cat("Use score_direction = 'higher' for LR threshold analysis.\n")
-  } else {
-    cat("Warning: P/LP variants do not have a higher median AlphaMissense score than B/LB variants.\n")
-    cat("Check the score column and direction before continuing.\n")
-  }
-}
-
-readr::write_csv(
-  alphamissense_score_direction_summary,
-  file.path(output_directory, "alphamissense_score_direction_summary.csv")
-)
-```
-
-
-## preparation of AlphaMissense LR dataset
-```{r lr-step-2-prepare-alphamissense-dataset, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# STEP 2: PREPARE ALPHAMISSENSE LR DATASET
-# ============================================================
-# Use only P/LP and B/LB variants with available continuous score.
-# VUS are excluded.
-# ============================================================
-
-score_col <- "am_pathogenicity_new"
-tool_name <- "AlphaMissense"
-score_direction <- "higher"
-
-ALPHAMISSENSE_LR_DATASET <- BINARY_PERFORMANCE_DATASET %>%
-  mutate(
-    score_numeric = clean_numeric_score(.data[[score_col]])
-  ) %>%
-  filter(
-    observed_binary %in% c("Pathogenic", "Benign"),
-    !is.na(score_numeric)
-  ) %>%
-  select(
-    any_of(c(
-      "HGVS",
-      "HGVS_transcript",
-      "Gene",
-      "SYMBOL",
-      "Observed_pathogenicity",
-      "observed_binary",
-      score_col
-    )),
-    score_numeric
-  )
-
-cat("\n==============================\n")
-cat("STEP 2: LR DATASET PREPARATION\n")
-cat("==============================\n\n")
-
-cat("Tool:", tool_name, "\n")
-cat("Score column:", score_col, "\n")
-cat("Score direction:", score_direction, "\n")
-cat("Number of binary variants with available score:", nrow(ALPHAMISSENSE_LR_DATASET), "\n\n")
-
-cat("Observed binary counts:\n")
-print(
-  ALPHAMISSENSE_LR_DATASET %>%
-    count(observed_binary, name = "n")
-)
-
-cat("\nScore range:\n")
-print(
-  ALPHAMISSENSE_LR_DATASET %>%
-    summarise(
-      min_score = min(score_numeric, na.rm = TRUE),
-      max_score = max(score_numeric, na.rm = TRUE),
-      median_score = median(score_numeric, na.rm = TRUE),
-      mean_score = mean(score_numeric, na.rm = TRUE)
-    )
-)
-
-readr::write_csv(
-  ALPHAMISSENSE_LR_DATASET,
-  file.path(output_directory, "alphamissense_lr_dataset.csv")
-)
-```
-
-
-## definition of LR+/LR- calculation function
-
-```{r lr-step-3-define-lr-functions, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# STEP 3: DEFINE LR+/LR- THRESHOLD FUNCTION
-# ============================================================
-# Calculates TP, TN, FP, FN, sensitivity, specificity,
-# LR+, LR-, and approximate 95% CIs.
-#
-# A Haldane-Anscombe correction (+0.5 to each cell) is used
-# for CI stability when any confusion-matrix cell is small.
-# ============================================================
-
-calculate_lr_at_threshold <- function(data, threshold, score_direction = "higher") {
-  
-  threshold_data <- data %>%
-    mutate(
-      predicted_binary = dplyr::case_when(
-        score_direction == "higher" & score_numeric >= threshold ~ "Pathogenic",
-        score_direction == "higher" & score_numeric < threshold ~ "Benign",
-        score_direction == "lower" & score_numeric <= threshold ~ "Pathogenic",
-        score_direction == "lower" & score_numeric > threshold ~ "Benign",
-        TRUE ~ NA_character_
-      )
-    )
-  
-  TP <- sum(
-    threshold_data$observed_binary == "Pathogenic" &
-      threshold_data$predicted_binary == "Pathogenic",
-    na.rm = TRUE
-  )
-  
-  TN <- sum(
-    threshold_data$observed_binary == "Benign" &
-      threshold_data$predicted_binary == "Benign",
-    na.rm = TRUE
-  )
-  
-  FP <- sum(
-    threshold_data$observed_binary == "Benign" &
-      threshold_data$predicted_binary == "Pathogenic",
-    na.rm = TRUE
-  )
-  
-  FN <- sum(
-    threshold_data$observed_binary == "Pathogenic" &
-      threshold_data$predicted_binary == "Benign",
-    na.rm = TRUE
-  )
-  
-  TP <- as.numeric(TP)
-  TN <- as.numeric(TN)
-  FP <- as.numeric(FP)
-  FN <- as.numeric(FN)
-  
-  sensitivity <- TP / (TP + FN)
-  specificity <- TN / (TN + FP)
-  
-  LR_positive <- sensitivity / (1 - specificity)
-  LR_negative <- (1 - sensitivity) / specificity
-  
-  # Haldane-Anscombe correction for CI stability
-  TPc <- TP + 0.5
-  TNc <- TN + 0.5
-  FPc <- FP + 0.5
-  FNc <- FN + 0.5
-  
-  sensitivity_c <- TPc / (TPc + FNc)
-  specificity_c <- TNc / (TNc + FPc)
-  
-  LR_positive_c <- sensitivity_c / (1 - specificity_c)
-  LR_negative_c <- (1 - sensitivity_c) / specificity_c
-  
-  se_log_LR_positive <- sqrt(
-    (1 / TPc) -
-      (1 / (TPc + FNc)) +
-      (1 / FPc) -
-      (1 / (FPc + TNc))
-  )
-  
-  se_log_LR_negative <- sqrt(
-    (1 / FNc) -
-      (1 / (TPc + FNc)) +
-      (1 / TNc) -
-      (1 / (FPc + TNc))
-  )
-  
-  LR_positive_lower_95 <- exp(log(LR_positive_c) - 1.96 * se_log_LR_positive)
-  LR_positive_upper_95 <- exp(log(LR_positive_c) + 1.96 * se_log_LR_positive)
-  
-  LR_negative_lower_95 <- exp(log(LR_negative_c) - 1.96 * se_log_LR_negative)
-  LR_negative_upper_95 <- exp(log(LR_negative_c) + 1.96 * se_log_LR_negative)
-  
-  tibble::tibble(
-    threshold = threshold,
-    n_evaluated = nrow(data),
-    TP = TP,
-    TN = TN,
-    FP = FP,
-    FN = FN,
-    sensitivity = round(sensitivity, 3),
-    specificity = round(specificity, 3),
-    LR_positive = round(LR_positive, 3),
-    LR_positive_lower_95 = round(LR_positive_lower_95, 3),
-    LR_positive_upper_95 = round(LR_positive_upper_95, 3),
-    LR_negative = round(LR_negative, 3),
-    LR_negative_lower_95 = round(LR_negative_lower_95, 3),
-    LR_negative_upper_95 = round(LR_negative_upper_95, 3),
-    qualifies_pathogenic_LR = LR_positive_lower_95 >= 2.08,
-    qualifies_benign_LR = LR_negative_upper_95 <= 0.48
-  )
-}
-
-cat("LR threshold function created successfully.\n")
-```
-
-
-## initial threshold scan using 0.05
-```{r lr-step-4-alphamissense-initial-threshold-scan-0-05, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# STEP 4: INITIAL ALPHAMISSENSE LR THRESHOLD SCAN
-# ============================================================
-# Because AlphaMissense scores range from 0 to 1, thresholds are
-# initially tested using 0.05 increments.
-# ============================================================
-
-alphamissense_threshold_grid_initial <- seq(0, 1, by = 0.05)
-
-alphamissense_lr_threshold_table_initial <- purrr::map_dfr(
-  alphamissense_threshold_grid_initial,
-  ~ calculate_lr_at_threshold(
-    data = ALPHAMISSENSE_LR_DATASET,
-    threshold = .x,
-    score_direction = "higher"
-  )
-)
-
-cat("\n==============================\n")
-cat("STEP 4: INITIAL 0.05 LR THRESHOLD SCAN\n")
-cat("==============================\n\n")
-
-alphamissense_lr_threshold_table_initial %>%
-  print(n = Inf, width = Inf)
-
-readr::write_csv(
-  alphamissense_lr_threshold_table_initial,
-  file.path(output_directory, "alphamissense_lr_threshold_table_initial_0_05.csv")
-)
-```
-
-
-## identification of candidate pathogenic and benign thresholds
-```{r lr-step-5-identify-alphamissense-candidate-thresholds, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# STEP 5: IDENTIFY CANDIDATE LR THRESHOLDS
-# ============================================================
-# Pathogenic threshold:
-# lower 95% CI for LR+ >= 2.08
-#
-# Benign threshold:
-# upper 95% CI for LR- <= 0.48
-# ============================================================
-
-alphamissense_candidate_pathogenic_threshold_initial <- alphamissense_lr_threshold_table_initial %>%
-  filter(qualifies_pathogenic_LR == TRUE) %>%
-  arrange(threshold) %>%
-  slice_head(n = 1)
-
-alphamissense_candidate_benign_threshold_initial <- alphamissense_lr_threshold_table_initial %>%
-  filter(qualifies_benign_LR == TRUE) %>%
-  arrange(desc(threshold)) %>%
-  slice_head(n = 1)
-
-cat("\n==============================\n")
-cat("STEP 5: INITIAL CANDIDATE THRESHOLDS\n")
-cat("==============================\n\n")
-
-cat("Candidate pathogenic threshold, initial 0.05 scan:\n")
-print(alphamissense_candidate_pathogenic_threshold_initial, width = Inf)
-
-cat("\nCandidate benign threshold, initial 0.05 scan:\n")
-print(alphamissense_candidate_benign_threshold_initial, width = Inf)
-
-alphamissense_initial_candidate_thresholds <- dplyr::bind_rows(
-  alphamissense_candidate_pathogenic_threshold_initial %>%
-    mutate(candidate_type = "Pathogenic threshold: LR+ lower 95% CI >= 2.08"),
-  alphamissense_candidate_benign_threshold_initial %>%
-    mutate(candidate_type = "Benign threshold: LR- upper 95% CI <= 0.48")
-) %>%
-  select(candidate_type, everything())
-
-readr::write_csv(
-  alphamissense_initial_candidate_thresholds,
-  file.path(output_directory, "alphamissense_initial_candidate_lr_thresholds.csv")
-)
-```
-
-
-## refining the threshold region using 0.01 increments 
-```{r lr-step-7-refine-alphamissense-lr-thresholds-0-01, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# STEP 7: REFINED ALPHAMISSENSE LR THRESHOLD SCAN
-# ============================================================
-# Refine around the approximate candidate regions using 0.01 increments.
-# ============================================================
-
-initial_candidate_threshold_values <- c(
-  alphamissense_candidate_pathogenic_threshold_initial$threshold,
-  alphamissense_candidate_benign_threshold_initial$threshold
-)
-
-initial_candidate_threshold_values <- initial_candidate_threshold_values[
-  !is.na(initial_candidate_threshold_values)
-]
-
-if (length(initial_candidate_threshold_values) > 0) {
-  
-  refine_min <- max(0, min(initial_candidate_threshold_values) - 0.10)
-  refine_max <- min(1, max(initial_candidate_threshold_values) + 0.10)
-  
-  alphamissense_threshold_grid_refined <- seq(
-    refine_min,
-    refine_max,
-    by = 0.01
-  )
-  
-} else {
-  
-  # If no candidate was found in the 0.05 scan, refine the full range
-  alphamissense_threshold_grid_refined <- seq(0, 1, by = 0.01)
-}
-
-alphamissense_lr_threshold_table_refined <- purrr::map_dfr(
-  alphamissense_threshold_grid_refined,
-  ~ calculate_lr_at_threshold(
-    data = ALPHAMISSENSE_LR_DATASET,
-    threshold = .x,
-    score_direction = "higher"
-  )
-)
-
-cat("\n==============================\n")
-cat("STEP 7: REFINED 0.01 LR THRESHOLD SCAN\n")
-cat("==============================\n\n")
-
-alphamissense_lr_threshold_table_refined %>%
-  print(n = Inf, width = Inf)
-
-alphamissense_candidate_pathogenic_threshold_refined <- alphamissense_lr_threshold_table_refined %>%
-  filter(qualifies_pathogenic_LR == TRUE) %>%
-  arrange(threshold) %>%
-  slice_head(n = 1)
-
-alphamissense_candidate_benign_threshold_refined <- alphamissense_lr_threshold_table_refined %>%
-  filter(qualifies_benign_LR == TRUE) %>%
-  arrange(desc(threshold)) %>%
-  slice_head(n = 1)
-
-cat("\nCandidate pathogenic threshold, refined 0.01 scan:\n")
-print(alphamissense_candidate_pathogenic_threshold_refined, width = Inf)
-
-cat("\nCandidate benign threshold, refined 0.01 scan:\n")
-print(alphamissense_candidate_benign_threshold_refined, width = Inf)
-
-readr::write_csv(
-  alphamissense_lr_threshold_table_refined,
-  file.path(output_directory, "alphamissense_lr_threshold_table_refined_0_01.csv")
-)
-
-alphamissense_refined_candidate_thresholds <- dplyr::bind_rows(
-  alphamissense_candidate_pathogenic_threshold_refined %>%
-    mutate(candidate_type = "Pathogenic threshold: LR+ lower 95% CI >= 2.08"),
-  alphamissense_candidate_benign_threshold_refined %>%
-    mutate(candidate_type = "Benign threshold: LR- upper 95% CI <= 0.48")
-) %>%
-  select(candidate_type, everything())
-
-readr::write_csv(
-  alphamissense_refined_candidate_thresholds,
-  file.path(output_directory, "alphamissense_refined_candidate_lr_thresholds.csv")
-)
-```
-
-
-```{r create-plot-directory}
-plot_directory <- file.path(output_directory, "plots")
-
-if (!dir.exists(plot_directory)) {
-  dir.create(plot_directory, recursive = TRUE)
-}
-
-cat("Plot directory:", plot_directory, "\n")
-```
-
-
-## plot of the final refined LR plot
-```{r lr-step-8-plot-alphamissense-refined-lr-scan, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# STEP 8: PLOT REFINED ALPHAMISSENSE LR SCAN
-# ============================================================
-
-alphamissense_lr_plot_data_refined <- alphamissense_lr_threshold_table_refined %>%
-  select(
-    threshold,
-    LR_positive,
-    LR_positive_lower_95,
-    LR_positive_upper_95,
-    LR_negative,
-    LR_negative_lower_95,
-    LR_negative_upper_95
-  ) %>%
-  tidyr::pivot_longer(
-    cols = c("LR_positive", "LR_negative"),
-    names_to = "LR_type",
-    values_to = "LR_value"
-  )
-
-plot_alphamissense_lr_refined <- ggplot(
-  alphamissense_lr_plot_data_refined,
-  aes(x = threshold, y = LR_value, linetype = LR_type)
-) +
-  geom_line(linewidth = 0.9) +
-  geom_hline(
-    yintercept = 2.08,
-    linetype = "dashed"
-  ) +
-  geom_hline(
-    yintercept = 0.48,
-    linetype = "dotted"
-  ) +
-  labs(
-    title = "AlphaMissense LR+/LR− across refined score thresholds",
-    subtitle = "Refined scan using 0.01 increments; VUS excluded",
-    x = "AlphaMissense score threshold",
-    y = "Likelihood ratio",
-    linetype = "LR type"
-  ) +
-  theme_minimal(base_size = 12)
-
-plot_alphamissense_lr_refined
-
-ggsave(
-  filename = file.path(plot_directory, "alphamissense_lr_threshold_plot_refined_0_01.png"),
-  plot = plot_alphamissense_lr_refined,
-  width = 8,
-  height = 5,
-  dpi = 300
-)
-```
-
-
-```{r alphamissense-final-lr-three-zone-classification, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# FINAL ALPHAMISSENSE THREE-ZONE LR CLASSIFICATION
-# ============================================================
-# Pathogenic-supporting threshold: score >= 0.77
-# Benign-supporting threshold: score < 0.67
-# Scores between 0.67 and 0.77 remain uncertain.
-# ============================================================
-
-alphamissense_pathogenic_lr_threshold <- 0.77
-alphamissense_benign_lr_threshold <- 0.67
-
-ALPHAMISSENSE_LR_THREE_ZONE_DATASET <- ALPHAMISSENSE_LR_DATASET %>%
-  mutate(
-    alphamissense_lr_category = dplyr::case_when(
-      score_numeric >= alphamissense_pathogenic_lr_threshold ~
-        "Pathogenic-supporting",
-      score_numeric < alphamissense_benign_lr_threshold ~
-        "Benign-supporting",
-      score_numeric >= alphamissense_benign_lr_threshold &
-        score_numeric < alphamissense_pathogenic_lr_threshold ~
-        "Uncertain interval",
-      TRUE ~ NA_character_
-    )
-  )
-
-alphamissense_lr_three_zone_summary <- ALPHAMISSENSE_LR_THREE_ZONE_DATASET %>%
-  count(alphamissense_lr_category, observed_binary, name = "n") %>%
-  group_by(alphamissense_lr_category) %>%
-  mutate(
-    category_total = sum(n),
-    percent_within_category = round(n / category_total * 100, 1)
-  ) %>%
-  ungroup() %>%
-  arrange(alphamissense_lr_category, observed_binary)
-
-alphamissense_lr_three_zone_summary %>%
-  print(n = Inf, width = Inf)
-
-alphamissense_lr_three_zone_overall_summary <- ALPHAMISSENSE_LR_THREE_ZONE_DATASET %>%
-  count(alphamissense_lr_category, name = "n_variants") %>%
-  mutate(
-    total_variants = nrow(ALPHAMISSENSE_LR_THREE_ZONE_DATASET),
-    percent_of_evaluable_variants = round(n_variants / total_variants * 100, 1)
-  ) %>%
-  arrange(alphamissense_lr_category)
-
-alphamissense_lr_three_zone_overall_summary %>%
-  print(n = Inf, width = Inf)
-
-readr::write_csv(
-  ALPHAMISSENSE_LR_THREE_ZONE_DATASET,
-  file.path(output_directory, "alphamissense_lr_three_zone_dataset.csv")
-)
-
-readr::write_csv(
-  alphamissense_lr_three_zone_summary,
-  file.path(output_directory, "alphamissense_lr_three_zone_summary.csv")
-)
-
-readr::write_csv(
-  alphamissense_lr_three_zone_overall_summary,
-  file.path(output_directory, "alphamissense_lr_three_zone_overall_summary.csv")
-)
-```
-
-
 
 ```{r save-binary-performance-summary-with-safe-lr}
 if (!dir.exists(output_directory)) {
@@ -7822,7 +9186,7 @@ readr::write_csv(
 final_tool_interpretation_summary <- binary_tool_performance_summary %>%
   mutate(
     coverage_percent = round(
-      total_variants_evaluated / total_eligible_binary_variants * 100,
+      n_evaluated / total_eligible_binary_variants * 100,
       1
     ),
     
@@ -7866,7 +9230,7 @@ final_tool_interpretation_summary <- binary_tool_performance_summary %>%
   select(
     tool,
     total_eligible_binary_variants,
-    total_variants_evaluated,
+    n_evaluated,
     coverage_percent,
     coverage_category,
     accuracy,
@@ -7910,7 +9274,7 @@ top_performing_tools <- final_tool_interpretation_summary %>%
   slice_head(n = 10) %>%
   select(
     tool,
-    total_variants_evaluated,
+    n_evaluated,
     coverage_percent,
     sensitivity,
     specificity,
@@ -7944,7 +9308,7 @@ tools_requiring_caution <- final_tool_interpretation_summary %>%
   ) %>%
   select(
     tool,
-    total_variants_evaluated,
+    n_evaluated,
     coverage_percent,
     sensitivity,
     specificity,
@@ -7975,7 +9339,8 @@ readr::write_csv(
 # Performance evaluation of in silico prediction tools
 creates a new object  where performance evaluation will be performed
 
-```{r create-analysis-dataset}
+```{r create-analysis-dataset, eval=FALSE}
+
 ANALYSIS_DATASET <- FINAL_MERGED_DATASET
 ```
 # check the values in the observed pathogenicty column in order to detect how the dataset records pathogenicity
@@ -8448,24 +9813,8 @@ ANALYSIS_DATASET %>%
   count(broad_variant_group, sort = TRUE)
 ```
 
-##rerunning missense only analysis usisng corrected variant missense subset
-```{r create-corrected-missense-binary-performance-dataset}
-MISSENSE_BINARY_PERFORMANCE_DATASET <- BINARY_PERFORMANCE_DATASET %>%
-  filter(
-    observed_binary %in% c("Pathogenic", "Benign"),
-    variant_group_missense == TRUE
-  )
 
-MISSENSE_BINARY_PERFORMANCE_DATASET %>%
-  summarise(
-    total_missense_binary_variants = n(),
-    pathogenic = sum(observed_binary == "Pathogenic", na.rm = TRUE),
-    benign = sum(observed_binary == "Benign", na.rm = TRUE),
-
-    polyphen_clean_available = sum(!is.na(PolyPhen_predicted_clean), na.rm = TRUE),
-    popeve_clean_available = sum(!is.na(popEVE_predicted_clean), na.rm = TRUE)
-  )
-```
+    
 
 
 
@@ -8752,7 +10101,7 @@ binary_tool_performance_summary <- purrr::map2_dfr(
 binary_performance_summary_with_coverage <- binary_tool_performance_summary %>%
   mutate(
     percent_binary_variants_evaluated = round(
-      total_variants_evaluated / total_eligible_binary_variants * 100,
+      n_evaluated / total_eligible_binary_variants * 100,
       1
     )
   ) %>%
@@ -8819,7 +10168,7 @@ missense_binary_tool_performance_summary <- purrr::map2_dfr(
 missense_binary_performance_summary_with_coverage <- missense_binary_tool_performance_summary %>%
   mutate(
     percent_missense_binary_variants_evaluated = round(
-      total_variants_evaluated / total_eligible_binary_variants * 100,
+      n_evaluated / total_eligible_binary_variants * 100,
       1
     )
   ) %>%
@@ -8900,7 +10249,7 @@ common_missense_subset_performance <- purrr::map2_dfr(
 whole_dataset_summary_for_comparison <- binary_performance_summary_with_coverage %>%
   select(
     tool,
-    whole_n_evaluated = total_variants_evaluated,
+    whole_n_evaluated = n_evaluated,
     whole_coverage_percent = percent_binary_variants_evaluated,
     whole_accuracy = accuracy,
     whole_sensitivity = sensitivity,
@@ -8912,7 +10261,7 @@ whole_dataset_summary_for_comparison <- binary_performance_summary_with_coverage
 missense_summary_for_comparison <- missense_binary_performance_summary_with_coverage %>%
   select(
     tool,
-    missense_n_evaluated = total_variants_evaluated,
+    missense_n_evaluated = n_evaluated,
     missense_coverage_percent = percent_missense_binary_variants_evaluated,
     missense_accuracy = accuracy,
     missense_sensitivity = sensitivity,
@@ -8924,7 +10273,7 @@ missense_summary_for_comparison <- missense_binary_performance_summary_with_cove
 common_subset_summary_for_comparison <- common_missense_subset_performance %>%
   select(
     tool,
-    common_subset_n_evaluated = total_variants_evaluated,
+    common_subset_n_evaluated = n_evaluated,
     common_subset_accuracy = accuracy,
     common_subset_sensitivity = sensitivity,
     common_subset_specificity = specificity,
@@ -8987,7 +10336,7 @@ binary_performance_summary_with_coverage %>%
   filter(tool %in% c("CADD", "PolyPhen-2")) %>%
   select(
     tool,
-    total_variants_evaluated,
+    n_evaluated,
     percent_binary_variants_evaluated,
     accuracy,
     sensitivity,
@@ -9032,7 +10381,7 @@ cat("\nCOMMON MISSENSE SUBSET PERFORMANCE\n")
 common_missense_subset_performance %>%
   select(
     tool,
-    total_variants_evaluated,
+    n_evaluated,
     accuracy,
     sensitivity,
     specificity,
@@ -9206,7 +10555,7 @@ optimise_single_tool_threshold <- function(
         score_column = score_column,
         pathogenic_score_direction = pathogenic_score_direction,
         optimised_threshold = NA_real_,
-        total_variants_evaluated = 0,
+        n_evaluated = 0,
         accuracy = NA_real_,
         sensitivity = NA_real_,
         specificity = NA_real_,
@@ -9266,7 +10615,7 @@ optimise_single_tool_threshold <- function(
       score_column,
       pathogenic_score_direction,
       optimised_threshold,
-      total_variants_evaluated,
+      n_evaluated,
       accuracy,
       sensitivity,
       specificity,
@@ -9317,7 +10666,7 @@ default_vs_corrected_optimised_threshold_comparison <- binary_tool_performance_s
   select(
     tool,
     default_prediction_column = prediction_column,
-    default_n_evaluated = total_variants_evaluated,
+    default_n_evaluated = n_evaluated,
     default_accuracy = accuracy,
     default_sensitivity = sensitivity,
     default_specificity = specificity,
@@ -9331,7 +10680,7 @@ default_vs_corrected_optimised_threshold_comparison <- binary_tool_performance_s
         score_column,
         pathogenic_score_direction,
         optimised_threshold,
-        optimised_n_evaluated = total_variants_evaluated,
+        optimised_n_evaluated = n_evaluated,
         optimised_accuracy = accuracy,
         optimised_sensitivity = sensitivity,
         optimised_specificity = specificity,
@@ -9435,7 +10784,7 @@ calculate_direct_prediction_performance <- function(data, observed_col, predicte
   
   tibble::tibble(
     tool = tool_name,
-    total_variants_evaluated = n_evaluated,
+    n_evaluated = n_evaluated,
     true_positive = TP,
     true_negative = TN,
     false_positive = FP,
@@ -9650,411 +10999,9 @@ default_vs_optimised_same_score_threshold_comparison %>%
 
 
 
-##If CADD threshold 10.44 was included in the threshold optimisation search, then the optimised threshold should not give a lower MCC than the MCC at 10.44.?? Analysis of this phenomenom
-
-##check if CADD_phred was actually the score column used
-
-```{r diagnose-cadd-threshold-grid-and-mcc-final}
-# ============================================================
-# FINAL CADD THRESHOLD GRID AND MCC DIAGNOSTIC
-# ============================================================
-# This avoids MCC becoming NA by calculating MCC directly using numeric counts.
-# It also forces inclusion of the previous-study/default threshold 10.44.
-# ============================================================
-
-safe_divide <- function(numerator, denominator) {
-  ifelse(denominator == 0, NA_real_, numerator / denominator)
-}
-
-calculate_mcc_from_counts <- function(TP, TN, FP, FN) {
-  
-  TP <- as.numeric(TP)
-  TN <- as.numeric(TN)
-  FP <- as.numeric(FP)
-  FN <- as.numeric(FN)
-  
-  numerator <- (TP * TN) - (FP * FN)
-  
-  denominator <- sqrt(
-    (TP + FP) *
-      (TP + FN) *
-      (TN + FP) *
-      (TN + FN)
-  )
-  
-  safe_divide(numerator, denominator)
-}
-
-CADD_THRESHOLD_DIAGNOSTIC_DATASET <- BINARY_PERFORMANCE_DATASET %>%
-  filter(
-    observed_binary %in% c("Pathogenic", "Benign")
-  ) %>%
-  mutate(
-    CADD_PHRED_numeric = clean_numeric_score(CADD_PHRED_new)
-  ) %>%
-  filter(
-    !is.na(CADD_PHRED_numeric)
-  )
-
-cat("Number of CADD score-available binary variants:\n")
-print(nrow(CADD_THRESHOLD_DIAGNOSTIC_DATASET))
-
-CADD_THRESHOLD_DIAGNOSTIC_DATASET %>%
-  summarise(
-    n_variants = n(),
-    min_CADD_PHRED = min(CADD_PHRED_numeric, na.rm = TRUE),
-    median_CADD_PHRED = median(CADD_PHRED_numeric, na.rm = TRUE),
-    max_CADD_PHRED = max(CADD_PHRED_numeric, na.rm = TRUE),
-    n_unique_CADD_PHRED_scores = n_distinct(CADD_PHRED_numeric)
-  ) %>%
-  print(width = Inf)
-
-# Force inclusion of 10.44 and also keep all observed score thresholds
-cadd_threshold_grid <- sort(
-  unique(
-    c(
-      CADD_THRESHOLD_DIAGNOSTIC_DATASET$CADD_PHRED_numeric,
-      10.44
-    )
-  )
-)
-
-cat("Was 10.44 included in the CADD threshold grid?\n")
-print(10.44 %in% cadd_threshold_grid)
-
-cat("Thresholds around 10.44 and 10.6, printed with full precision:\n")
-
-tibble::tibble(
-  threshold = cadd_threshold_grid
-) %>%
-  filter(
-    threshold >= 10,
-    threshold <= 11
-  ) %>%
-  mutate(
-    threshold_full_precision = format(threshold, digits = 15),
-    distance_from_10_44 = abs(threshold - 10.44),
-    distance_from_10_6 = abs(threshold - 10.6)
-  ) %>%
-  arrange(threshold) %>%
-  print(n = Inf, width = Inf)
-
-calculate_cadd_threshold_performance_direct <- function(threshold_value) {
-  
-  threshold_data <- CADD_THRESHOLD_DIAGNOSTIC_DATASET %>%
-    mutate(
-      predicted = dplyr::case_when(
-        CADD_PHRED_numeric >= threshold_value ~ "Pathogenic",
-        CADD_PHRED_numeric < threshold_value ~ "Benign",
-        TRUE ~ NA_character_
-      )
-    )
-  
-  TP <- sum(
-    threshold_data$observed_binary == "Pathogenic" &
-      threshold_data$predicted == "Pathogenic",
-    na.rm = TRUE
-  )
-  
-  TN <- sum(
-    threshold_data$observed_binary == "Benign" &
-      threshold_data$predicted == "Benign",
-    na.rm = TRUE
-  )
-  
-  FP <- sum(
-    threshold_data$observed_binary == "Benign" &
-      threshold_data$predicted == "Pathogenic",
-    na.rm = TRUE
-  )
-  
-  FN <- sum(
-    threshold_data$observed_binary == "Pathogenic" &
-      threshold_data$predicted == "Benign",
-    na.rm = TRUE
-  )
-  
-  TP <- as.numeric(TP)
-  TN <- as.numeric(TN)
-  FP <- as.numeric(FP)
-  FN <- as.numeric(FN)
-  
-  n_evaluated <- TP + TN + FP + FN
-  
-  sensitivity <- safe_divide(TP, TP + FN)
-  specificity <- safe_divide(TN, TN + FP)
-  balanced_accuracy <- mean(c(sensitivity, specificity), na.rm = TRUE)
-  accuracy <- safe_divide(TP + TN, n_evaluated)
-  mcc <- calculate_mcc_from_counts(TP, TN, FP, FN)
-  
-  tibble::tibble(
-    threshold = threshold_value,
-    threshold_full_precision = format(threshold_value, digits = 15),
-    total_variants_evaluated = n_evaluated,
-    true_positive = TP,
-    true_negative = TN,
-    false_positive = FP,
-    false_negative = FN,
-    accuracy = round(accuracy, 3),
-    sensitivity = round(sensitivity, 3),
-    specificity = round(specificity, 3),
-    balanced_accuracy = round(balanced_accuracy, 3),
-    mcc = round(mcc, 3)
-  )
-}
-
-cadd_threshold_grid_performance <- purrr::map_dfr(
-  cadd_threshold_grid,
-  calculate_cadd_threshold_performance_direct
-) %>%
-  arrange(desc(mcc), desc(balanced_accuracy), desc(accuracy))
-
-cat("Top CADD thresholds by MCC:\n")
-cadd_threshold_grid_performance %>%
-  slice_head(n = 20) %>%
-  print(n = Inf, width = Inf)
-
-cat("CADD performance exactly at threshold 10.44:\n")
-cadd_threshold_grid_performance %>%
-  filter(threshold == 10.44) %>%
-  print(width = Inf)
-
-cat("Nearest CADD thresholds to 10.6:\n")
-cadd_threshold_grid_performance %>%
-  mutate(distance_from_10_6 = abs(threshold - 10.6)) %>%
-  arrange(distance_from_10_6) %>%
-  slice_head(n = 10) %>%
-  select(
-    threshold,
-    threshold_full_precision,
-    distance_from_10_6,
-    total_variants_evaluated,
-    accuracy,
-    sensitivity,
-    specificity,
-    balanced_accuracy,
-    mcc
-  ) %>%
-  print(n = Inf, width = Inf)
-
-readr::write_csv(
-  cadd_threshold_grid_performance,
-  file.path(output_directory, "cadd_threshold_grid_performance_diagnostic.csv")
-)
-```
-
-
-```{r correct-cadd-same-score-threshold-result-final}
-# ============================================================
-# SELF-CONTAINED CADD SAME-SCORE THRESHOLD CORRECTION
-# ============================================================
-# This creates a corrected CADD row even if the full same-score
-# comparison table is not currently available in the R session.
-# ============================================================
-
-safe_divide <- function(numerator, denominator) {
-  ifelse(denominator == 0, NA_real_, numerator / denominator)
-}
-
-calculate_mcc_from_counts <- function(TP, TN, FP, FN) {
-  
-  TP <- as.numeric(TP)
-  TN <- as.numeric(TN)
-  FP <- as.numeric(FP)
-  FN <- as.numeric(FN)
-  
-  numerator <- (TP * TN) - (FP * FN)
-  
-  denominator <- sqrt(
-    (TP + FP) *
-      (TP + FN) *
-      (TN + FP) *
-      (TN + FN)
-  )
-  
-  safe_divide(numerator, denominator)
-}
-
-calculate_cadd_same_score_row <- function(
-    data,
-    default_threshold,
-    optimised_threshold
-) {
-  
-  comparison_data <- data %>%
-    filter(
-      observed_binary %in% c("Pathogenic", "Benign")
-    ) %>%
-    mutate(
-      CADD_PHRED_numeric = clean_numeric_score(CADD_PHRED_new),
-      
-      default_prediction = dplyr::case_when(
-        CADD_PHRED_numeric >= default_threshold ~ "Pathogenic",
-        CADD_PHRED_numeric < default_threshold ~ "Benign",
-        TRUE ~ NA_character_
-      ),
-      
-      optimised_prediction = dplyr::case_when(
-        CADD_PHRED_numeric >= optimised_threshold ~ "Pathogenic",
-        CADD_PHRED_numeric < optimised_threshold ~ "Benign",
-        TRUE ~ NA_character_
-      )
-    ) %>%
-    filter(
-      !is.na(CADD_PHRED_numeric),
-      !is.na(default_prediction),
-      !is.na(optimised_prediction)
-    )
-  
-  calculate_direct_metrics <- function(prediction_column) {
-    
-    TP <- sum(
-      comparison_data$observed_binary == "Pathogenic" &
-        comparison_data[[prediction_column]] == "Pathogenic",
-      na.rm = TRUE
-    )
-    
-    TN <- sum(
-      comparison_data$observed_binary == "Benign" &
-        comparison_data[[prediction_column]] == "Benign",
-      na.rm = TRUE
-    )
-    
-    FP <- sum(
-      comparison_data$observed_binary == "Benign" &
-        comparison_data[[prediction_column]] == "Pathogenic",
-      na.rm = TRUE
-    )
-    
-    FN <- sum(
-      comparison_data$observed_binary == "Pathogenic" &
-        comparison_data[[prediction_column]] == "Benign",
-      na.rm = TRUE
-    )
-    
-    TP <- as.numeric(TP)
-    TN <- as.numeric(TN)
-    FP <- as.numeric(FP)
-    FN <- as.numeric(FN)
-    
-    n_evaluated <- TP + TN + FP + FN
-    
-    sensitivity <- safe_divide(TP, TP + FN)
-    specificity <- safe_divide(TN, TN + FP)
-    accuracy <- safe_divide(TP + TN, n_evaluated)
-    balanced_accuracy <- mean(c(sensitivity, specificity), na.rm = TRUE)
-    mcc <- calculate_mcc_from_counts(TP, TN, FP, FN)
-    
-    tibble::tibble(
-      accuracy = round(accuracy, 3),
-      sensitivity = round(sensitivity, 3),
-      specificity = round(specificity, 3),
-      balanced_accuracy = round(balanced_accuracy, 3),
-      mcc = round(mcc, 3)
-    )
-  }
-  
-  default_metrics <- calculate_direct_metrics("default_prediction")
-  optimised_metrics <- calculate_direct_metrics("optimised_prediction")
-  
-  tibble::tibble(
-    tool = "CADD",
-    score_column = "CADD_PHRED_new",
-    pathogenic_score_direction = "higher",
-    same_score_available_n = nrow(comparison_data),
-    
-    default_threshold = default_threshold,
-    optimised_threshold = optimised_threshold,
-    
-    default_accuracy_same_score_subset = default_metrics$accuracy,
-    default_sensitivity_same_score_subset = default_metrics$sensitivity,
-    default_specificity_same_score_subset = default_metrics$specificity,
-    default_balanced_accuracy_same_score_subset = default_metrics$balanced_accuracy,
-    default_mcc_same_score_subset = default_metrics$mcc,
-    
-    optimised_accuracy_same_score_subset = optimised_metrics$accuracy,
-    optimised_sensitivity_same_score_subset = optimised_metrics$sensitivity,
-    optimised_specificity_same_score_subset = optimised_metrics$specificity,
-    optimised_balanced_accuracy_same_score_subset = optimised_metrics$balanced_accuracy,
-    optimised_mcc_same_score_subset = optimised_metrics$mcc,
-    
-    mcc_change_same_score_subset = round(
-      optimised_metrics$mcc - default_metrics$mcc,
-      3
-    )
-  )
-}
-
-# Use best threshold from corrected diagnostic if available.
-# If not, use 10.56 based on the diagnostic output.
-if ("cadd_threshold_grid_performance" %in% ls()) {
-  
-  cadd_best_threshold <- cadd_threshold_grid_performance %>%
-    arrange(desc(mcc), desc(balanced_accuracy), desc(accuracy)) %>%
-    slice_head(n = 1) %>%
-    pull(threshold)
-  
-} else {
-  
-  cadd_best_threshold <- 10.56
-}
-
-cadd_corrected_same_score_row <- calculate_cadd_same_score_row(
-  data = BINARY_PERFORMANCE_DATASET,
-  default_threshold = 10.44,
-  optimised_threshold = cadd_best_threshold
-)
-
-cat("Corrected CADD same-score threshold row:\n")
-
-cadd_corrected_same_score_row %>%
-  select(
-    tool,
-    same_score_available_n,
-    default_threshold,
-    optimised_threshold,
-    default_mcc_same_score_subset,
-    optimised_mcc_same_score_subset,
-    mcc_change_same_score_subset
-  ) %>%
-  print(width = Inf)
-
-# If the full table exists, replace CADD row.
-# If it does not exist, create a CADD-only corrected table.
-if ("default_vs_optimised_same_score_threshold_comparison" %in% ls()) {
-  
-  default_vs_optimised_same_score_threshold_comparison <- default_vs_optimised_same_score_threshold_comparison %>%
-    filter(tool != "CADD") %>%
-    bind_rows(cadd_corrected_same_score_row) %>%
-    arrange(desc(mcc_change_same_score_subset))
-  
-} else {
-  
-  default_vs_optimised_same_score_threshold_comparison <- cadd_corrected_same_score_row
-}
-
-readr::write_csv(
-  cadd_corrected_same_score_row,
-  file.path(
-    output_directory,
-    "cadd_corrected_same_score_threshold_row.csv"
-  )
-)
-
-readr::write_csv(
-  default_vs_optimised_same_score_threshold_comparison,
-  file.path(
-    output_directory,
-    "default_vs_optimised_same_score_threshold_comparison.csv"
-  )
-)
-```
-
-
-
 ##allele frequency descriptive analysis
 
-#identification of allele-frequency columns
+#identification of alle-frequency columns
 
 ```{r identify-allele-frequency-columns}
 # ============================================================
@@ -10201,303 +11148,20 @@ readr::write_csv(
 ```
 
 
-##Are some tools overcalling relatively frequent variants as pathogenic? and Are some established pathogenic haemoglobinopathy variants unusually frequent because of population-specific factors? 
-
-
-```{r recreate-af-analysis-dataset-before-frequency-flags-safe}
+## identification of high frequency P/LP variants
+```{r identify-high-frequency-pathogenic-variants}
 # ============================================================
-# RECREATE AF_ANALYSIS_DATASET BEFORE FREQUENCY FLAGS
+# IDENTIFY P/LP VARIANTS WITH RELATIVELY HIGH POPULATION AF
 # ============================================================
-# This version works even if ANALYSIS_DATASET_WITH_VARIANT_GROUPS
-# is not currently available.
+# These are not automatically errors, especially in haemoglobinopathies,
+# but they should be inspected because high AF may affect interpretation.
 # ============================================================
 
-clean_af_value <- function(x) {
-  x <- as.character(x)
-  x[x %in% c("", "-", ".", "NA", "na", "N/A", "n/a", "invalid_field")] <- NA
-  suppressWarnings(as.numeric(x))
-}
-
-# Choose the best available source dataset
-if ("ANALYSIS_DATASET_WITH_VARIANT_GROUPS" %in% ls()) {
-  
-  AF_SOURCE_DATASET <- ANALYSIS_DATASET_WITH_VARIANT_GROUPS
-  cat("Using ANALYSIS_DATASET_WITH_VARIANT_GROUPS as AF source dataset\n")
-  
-} else if ("ANALYSIS_DATASET" %in% ls()) {
-  
-  AF_SOURCE_DATASET <- ANALYSIS_DATASET
-  cat("Using ANALYSIS_DATASET as AF source dataset\n")
-  
-} else if ("BINARY_PERFORMANCE_DATASET" %in% ls()) {
-  
-  AF_SOURCE_DATASET <- BINARY_PERFORMANCE_DATASET
-  cat("Using BINARY_PERFORMANCE_DATASET as AF source dataset\n")
-  
-} else {
-  
-  stop("No suitable dataset found. Please run the dataset import and merge chunks first.")
-}
-
-AF_ANALYSIS_DATASET <- AF_SOURCE_DATASET %>%
-  mutate(
-    clinical_group = dplyr::case_when(
-      Observed_pathogenicity %in% c(
-        "P", "LP", "P/LP", 
-        "Pathogenic", "Likely pathogenic",
-        "Pathogenic/Likely pathogenic"
-      ) ~ "P/LP",
-      
-      Observed_pathogenicity %in% c(
-        "B", "LB", "B/LB", 
-        "Benign", "Likely benign",
-        "Benign/Likely benign"
-      ) ~ "B/LB",
-      
-      Observed_pathogenicity %in% c(
-        "VUS", "Uncertain significance", "Uncertain"
-      ) ~ "VUS",
-      
-      TRUE ~ as.character(Observed_pathogenicity)
-    ),
-
-    af_gnomad4_joint = clean_af_value(gnomAD4_1_joint_AF_new),
-    af_gnomad4_popmax = clean_af_value(gnomAD4_1_joint_POPMAX_AF_new),
-    af_gnomad4_afr = clean_af_value(gnomAD4_1_joint_AFR_AF_new),
-    af_dbnsfp_popmax = clean_af_value(dbNSFP_POPMAX_AF_new)
-  )
-
-AF_ANALYSIS_DATASET %>%
-  count(clinical_group) %>%
-  print(n = Inf)
-
-AF_ANALYSIS_DATASET %>%
-  summarise(
-    total_variants = n(),
-    gnomad4_joint_available = sum(!is.na(af_gnomad4_joint)),
-    gnomad4_popmax_available = sum(!is.na(af_gnomad4_popmax)),
-    gnomad4_afr_available = sum(!is.na(af_gnomad4_afr)),
-    dbnsfp_popmax_available = sum(!is.na(af_dbnsfp_popmax))
-  ) %>%
-  print(width = Inf)
-```
-
-##creating frequency evidence flags to determine which variants woild look too common to be pathogenic or rare enough to support pathogenicity in real populations makes biological and clinical sense
-BA1=Is this variant so common that it would normally be considered benign?
-BS1 =Is this variant more common than expected for the disease? uses gnomAD4_1_joint_POPMAX_AF_new
-PPM2 = Is this variant absent or very rare in the overall population to support pathogenicty? uses gnomAD4_1_joint_AF_new
-
-
-```{r revised-frequency-evidence-flags}
-# ============================================================
-# REVISED FREQUENCY EVIDENCE FLAGS
-# ============================================================
-# BA1: POPMAX AF >= 0.005
-# BS1: POPMAX AF >= 0.001
-# PM2_Supporting: overall gnomAD AF < 0.0001
-#
-# Also distinguishes:
-# - numerical gnomAD frequency available
-# - appears absent/zero in gnomAD
-# - not assessable from VEP output
-# ============================================================
-
-clean_af_value <- function(x) {
-  x <- as.character(x)
-  x[x %in% c("", "-", ".", "NA", "na", "N/A", "n/a", "invalid_field")] <- NA
-  suppressWarnings(as.numeric(x))
-}
-
-# Choose source dataset safely
-if ("AF_ANALYSIS_DATASET" %in% ls()) {
-  FREQUENCY_SOURCE_DATASET <- AF_ANALYSIS_DATASET
-} else if ("ANALYSIS_DATASET_WITH_VARIANT_GROUPS" %in% ls()) {
-  FREQUENCY_SOURCE_DATASET <- ANALYSIS_DATASET_WITH_VARIANT_GROUPS
-} else if ("ANALYSIS_DATASET" %in% ls()) {
-  FREQUENCY_SOURCE_DATASET <- ANALYSIS_DATASET
-} else {
-  stop("No suitable source dataset found. Run the dataset creation chunks first.")
-}
-
-FREQUENCY_EVIDENCE_DATASET <- FREQUENCY_SOURCE_DATASET %>%
-  mutate(
-    clinical_group = dplyr::case_when(
-      Observed_pathogenicity %in% c(
-        "P", "LP", "P/LP",
-        "Pathogenic", "Likely pathogenic",
-        "Pathogenic/Likely pathogenic"
-      ) ~ "P/LP",
-
-      Observed_pathogenicity %in% c(
-        "B", "LB", "B/LB",
-        "Benign", "Likely benign",
-        "Benign/Likely benign"
-      ) ~ "B/LB",
-
-      Observed_pathogenicity %in% c(
-        "VUS", "Uncertain significance", "Uncertain"
-      ) ~ "VUS",
-
-      TRUE ~ as.character(Observed_pathogenicity)
-    ),
-
-    # Raw fields retained for checking whether VEP gave a value or placeholder
-    raw_overall_gnomad_af = as.character(gnomAD4_1_joint_AF_new),
-    raw_popmax_gnomad_af = as.character(gnomAD4_1_joint_POPMAX_AF_new),
-
-    # Numeric cleaned fields
-    overall_af_for_PM2 = clean_af_value(gnomAD4_1_joint_AF_new),
-    popmax_af_for_BA1_BS1 = clean_af_value(gnomAD4_1_joint_POPMAX_AF_new),
-
-    # Frequency availability status
-    gnomad_frequency_status = dplyr::case_when(
-      !is.na(overall_af_for_PM2) | !is.na(popmax_af_for_BA1_BS1) ~ "Numerical frequency available",
-
-      raw_overall_gnomad_af %in% c("-", "", ".", "NA", "na", "N/A", "n/a") &
-        raw_popmax_gnomad_af %in% c("-", "", ".", "NA", "na", "N/A", "n/a") ~
-        "Not assessable from VEP output",
-
-      TRUE ~ "Not assessable from VEP output"
-    ),
-
-    appears_absent_or_zero_in_gnomad = dplyr::case_when(
-      !is.na(overall_af_for_PM2) & overall_af_for_PM2 == 0 ~ TRUE,
-      !is.na(popmax_af_for_BA1_BS1) & popmax_af_for_BA1_BS1 == 0 ~ TRUE,
-      TRUE ~ FALSE
-    ),
-
-    # Threshold flags using supervisor/Petros definitions
-    BA1_popmax_ge_0_5_percent = dplyr::case_when(
-      !is.na(popmax_af_for_BA1_BS1) & popmax_af_for_BA1_BS1 >= 0.005 ~ TRUE,
-      !is.na(popmax_af_for_BA1_BS1) & popmax_af_for_BA1_BS1 < 0.005 ~ FALSE,
-      TRUE ~ NA
-    ),
-
-    BS1_popmax_ge_0_1_percent = dplyr::case_when(
-      !is.na(popmax_af_for_BA1_BS1) & popmax_af_for_BA1_BS1 >= 0.001 ~ TRUE,
-      !is.na(popmax_af_for_BA1_BS1) & popmax_af_for_BA1_BS1 < 0.001 ~ FALSE,
-      TRUE ~ NA
-    ),
-
-    PM2_supporting_overall_af_lt_0_01_percent = dplyr::case_when(
-      !is.na(overall_af_for_PM2) & overall_af_for_PM2 < 0.0001 ~ TRUE,
-      !is.na(overall_af_for_PM2) & overall_af_for_PM2 >= 0.0001 ~ FALSE,
-      TRUE ~ NA
-    ),
-
-    # Do not assign multiple criteria simultaneously.
-    # Flag overlapping or conflicting cases for review.
-    frequency_evidence_interpretation = dplyr::case_when(
-      BA1_popmax_ge_0_5_percent == TRUE &
-        PM2_supporting_overall_af_lt_0_01_percent == TRUE ~
-        "Review: BA1-level POPMAX but PM2-level overall rarity",
-
-      BS1_popmax_ge_0_1_percent == TRUE &
-        PM2_supporting_overall_af_lt_0_01_percent == TRUE ~
-        "Review: BS1-level POPMAX but PM2-level overall rarity",
-
-      BA1_popmax_ge_0_5_percent == TRUE ~
-        "BA1-level frequency flag",
-
-      BS1_popmax_ge_0_1_percent == TRUE ~
-        "BS1-level frequency flag",
-
-      PM2_supporting_overall_af_lt_0_01_percent == TRUE ~
-        "PM2_Supporting rarity flag",
-
-      gnomad_frequency_status == "Not assessable from VEP output" ~
-        "Frequency not assessable",
-
-      appears_absent_or_zero_in_gnomad == TRUE ~
-        "Appears absent/zero frequency in gnomAD",
-
-      TRUE ~ "No frequency evidence flag"
-    )
-  )
-
-frequency_evidence_summary_by_clinical_group_revised <- FREQUENCY_EVIDENCE_DATASET %>%
-  filter(clinical_group %in% c("P/LP", "B/LB", "VUS")) %>%
-  group_by(clinical_group) %>%
-  summarise(
-    n_variants = n(),
-
-    n_numerical_frequency_available = sum(
-      gnomad_frequency_status == "Numerical frequency available",
-      na.rm = TRUE
-    ),
-
-    n_appears_absent_or_zero_in_gnomad = sum(
-      appears_absent_or_zero_in_gnomad == TRUE,
-      na.rm = TRUE
-    ),
-
-    n_frequency_not_assessable = sum(
-      gnomad_frequency_status == "Not assessable from VEP output",
-      na.rm = TRUE
-    ),
-
-    n_BA1_popmax_ge_0_5_percent = sum(
-      BA1_popmax_ge_0_5_percent == TRUE,
-      na.rm = TRUE
-    ),
-
-    n_BS1_popmax_ge_0_1_percent = sum(
-      BS1_popmax_ge_0_1_percent == TRUE,
-      na.rm = TRUE
-    ),
-
-    n_PM2_supporting_overall_af_lt_0_01_percent = sum(
-      PM2_supporting_overall_af_lt_0_01_percent == TRUE,
-      na.rm = TRUE
-    ),
-
-    n_review_due_to_overlapping_frequency_signals = sum(
-      stringr::str_detect(frequency_evidence_interpretation, "^Review"),
-      na.rm = TRUE
-    ),
-
-    .groups = "drop"
-  )
-
-frequency_evidence_summary_by_clinical_group_revised %>%
-  print(n = Inf, width = Inf)
-
-readr::write_csv(
-  frequency_evidence_summary_by_clinical_group_revised,
-  file.path(
-    output_directory,
-    "frequency_evidence_summary_by_clinical_group_revised.csv"
-  )
-)
-
-readr::write_csv(
-  FREQUENCY_EVIDENCE_DATASET,
-  file.path(
-    output_directory,
-    "frequency_evidence_dataset_with_review_flags.csv"
-  )
-)
-```
-
-## flagging odf established P/LP variants with high population frequency
-
-
-```{r revised-high-frequency-pathogenic-review-flags}
-# ============================================================
-# REVISED HIGH-FREQUENCY P/LP REVIEW FLAGS
-# ============================================================
-# Flags P/LP haemoglobinopathy variants with BA1/BS1-level POPMAX
-# or overlapping POPMAX-vs-overall frequency evidence.
-# ============================================================
-
-high_frequency_pathogenic_frequency_review_flags <- FREQUENCY_EVIDENCE_DATASET %>%
+high_frequency_pathogenic_variants <- AF_ANALYSIS_DATASET %>%
   filter(
     clinical_group == "P/LP",
-    (
-      BA1_popmax_ge_0_5_percent == TRUE |
-        BS1_popmax_ge_0_1_percent == TRUE |
-        stringr::str_detect(frequency_evidence_interpretation, "^Review")
-    )
+    !is.na(af_gnomad4_popmax),
+    af_gnomad4_popmax > 0.001
   ) %>%
   select(
     any_of(c(
@@ -10509,808 +11173,22 @@ high_frequency_pathogenic_frequency_review_flags <- FREQUENCY_EVIDENCE_DATASET %
       "clinical_group",
       "Effect_function",
       "Consequence",
-      "popmax_af_for_BA1_BS1",
-      "overall_af_for_PM2",
-      "BA1_popmax_ge_0_5_percent",
-      "BS1_popmax_ge_0_1_percent",
-      "PM2_supporting_overall_af_lt_0_01_percent",
-      "appears_absent_or_zero_in_gnomad",
-      "gnomad_frequency_status",
-      "frequency_evidence_interpretation"
+      "af_gnomad4_popmax",
+      "af_gnomad4_joint",
+      "af_gnomad4_afr",
+      "af_dbnsfp_popmax"
     ))
   ) %>%
-  arrange(desc(popmax_af_for_BA1_BS1))
+  arrange(desc(af_gnomad4_popmax))
 
-high_frequency_pathogenic_frequency_review_flags %>%
+high_frequency_pathogenic_variants %>%
   print(n = Inf, width = Inf)
 
 readr::write_csv(
-  high_frequency_pathogenic_frequency_review_flags,
-  file.path(
-    output_directory,
-    "high_frequency_pathogenic_frequency_review_flags.csv"
-  )
+  high_frequency_pathogenic_variants,
+  file.path(output_directory, "high_frequency_pathogenic_variants.csv")
 )
 ```
-
-
-```{r create-manual-gnomad-check-table}
-# ============================================================
-# CREATE MANUAL GNOMAD CHECK TABLE
-# ============================================================
-# This creates a small table of variants to manually confirm in gnomAD:
-# 1. High-frequency P/LP variants
-# 2. Variants flagged for review
-# 3. Variants appearing absent/zero in gnomAD
-# 4. A small sample of P/LP variants not assessable from VEP output
-# ============================================================
-
-manual_gnomad_check_table <- FREQUENCY_EVIDENCE_DATASET %>%
-  mutate(
-    manual_check_reason = dplyr::case_when(
-      clinical_group == "P/LP" &
-        (
-          BA1_popmax_ge_0_5_percent == TRUE |
-            BS1_popmax_ge_0_1_percent == TRUE
-        ) ~ "High-frequency P/LP variant",
-
-      stringr::str_detect(
-        frequency_evidence_interpretation,
-        "^Review"
-      ) ~ "Overlapping POPMAX and overall AF signals",
-
-      appears_absent_or_zero_in_gnomad == TRUE ~
-        "Appears absent/zero in gnomAD from VEP annotation",
-
-      clinical_group == "P/LP" &
-        gnomad_frequency_status == "Not assessable from VEP output" ~
-        "P/LP variant not assessable from VEP frequency output",
-
-      TRUE ~ NA_character_
-    )
-  ) %>%
-  filter(
-    !is.na(manual_check_reason)
-  ) %>%
-  group_by(manual_check_reason) %>%
-  slice_head(n = 10) %>%
-  ungroup() %>%
-  select(
-    any_of(c(
-      "HGVS",
-      "HGVS_transcript",
-      "Gene",
-      "SYMBOL",
-      "Observed_pathogenicity",
-      "clinical_group",
-      "Effect_function",
-      "Consequence",
-      "popmax_af_for_BA1_BS1",
-      "overall_af_for_PM2",
-      "gnomad_frequency_status",
-      "appears_absent_or_zero_in_gnomad",
-      "frequency_evidence_interpretation",
-      "manual_check_reason"
-    ))
-  ) %>%
-  mutate(
-    manual_gnomad_confirmed = "",
-    manual_gnomad_version_checked = "",
-    manual_gnomad_overall_AF = "",
-    manual_gnomad_popmax_AF = "",
-    manual_notes = ""
-  ) %>%
-  arrange(
-    manual_check_reason,
-    desc(popmax_af_for_BA1_BS1)
-  )
-
-manual_gnomad_check_table %>%
-  print(n = Inf, width = Inf)
-
-readr::write_csv(
-  manual_gnomad_check_table,
-  file.path(output_directory, "manual_gnomad_check_table.csv")
-)
-```
-
-
-
-```{r create-gnomad-ancestry-af-plot-dataset}
-# ============================================================
-# CREATE GNOMAD4.1 ANCESTRY AF PLOT DATASET
-# ============================================================
-# Uses gnomAD4.1 joint ancestry-specific AF columns.
-# ============================================================
-
-plot_directory <- file.path(output_directory, "plots")
-
-if (!dir.exists(plot_directory)) {
-  dir.create(plot_directory, recursive = TRUE)
-}
-
-clean_af_value <- function(x) {
-  x <- as.character(x)
-  x[x %in% c("", "-", ".", "NA", "na", "N/A", "n/a", "invalid_field")] <- NA
-  suppressWarnings(as.numeric(x))
-}
-
-GNOMAD_ANCESTRY_AF_DATASET <- FREQUENCY_EVIDENCE_DATASET %>%
-  mutate(
-    Overall = clean_af_value(gnomAD4_1_joint_AF_new),
-    POPMAX = clean_af_value(gnomAD4_1_joint_POPMAX_AF_new),
-    AFR = clean_af_value(gnomAD4_1_joint_AFR_AF_new),
-    AMR = clean_af_value(gnomAD4_1_joint_AMR_AF_new),
-    EAS = clean_af_value(gnomAD4_1_joint_EAS_AF_new),
-    NFE = clean_af_value(gnomAD4_1_joint_NFE_AF_new),
-    SAS = clean_af_value(gnomAD4_1_joint_SAS_AF_new),
-    FIN = clean_af_value(gnomAD4_1_joint_FIN_AF_new),
-    ASJ = clean_af_value(gnomAD4_1_joint_ASJ_AF_new),
-    MID = clean_af_value(gnomAD4_1_joint_MID_AF_new)
-  ) %>%
-  select(
-    any_of(c(
-      "HGVS",
-      "HGVS_transcript",
-      "Gene",
-      "Observed_pathogenicity",
-      "clinical_group",
-      "Overall",
-      "POPMAX",
-      "AFR",
-      "AMR",
-      "EAS",
-      "NFE",
-      "SAS",
-      "FIN",
-      "ASJ",
-      "MID"
-    ))
-  ) %>%
-  tidyr::pivot_longer(
-    cols = c(
-      "Overall",
-      "POPMAX",
-      "AFR",
-      "AMR",
-      "EAS",
-      "NFE",
-      "SAS",
-      "FIN",
-      "ASJ",
-      "MID"
-    ),
-    names_to = "gnomad_group",
-    values_to = "allele_frequency"
-  ) %>%
-  filter(
-    !is.na(allele_frequency)
-  ) %>%
-  mutate(
-    log10_af = log10(allele_frequency + 1e-8),
-    gnomad_group = factor(
-      gnomad_group,
-      levels = c(
-        "Overall",
-        "POPMAX",
-        "AFR",
-        "AMR",
-        "EAS",
-        "NFE",
-        "SAS",
-        "FIN",
-        "ASJ",
-        "MID"
-      )
-    )
-  )
-
-GNOMAD_ANCESTRY_AF_DATASET %>%
-  count(gnomad_group) %>%
-  print(n = Inf)
-
-readr::write_csv(
-  GNOMAD_ANCESTRY_AF_DATASET,
-  file.path(output_directory, "gnomad_ancestry_af_plot_dataset.csv")
-)
-```
-
-
-
-```{r plot-gnomad-ancestry-af-distribution}
-# ============================================================
-# PLOT GNOMAD4.1 ANCESTRY-SPECIFIC AF DISTRIBUTIONS
-# ============================================================
-
-plot_gnomad_ancestry_af_distribution <- ggplot(
-  GNOMAD_ANCESTRY_AF_DATASET,
-  aes(x = gnomad_group, y = log10_af)
-) +
-  geom_boxplot(outlier.alpha = 0.3) +
-  labs(
-    title = "gnomAD4.1 allele-frequency distributions by ancestry group",
-    subtitle = "AF values shown as log10(AF + 1e-8)",
-    x = "gnomAD4.1 group",
-    y = "log10(AF + 1e-8)"
-  ) +
-  theme_minimal(base_size = 12)
-
-plot_gnomad_ancestry_af_distribution
-
-ggsave(
-  filename = file.path(plot_directory, "gnomad_ancestry_af_distribution_boxplot.png"),
-  plot = plot_gnomad_ancestry_af_distribution,
-  width = 9,
-  height = 5,
-  dpi = 300
-)
-```
-
-
-```{r plot-ancestry-af-for-high-frequency-pathogenic-review-variants}
-# ============================================================
-# PLOT ANCESTRY AF FOR HIGH-FREQUENCY / REVIEW P/LP VARIANTS
-# ============================================================
-
-high_frequency_or_review_variant_ids <- high_frequency_pathogenic_frequency_review_flags %>%
-  pull(HGVS) %>%
-  unique()
-
-plot_high_frequency_review_ancestry_af_data <- GNOMAD_ANCESTRY_AF_DATASET %>%
-  filter(
-    HGVS %in% high_frequency_or_review_variant_ids
-  )
-
-plot_high_frequency_review_ancestry_af <- ggplot(
-  plot_high_frequency_review_ancestry_af_data,
-  aes(x = gnomad_group, y = log10_af)
-) +
-  geom_col() +
-  facet_wrap(~ HGVS) +
-  labs(
-    title = "Ancestry-specific AF for high-frequency/review P/LP variants",
-    subtitle = "Shows whether elevated frequency is driven by specific ancestry groups",
-    x = "gnomAD4.1 group",
-    y = "log10(AF + 1e-8)"
-  ) +
-  theme_minimal(base_size = 11)
-
-plot_high_frequency_review_ancestry_af
-
-ggsave(
-  filename = file.path(
-    plot_directory,
-    "ancestry_af_high_frequency_pathogenic_review_variants.png"
-  ),
-  plot = plot_high_frequency_review_ancestry_af,
-  width = 10,
-  height = 7,
-  dpi = 300
-)
-```
-
-
-## population frequency evidence analysis 
-
-
-```{r rebuild-corrected-af-status-categories-before-final-evidence, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# REBUILD CORRECTED AF STATUS CATEGORIES
-# ============================================================
-# Categories:
-# 1. Numerical positive AF
-# 2. Numerical zero AF
-# 3. Confirmed absent after manual review
-# 4. Not assessable from VEP/dbNSFP output
-# ============================================================
-
-clean_af_value <- function(x) {
-  x <- as.character(x)
-  x[x %in% c("", "-", ".", "NA", "na", "N/A", "n/a", "invalid_field")] <- NA
-  suppressWarnings(as.numeric(x))
-}
-
-FREQUENCY_EVIDENCE_DATASET <- FREQUENCY_EVIDENCE_DATASET %>%
-  mutate(
-    overall_af_for_PM2 = clean_af_value(gnomAD4_1_joint_AF_new),
-    popmax_af_for_BA1_BS1 = clean_af_value(gnomAD4_1_joint_POPMAX_AF_new),
-
-    any_numerical_af_available = !is.na(overall_af_for_PM2) |
-      !is.na(popmax_af_for_BA1_BS1),
-
-    numerical_positive_AF = (
-      (!is.na(overall_af_for_PM2) & overall_af_for_PM2 > 0) |
-        (!is.na(popmax_af_for_BA1_BS1) & popmax_af_for_BA1_BS1 > 0)
-    ),
-
-    numerical_zero_AF = any_numerical_af_available &
-      numerical_positive_AF == FALSE &
-      (
-        (!is.na(overall_af_for_PM2) & overall_af_for_PM2 == 0) |
-          (!is.na(popmax_af_for_BA1_BS1) & popmax_af_for_BA1_BS1 == 0)
-      ),
-
-    confirmed_absence_after_manual_review = FALSE,
-
-    af_status_resolved = dplyr::case_when(
-      confirmed_absence_after_manual_review == TRUE ~
-        "Confirmed absent after manual review",
-
-      numerical_positive_AF == TRUE ~
-        "Numerical positive AF",
-
-      numerical_zero_AF == TRUE ~
-        "Numerical zero AF",
-
-      any_numerical_af_available == FALSE ~
-        "Not assessable from VEP/dbNSFP output",
-
-      TRUE ~ "Not assessable from VEP/dbNSFP output"
-    )
-  )
-
-af_status_by_clinical_group <- FREQUENCY_EVIDENCE_DATASET %>%
-  filter(clinical_group %in% c("B/LB", "P/LP", "VUS")) %>%
-  count(clinical_group, af_status_resolved, name = "n_variants") %>%
-  group_by(clinical_group) %>%
-  mutate(
-    clinical_group_total = sum(n_variants),
-    percent = round(n_variants / clinical_group_total * 100, 1),
-    label = paste0(n_variants, "/", clinical_group_total)
-  ) %>%
-  ungroup()
-
-af_status_by_clinical_group %>%
-  print(n = Inf, width = Inf)
-
-readr::write_csv(
-  af_status_by_clinical_group,
-  file.path(output_directory, "af_status_by_clinical_group_resolved.csv")
-)
-
-readr::write_csv(
-  FREQUENCY_EVIDENCE_DATASET,
-  file.path(output_directory, "frequency_evidence_dataset_with_corrected_af_status.csv")
-)
-```
-
-
-
-```{r check-ba1-bs1-ac-an-requirements, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# CHECK AC AND AN REQUIREMENTS FOR BA1/BS1 AND PM2
-# ============================================================
-# Uses gnomAD4.1 joint AC/AN fields.
-#
-# BA1/BS1:
-# - assessed using POPMAX AF
-# - AC/AN checked using POPMAX AC and POPMAX AN
-#
-# PM2_Supporting:
-# - assessed using overall gnomAD4.1 AF
-# - AC/AN checked using overall AC and AN
-# ============================================================
-
-clean_numeric_value <- function(x) {
-  x <- as.character(x)
-  x[x %in% c("", "-", ".", "NA", "na", "N/A", "n/a", "invalid_field")] <- NA
-  suppressWarnings(as.numeric(x))
-}
-
-FREQUENCY_EVIDENCE_DATASET <- FREQUENCY_EVIDENCE_DATASET %>%
-  mutate(
-    gnomAD4_1_joint_AC_numeric =
-      clean_numeric_value(gnomAD4_1_joint_AC_new),
-
-    gnomAD4_1_joint_AN_numeric =
-      clean_numeric_value(gnomAD4_1_joint_AN_new),
-
-    gnomAD4_1_joint_POPMAX_AC_numeric =
-      clean_numeric_value(gnomAD4_1_joint_POPMAX_AC_new),
-
-    gnomAD4_1_joint_POPMAX_AN_numeric =
-      clean_numeric_value(gnomAD4_1_joint_POPMAX_AN_new),
-
-    # AC/AN availability
-    PM2_AC_AN_available = !is.na(gnomAD4_1_joint_AC_numeric) &
-      !is.na(gnomAD4_1_joint_AN_numeric),
-
-    BA1_BS1_AC_AN_available = !is.na(gnomAD4_1_joint_POPMAX_AC_numeric) &
-      !is.na(gnomAD4_1_joint_POPMAX_AN_numeric),
-
-    # Basic AC/AN validity checks
-    PM2_AC_AN_valid = PM2_AC_AN_available &
-      gnomAD4_1_joint_AN_numeric > 0 &
-      gnomAD4_1_joint_AC_numeric >= 0,
-
-    BA1_BS1_AC_AN_valid = BA1_BS1_AC_AN_available &
-      gnomAD4_1_joint_POPMAX_AN_numeric > 0 &
-      gnomAD4_1_joint_POPMAX_AC_numeric >= 0,
-
-    PM2_AC_AN_note = dplyr::case_when(
-      PM2_AC_AN_valid == TRUE ~
-        "Overall AC/AN available and valid",
-      PM2_AC_AN_available == TRUE & PM2_AC_AN_valid == FALSE ~
-        "Overall AC/AN available but invalid or AN=0",
-      TRUE ~
-        "Overall AC/AN not assessable"
-    ),
-
-    BA1_BS1_AC_AN_note = dplyr::case_when(
-      BA1_BS1_AC_AN_valid == TRUE ~
-        "POPMAX AC/AN available and valid",
-      BA1_BS1_AC_AN_available == TRUE & BA1_BS1_AC_AN_valid == FALSE ~
-        "POPMAX AC/AN available but invalid or AN=0",
-      TRUE ~
-        "POPMAX AC/AN not assessable"
-    )
-  )
-
-ac_an_requirement_summary <- FREQUENCY_EVIDENCE_DATASET %>%
-  filter(clinical_group %in% c("B/LB", "P/LP", "VUS")) %>%
-  summarise(
-    total_variants = n(),
-
-    n_PM2_AC_AN_available = sum(PM2_AC_AN_available, na.rm = TRUE),
-    n_PM2_AC_AN_valid = sum(PM2_AC_AN_valid, na.rm = TRUE),
-
-    n_BA1_BS1_AC_AN_available = sum(BA1_BS1_AC_AN_available, na.rm = TRUE),
-    n_BA1_BS1_AC_AN_valid = sum(BA1_BS1_AC_AN_valid, na.rm = TRUE)
-  )
-
-ac_an_requirement_summary %>%
-  print(width = Inf)
-
-ac_an_requirement_by_clinical_group <- FREQUENCY_EVIDENCE_DATASET %>%
-  filter(clinical_group %in% c("B/LB", "P/LP", "VUS")) %>%
-  group_by(clinical_group) %>%
-  summarise(
-    n_variants = n(),
-
-    n_PM2_AC_AN_valid = sum(PM2_AC_AN_valid, na.rm = TRUE),
-    percent_PM2_AC_AN_valid = round(n_PM2_AC_AN_valid / n_variants * 100, 1),
-
-    n_BA1_BS1_AC_AN_valid = sum(BA1_BS1_AC_AN_valid, na.rm = TRUE),
-    percent_BA1_BS1_AC_AN_valid = round(n_BA1_BS1_AC_AN_valid / n_variants * 100, 1),
-
-    .groups = "drop"
-  )
-
-ac_an_requirement_by_clinical_group %>%
-  print(n = Inf, width = Inf)
-
-readr::write_csv(
-  ac_an_requirement_summary,
-  file.path(output_directory, "ac_an_requirement_summary.csv")
-)
-
-readr::write_csv(
-  ac_an_requirement_by_clinical_group,
-  file.path(output_directory, "ac_an_requirement_by_clinical_group.csv")
-)
-
-readr::write_csv(
-  FREQUENCY_EVIDENCE_DATASET,
-  file.path(output_directory, "frequency_evidence_dataset_with_ac_an_requirements.csv")
-)
-```
-
-
-## rebuilding final population evidence categories after check
-```{r rebuild-final-population-evidence-categories-after-ac-an, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# REBUILD FINAL POPULATION-EVIDENCE CATEGORIES AFTER AC/AN CHECK
-# ============================================================
-# BA1: POPMAX AF >= 0.005, with valid POPMAX AC/AN
-# BS1: POPMAX AF >= 0.001, with valid POPMAX AC/AN
-# PM2_Supporting: overall gnomAD AF < 0.0001, with valid overall AC/AN
-#
-# Rules:
-# 1. BA1 overrides BS1.
-# 2. Conflicting POPMAX and overall AF signals require review.
-# 3. Do not assign multiple criteria simultaneously.
-# ============================================================
-
-FREQUENCY_EVIDENCE_DATASET <- FREQUENCY_EVIDENCE_DATASET %>%
-  mutate(
-    BA1_popmax_met = !is.na(popmax_af_for_BA1_BS1) &
-      popmax_af_for_BA1_BS1 >= 0.005 &
-      BA1_BS1_AC_AN_valid == TRUE,
-
-    BS1_popmax_met = !is.na(popmax_af_for_BA1_BS1) &
-      popmax_af_for_BA1_BS1 >= 0.001 &
-      BA1_BS1_AC_AN_valid == TRUE,
-
-    PM2_supporting_overall_met = !is.na(overall_af_for_PM2) &
-      overall_af_for_PM2 < 0.0001 &
-      PM2_AC_AN_valid == TRUE,
-
-    conflicting_popmax_overall_signal = (
-      (BA1_popmax_met == TRUE | BS1_popmax_met == TRUE) &
-        PM2_supporting_overall_met == TRUE
-    ),
-
-    final_population_evidence_category = dplyr::case_when(
-      af_status_resolved == "Not assessable from VEP/dbNSFP output" ~
-        "Frequency not assessable",
-
-      conflicting_popmax_overall_signal == TRUE ~
-        "Requires review: POPMAX high but overall AF rare",
-
-      BA1_popmax_met == TRUE ~
-        "BA1-level frequency",
-
-      BS1_popmax_met == TRUE ~
-        "BS1-level frequency",
-
-      PM2_supporting_overall_met == TRUE ~
-        "PM2_Supporting-level rarity",
-
-      numerical_zero_AF == TRUE ~
-        "Numerical zero AF; review before PM2 use",
-
-      TRUE ~
-        "No population-frequency criterion met"
-    )
-  )
-
-final_population_evidence_summary <- FREQUENCY_EVIDENCE_DATASET %>%
-  filter(clinical_group %in% c("B/LB", "P/LP", "VUS")) %>%
-  count(clinical_group, final_population_evidence_category, name = "n_variants") %>%
-  group_by(clinical_group) %>%
-  mutate(
-    clinical_group_total = sum(n_variants),
-    percent = round(n_variants / clinical_group_total * 100, 1),
-    label = paste0(n_variants, "/", clinical_group_total)
-  ) %>%
-  ungroup()
-
-final_population_evidence_summary %>%
-  print(n = Inf, width = Inf)
-
-readr::write_csv(
-  final_population_evidence_summary,
-  file.path(output_directory, "final_population_evidence_summary_by_clinical_group.csv")
-)
-
-readr::write_csv(
-  FREQUENCY_EVIDENCE_DATASET,
-  file.path(output_directory, "frequency_evidence_dataset_with_final_population_categories.csv")
-)
-```
-
-## confirmation of overlapping cases being appropriately flagged as review
-
-```{r check-conflicting-popmax-overall-review-cases, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# CHECK CONFLICTING POPMAX / OVERALL FREQUENCY CASES
-# ============================================================
-
-conflicting_frequency_review_cases <- FREQUENCY_EVIDENCE_DATASET %>%
-  filter(conflicting_popmax_overall_signal == TRUE) %>%
-  select(
-    any_of(c(
-      "HGVS",
-      "HGVS_transcript",
-      "Gene",
-      "SYMBOL",
-      "Observed_pathogenicity",
-      "clinical_group",
-      "overall_af_for_PM2",
-      "popmax_af_for_BA1_BS1",
-      "BA1_popmax_met",
-      "BS1_popmax_met",
-      "PM2_supporting_overall_met",
-      "PM2_AC_AN_valid",
-      "BA1_BS1_AC_AN_valid",
-      "final_population_evidence_category"
-    ))
-  )
-
-conflicting_frequency_review_cases %>%
-  print(n = Inf, width = Inf)
-
-readr::write_csv(
-  conflicting_frequency_review_cases,
-  file.path(output_directory, "conflicting_frequency_review_cases.csv")
-)
-```
-
-
-
-
-## confirmation that BA1 overides BS1
-
-```{r check-ba1-overrides-bs1, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# CHECK BA1 OVERRIDES BS1
-# ============================================================
-
-ba1_bs1_overlap_check <- FREQUENCY_EVIDENCE_DATASET %>%
-  filter(
-    BA1_popmax_met == TRUE,
-    BS1_popmax_met == TRUE
-  ) %>%
-  count(final_population_evidence_category, name = "n_variants")
-
-ba1_bs1_overlap_check %>%
-  print(n = Inf, width = Inf)
-
-readr::write_csv(
-  ba1_bs1_overlap_check,
-  file.path(output_directory, "ba1_bs1_overlap_resolution_check.csv")
-)
-```
-
-
-## PLOT FIGURE 1 ===the AF status by clinical classification
-```{r figure-af-status-stacked-bar-by-clinical-classification, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# FIGURE 1: STACKED BAR CHART OF AF STATUS BY CLINICAL GROUP
-# ============================================================
-
-plot_directory <- file.path(output_directory, "plots")
-
-if (!dir.exists(plot_directory)) {
-  dir.create(plot_directory, recursive = TRUE)
-}
-
-plot_af_status_by_clinical_group <- ggplot(
-  af_status_by_clinical_group,
-  aes(
-    x = clinical_group,
-    y = n_variants,
-    fill = af_status_resolved
-  )
-) +
-  geom_col() +
-  geom_text(
-    aes(label = label),
-    position = position_stack(vjust = 0.5),
-    size = 3
-  ) +
-  labs(
-    title = "Allele-frequency annotation status by clinical classification",
-    subtitle = "Counts shown as n/clinical-group total",
-    x = "Clinical classification",
-    y = "Number of variants",
-    fill = "AF status"
-  ) +
-  theme_minimal(base_size = 12)
-
-plot_af_status_by_clinical_group
-
-ggsave(
-  filename = file.path(plot_directory, "figure_af_status_by_clinical_classification.png"),
-  plot = plot_af_status_by_clinical_group,
-  width = 9,
-  height = 6,
-  dpi = 300
-)
-```
-
-
-## positive AF distribution with refernce lines plot
-```{r figure-positive-af-distribution-log-scale, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# FIGURE 2: POSITIVE AF DISTRIBUTIONS BY CLINICAL GROUP
-# ============================================================
-
-positive_af_distribution_data <- FREQUENCY_EVIDENCE_DATASET %>%
-  filter(clinical_group %in% c("B/LB", "P/LP", "VUS")) %>%
-  select(
-    clinical_group,
-    overall_af_for_PM2,
-    popmax_af_for_BA1_BS1
-  ) %>%
-  tidyr::pivot_longer(
-    cols = c(overall_af_for_PM2, popmax_af_for_BA1_BS1),
-    names_to = "af_type",
-    values_to = "allele_frequency"
-  ) %>%
-  mutate(
-    af_type = dplyr::case_when(
-      af_type == "overall_af_for_PM2" ~ "Overall gnomAD AF",
-      af_type == "popmax_af_for_BA1_BS1" ~ "POPMAX AF",
-      TRUE ~ af_type
-    )
-  ) %>%
-  filter(
-    !is.na(allele_frequency),
-    allele_frequency > 0
-  )
-
-plot_positive_af_distribution <- ggplot(
-  positive_af_distribution_data,
-  aes(
-    x = clinical_group,
-    y = allele_frequency
-  )
-) +
-  geom_boxplot(outlier.alpha = 0.4) +
-  geom_jitter(width = 0.15, alpha = 0.35, size = 1) +
-  facet_wrap(~ af_type) +
-  scale_y_log10() +
-  geom_hline(
-    yintercept = 0.0001,
-    linetype = "dashed"
-  ) +
-  geom_hline(
-    yintercept = 0.001,
-    linetype = "dotted"
-  ) +
-  geom_hline(
-    yintercept = 0.005,
-    linetype = "dotdash"
-  ) +
-  labs(
-    title = "Positive gnomAD4.1 allele-frequency distributions by clinical classification",
-    subtitle = "Log scale with PM2_Supporting, BS1 and BA1 reference thresholds",
-    x = "Clinical classification",
-    y = "Allele frequency, log10 scale"
-  ) +
-  theme_minimal(base_size = 12)
-
-plot_positive_af_distribution
-
-ggsave(
-  filename = file.path(plot_directory, "figure_positive_af_distribution_log_scale.png"),
-  plot = plot_positive_af_distribution,
-  width = 10,
-  height = 6,
-  dpi = 300
-)
-
-readr::write_csv(
-  positive_af_distribution_data,
-  file.path(output_directory, "positive_af_distribution_plot_data.csv")
-)
-```
-
-
-## plot of final resolved pop-evidence categories
-
-```{r figure-final-population-evidence-categories, echo=TRUE, message=FALSE, warning=FALSE}
-# ============================================================
-# FIGURE 3: FINAL RESOLVED POPULATION-EVIDENCE CATEGORIES
-# ============================================================
-
-plot_final_population_evidence_categories <- ggplot(
-  final_population_evidence_summary,
-  aes(
-    x = clinical_group,
-    y = n_variants,
-    fill = final_population_evidence_category
-  )
-) +
-  geom_col() +
-  geom_text(
-    aes(label = label),
-    position = position_stack(vjust = 0.5),
-    size = 3
-  ) +
-  labs(
-    title = "Final resolved population-evidence categories by clinical classification",
-    subtitle = "BA1 prioritised over BS1; conflicting POPMAX/overall signals flagged for review",
-    x = "Clinical classification",
-    y = "Number of variants",
-    fill = "Population-evidence category"
-  ) +
-  theme_minimal(base_size = 12)
-
-plot_final_population_evidence_categories
-
-ggsave(
-  filename = file.path(plot_directory, "figure_final_population_evidence_categories.png"),
-  plot = plot_final_population_evidence_categories,
-  width = 10,
-  height = 6,
-  dpi = 300
-)
-```
-
-
-
 
 ```{r create-plot-directory-before-af-plots}
 plot_directory <- file.path(output_directory, "plots")
@@ -12500,11 +12378,11 @@ readr::write_csv(
 ## plot the number of variants used by each tool
 ```{r plot-tool-coverage, fig.width=9, fig.height=6}
 coverage_plot <- binary_tool_performance_summary %>%
-  arrange(total_variants_evaluated) %>%
+  arrange(n_evaluated) %>%
   ggplot(
     aes(
-      x = reorder(tool, total_variants_evaluated),
-      y = total_variants_evaluated
+      x = reorder(tool, n_evaluated),
+      y = n_evaluated
     )
   ) +
   geom_col() +
@@ -12636,11 +12514,11 @@ ANALYSIS_DATASET <- ANALYSIS_DATASET %>%
 ## Designing coverage plot
 ```{r expanded-tool-coverage-plot, fig.width=9, fig.height=7}
 coverage_plot_expanded <- binary_tool_performance_summary %>%
-  arrange(total_variants_evaluated) %>%
+  arrange(n_evaluated) %>%
   ggplot(
     aes(
-      x = reorder(tool, total_variants_evaluated),
-      y = total_variants_evaluated
+      x = reorder(tool, n_evaluated),
+      y = n_evaluated
     )
   ) +
   geom_col() +
@@ -12807,7 +12685,7 @@ plot_whole_dataset_mcc_data_check <- binary_performance_summary_with_coverage %>
   filter(tool %in% c("CADD", "PolyPhen-2")) %>%
   select(
     tool,
-    total_variants_evaluated,
+    n_evaluated,
     percent_binary_variants_evaluated,
     mcc
   )
@@ -12997,35 +12875,35 @@ final_results_index <- tibble::tibble(
     "Table",
     "Table",
     "Table",
-    "Table",
-    "Table",
+    "Plot",
+    "Plot",
     "Plot",
     "Plot",
     "Plot"
   ),
   output_name = c(
-    "Whole binary tool performance with coverage",
+    "Whole binary tool performance",
+    "Corrected missense-only tool performance",
+    "Common missense subset performance",
+    "Default versus optimised threshold comparison",
     "Main analysis comparison summary",
-    "Corrected optimised thresholds",
-    "Same-score default versus optimised threshold comparison",
-    "Allele-frequency column summary",
-    "AF by clinical group summary",
-    "AF by tool error group summary",
     "Whole-dataset MCC plot",
-    "AF by clinical group boxplot",
-    "AF by tool error group boxplot"
+    "Missense-only MCC plot",
+    "Common-subset MCC plot",
+    "Missense coverage versus MCC plot",
+    "Default versus optimised MCC change plot"
   ),
   file_name = c(
     "binary_performance_summary_with_coverage.csv",
+    "corrected_missense_binary_performance_summary_with_coverage_after_polyphen_fix.csv",
+    "common_missense_subset_performance_selected_tools.csv",
+    "default_vs_corrected_optimised_threshold_comparison_after_polyphen_fix.csv",
     "main_analysis_comparison_summary.csv",
-    "corrected_optimised_thresholds_confirmed_tools_whole_dataset.csv",
-    "default_vs_optimised_same_score_threshold_comparison.csv",
-    "allele_frequency_column_summary.csv",
-    "af_by_clinical_group_summary.csv",
-    "af_by_tool_error_group_summary.csv",
-    "plots/whole_dataset_mcc_by_tool.png",
-    "plots/af_by_clinical_group_boxplot.png",
-    "plots/af_by_tool_error_group_boxplot.png"
+    "whole_dataset_mcc_by_tool.png",
+    "missense_only_mcc_by_tool.png",
+    "common_missense_subset_mcc_by_tool.png",
+    "missense_coverage_vs_mcc.png",
+    "default_vs_optimised_mcc_change.png"
   )
 )
 
@@ -13037,6 +12915,7 @@ readr::write_csv(
   file.path(output_directory, "final_results_index.csv")
 )
 ```
+
 ```{r save-session-info}
 session_info_text <- capture.output(sessionInfo())
 

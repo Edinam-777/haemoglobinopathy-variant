@@ -1,255 +1,196 @@
 # Assessment of In Silico Tools for Variant-Effect Prediction in Haemoglobinopathies
 
-## Overview
+## Project overview
 
-This repository contains the data-processing and statistical analysis workflow for my MSc research project, **“Assessment of In Silico Tools for Variant-Effect Prediction in Haemoglobinopathies.”**
+This repository contains the reproducible data-processing and statistical-analysis workflow developed for my MSc research project:
 
-The study evaluates computational tools used to predict the functional and clinical effects of variants in the haemoglobin genes **HBA1, HBA2, and HBB**.
+**“Assessment of In Silico Tools for Variant-Effect Prediction in Haemoglobinopathies.”**
 
-The project focuses on the availability, agreement, and performance of established and newer computational prediction tools and considers how their outputs may contribute to the application of the ACMG/AMP computational evidence criteria **PP3** and **BP4** in haemoglobinopathy variant interpretation.
+The project evaluates computational tools used to predict the effects of sequence variants in the haemoglobin genes **HBA1, HBA2, and HBB**.
 
-## Background
+The analysis examines:
 
-Haemoglobinopathies are inherited disorders caused by pathogenic variants affecting haemoglobin production or structure. Accurate variant interpretation is important for diagnosis, genetic counselling, carrier screening, and clinical management.
+- prediction availability and coverage;
+- agreement and disagreement between tools;
+- performance against established clinical classifications;
+- differences across genes and variant consequences;
+- variants of uncertain significance;
+- likelihood ratios for eligible tools; and
+- the potential contribution of computational predictions to the ACMG/AMP evidence criteria **PP3** and **BP4**.
 
-Computational prediction tools are frequently used as supporting evidence when interpreting sequence variants. However, these tools differ in their algorithms, training datasets, score thresholds, applicable variant types, and overall performance.
+This repository demonstrates a genomic-data analysis workflow involving variant standardisation, genome-build conversion, Ensembl Variant Effect Predictor annotation, transcript selection, data integration, quality control, statistical evaluation, and reproducible reporting in R.
 
-Their predictions should therefore not be treated as independent clinical classifications. Instead, their performance must be evaluated against variants with established clinical classifications and interpreted alongside other forms of evidence.
+## Research context
 
-## Study aims
+Haemoglobinopathies are inherited disorders caused by variants that affect haemoglobin structure or production. Accurate interpretation of variants in haemoglobin genes is important for diagnosis, carrier screening, genetic counselling, and clinical management.
 
-The overall aim of this project is to assess the performance and clinical relevance of computational variant-effect prediction tools in haemoglobinopathies.
+Computational prediction tools are commonly used as supporting evidence during variant interpretation. However, these tools differ in their algorithms, training datasets, score thresholds, applicable variant types, and performance characteristics.
 
-The specific objectives are to:
+Their predictions should therefore not be treated as independent clinical classifications. This study evaluates their performance against variants with established clinical classifications and considers their appropriate use within the ACMG/AMP framework.
+
+## Study objectives
+
+The objectives of the project are to:
 
 1. curate variants in **HBA1, HBA2, and HBB** with established clinical classifications;
 2. standardise variant descriptions and genomic coordinates;
-3. obtain computational annotations using Ensembl Variant Effect Predictor and associated resources;
-4. evaluate prediction-tool coverage across genes, variant classes, and functional consequences;
-5. compare computational predictions with observed clinical classifications;
-6. calculate performance measures including sensitivity, specificity, accuracy, concordance, and Matthews correlation coefficient;
-7. examine variants of uncertain significance separately;
-8. calculate likelihood ratios for eligible tools where sufficient data are available;
-9. investigate agreement and disagreement between prediction tools; and
-10. assess the implications of computational predictions for the ACMG/AMP PP3 and BP4 criteria.
+3. convert genomic coordinates from GRCh37 to GRCh38;
+4. obtain computational annotations using Ensembl Variant Effect Predictor and associated resources;
+5. retain appropriate MANE Select transcript annotations;
+6. evaluate prediction-tool coverage across genes and variant consequences;
+7. compare computational predictions with observed clinical classifications;
+8. calculate performance measures including sensitivity, specificity, accuracy, balanced accuracy, concordance, and Matthews correlation coefficient;
+9. examine variants of uncertain significance separately;
+10. calculate likelihood ratios for eligible tools;
+11. investigate agreement and disagreement between prediction tools; and
+12. assess the implications of computational predictions for ACMG/AMP PP3 and BP4 evidence.
 
-## Genes included
+## Genes and clinical classifications
 
-The analysis focuses on variants affecting:
+The analysis includes variants affecting:
 
-* **HBA1**, encoding haemoglobin subunit alpha 1;
-* **HBA2**, encoding haemoglobin subunit alpha 2; and
-* **HBB**, encoding haemoglobin subunit beta.
+- **HBA1** — haemoglobin subunit alpha 1;
+- **HBA2** — haemoglobin subunit alpha 2; and
+- **HBB** — haemoglobin subunit beta.
 
-## Variant classifications
+The reference dataset contains variants classified as:
 
-The reference dataset includes variants classified as:
-
-* pathogenic or likely pathogenic;
-* benign or likely benign; and
-* variants of uncertain significance.
+- pathogenic or likely pathogenic;
+- benign or likely benign; and
+- variants of uncertain significance.
 
 For binary performance analyses, pathogenic and likely pathogenic variants are compared with benign and likely benign variants.
 
 Variants of uncertain significance are analysed separately and are not automatically assigned to either binary class.
 
-## Study workflow
+## Analysis workflow
 
-The main stages of the project are:
+The main workflow consists of:
 
-1. import and inspect the original haemoglobinopathy variant dataset;
-2. clean and standardise variant identifiers;
-3. convert genomic coordinates from GRCh37 to GRCh38;
-4. validate and normalise variant descriptions;
-5. prepare variants for Ensembl Variant Effect Predictor;
-6. import and clean the VEP output;
-7. identify and retain appropriate MANE Select transcript annotations;
-8. merge VEP annotations with the original clinical dataset;
-9. check duplicate, missing, and unmatched variants;
-10. assess computational-tool coverage;
-11. perform descriptive analyses;
-12. conduct binary pathogenic-versus-benign performance analyses;
-13. examine variants of uncertain significance;
-14. calculate likelihood ratios where appropriate; and
-15. generate tables and figures.
+1. importing and inspecting the original variant dataset;
+2. cleaning and standardising variant identifiers;
+3. converting coordinates from GRCh37 to GRCh38;
+4. validating and normalising variant descriptions;
+5. preparing variants for Ensembl Variant Effect Predictor;
+6. importing and cleaning VEP annotations;
+7. selecting appropriate MANE Select transcript records;
+8. merging VEP annotations with the clinical dataset;
+9. identifying duplicate, missing, and unmatched records;
+10. assessing tool coverage;
+11. performing descriptive analyses;
+12. conducting pathogenic-versus-benign performance analyses;
+13. evaluating missense variants separately;
+14. examining variants of uncertain significance;
+15. calculating likelihood ratios where appropriate; and
+16. generating reproducible tables and figures.
 
-## Genome-build and transcript processing
+## Variant annotation and quality control
 
-The original dataset contained variants represented using the **GRCh37** reference genome.
+The original dataset used the **GRCh37** reference genome. Variant coordinates were converted to **GRCh38** before annotation.
 
-Variant coordinates were converted to **GRCh38** before annotation. Variant descriptions were subsequently checked and standardised before being submitted to Ensembl Variant Effect Predictor.
+Variant descriptions were checked and standardised before submission to Ensembl Variant Effect Predictor.
 
-Where multiple transcript annotations were returned for the same variant, transcript selection was guided by the availability of **MANE Select** annotations for HBA1, HBA2, and HBB.
+Where VEP returned multiple transcript annotations for the same variant, transcript selection was guided by **MANE Select** annotations for HBA1, HBA2, and HBB.
 
-The analysis includes quality-control checks for:
+Quality-control checks include:
 
-* variants with multiple VEP rows;
-* duplicate variant identifiers;
-* missing MANE Select annotations;
-* unmatched variants after merging;
-* inconsistent genomic or transcript descriptions; and
-* missing prediction scores.
+- duplicate variant identifiers;
+- variants with multiple VEP annotation rows;
+- missing MANE Select annotations;
+- unmatched variants after dataset merging;
+- inconsistent genomic or transcript descriptions; and
+- missing computational prediction scores.
 
-## Computational annotations
+## Computational prediction tools
 
-The project evaluates annotations from several categories of computational tools.
+The project evaluates established and newer computational predictors where annotations are available.
 
-### Individual missense prediction tools
-
-Examples include:
-
-* SIFT;
-* PolyPhen-2;
-* MutationTaster;
-* PROVEAN;
-* FATHMM;
-* MutationAssessor; and
-* LIST-S2.
-
-### Meta-predictors and ensemble tools
+### Individual prediction tools
 
 Examples include:
 
-* REVEL;
-* MetaSVM;
-* MetaLR;
-* ClinPred;
-* BayesDel;
-* Condel;
-* VEST4;
-* DANN;
-* CADD; and
-* Eigen.
+- SIFT;
+- PolyPhen-2;
+- MutationTaster;
+- PROVEAN;
+- FATHMM;
+- MutationAssessor; and
+- LIST-S2.
 
-### Modern protein-language and deep-learning approaches
+### Meta-predictors and ensemble methods
+
+Examples include:
+
+- REVEL;
+- MetaSVM;
+- MetaLR;
+- ClinPred;
+- BayesDel;
+- Condel;
+- VEST4;
+- DANN;
+- CADD; and
+- Eigen.
+
+### Deep-learning and protein-language approaches
 
 The analysis also considers newer tools where scores are available, including:
 
-* AlphaMissense;
-* EVE; and
-* ESM1b.
+- AlphaMissense;
+- EVE; and
+- ESM1b.
 
 ### Splicing and conservation annotations
 
-Additional analyses may include:
+Additional annotations include tools and scores such as:
 
-* SpliceAI;
-* GERP++;
-* phyloP;
-* phastCons; and
-* other conservation-related annotations.
+- SpliceAI;
+- GERP++;
+- phyloP; and
+- phastCons.
 
-Not all prediction tools are applicable to every variant type. Tool coverage is therefore evaluated before performance comparisons are made.
+Not every tool is applicable to every variant type. Prediction coverage is therefore evaluated before performance comparisons are interpreted.
 
-## Performance analysis
+## Performance evaluation
 
-For tools with sufficient predictions and clearly defined pathogenic and benign thresholds, performance may be assessed using:
+For tools with sufficient predictions and defined pathogenic and benign thresholds, the analysis evaluates:
 
-* true positives;
-* true negatives;
-* false positives;
-* false negatives;
-* sensitivity;
-* specificity;
-* accuracy;
-* positive predictive value;
-* negative predictive value;
-* balanced accuracy;
-* Matthews correlation coefficient;
-* concordance; and
-* likelihood ratios.
+- true positives;
+- true negatives;
+- false positives;
+- false negatives;
+- sensitivity;
+- specificity;
+- accuracy;
+- balanced accuracy;
+- positive predictive value;
+- negative predictive value;
+- Matthews correlation coefficient;
+- concordance; and
+- likelihood ratios.
 
-Performance estimates are interpreted together with:
+Performance estimates are interpreted alongside:
 
-* the number of variants evaluated;
-* missing prediction scores;
-* class imbalance;
-* gene-specific performance;
-* variant consequence;
-* tool applicability; and
-* the thresholds recommended for each predictor.
+- the number of evaluated variants;
+- missing prediction scores;
+- class imbalance;
+- gene-specific performance;
+- variant consequence;
+- tool applicability; and
+- predictor-specific score thresholds.
 
 ## Repository structure
 
 ```text
 haemoglobinopathy-variant/
-├── data/          # Raw and processed datasets
-├── docs/          # Workflow, protocol, and data documentation
-├── environment/   # Software and package information
-├── results/       # Generated tables and figures
-├── scripts/       # Numbered R analysis scripts
-├── README.md      # Project overview
-├── LICENSE        # Repository licence
+├── data/
+│   ├── raw/              # Original input files
+│   └── processed/        # Cleaned and merged analysis datasets
+├── notebooks/            # Reproducible R Markdown analysis
+├── results/
+│   ├── tables/           # Generated summary and performance tables
+│   └── plots/            # Generated figures
+├── .gitignore
+├── LICENSE
+├── README.md
 └── haemoglobinopathy-variant.Rproj
-```
-
-The repository is being reorganised so that raw data, processed data, analysis scripts, tables, figures, and documentation are stored separately.
-
-## Reproducibility
-
-The analysis is conducted primarily in **R** and **RStudio**.
-
-Core packages used in the workflow include:
-
-```r
-library(tidyverse)
-library(readxl)
-library(readr)
-library(dplyr)
-library(stringr)
-library(janitor)
-library(ggplot2)
-library(pheatmap)
-```
-
-Additional packages may be used for performance analysis, Excel export, reporting, and reproducible project paths.
-
-The final workflow will use project-relative paths rather than computer-specific absolute file paths.
-
-## Important interpretation note
-
-Computational predictions are evaluated as supporting evidence only.
-
-A prediction of pathogenicity or benignity from an in silico tool does not independently establish the clinical significance of a variant. Results should be interpreted alongside population evidence, functional evidence, segregation data, phenotype information, allelic evidence, disease mechanism, and haemoglobinopathy-specific ACMG/AMP recommendations.
-
-## Data availability
-
-The repository contains research data and derived computational annotations used for this MSc project.
-
-Some source data, clinical classifications, database annotations, or third-party scores may be subject to separate usage, citation, or redistribution requirements. Files that cannot be redistributed publicly will be replaced with appropriate documentation or instructions for obtaining the original data.
-
-## Project status
-
-This repository is under active development.
-
-Current and planned work includes:
-
-* repository restructuring;
-* data and variable documentation;
-* prediction-tool coverage analysis;
-* binary pathogenic-versus-benign evaluation;
-* comparison with previously published predictor scores;
-* VUS-focused analysis;
-* likelihood-ratio analysis;
-* generation of final tables and figures; and
-* preparation of a reproducible analysis report.
-
-## Author
-
-**Jessica Edinam Ackuaku**
-
-MSc Molecular Medicine
-Cyprus Institute of Neurology and Genetics
-
-## Supervision
-
-This research is being conducted under the supervision of:
-
-* Dr Petros Kountouris
-* Dr Stella Tamana
-
-## Licence
-
-The analysis code in this repository is made available under the MIT Licence.
-
-The MIT Licence applies to the original code contained in this repository. It does not automatically apply to third-party datasets, clinical classifications, software, database annotations, or predictor scores.
