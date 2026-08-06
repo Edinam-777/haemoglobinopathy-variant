@@ -1,9 +1,0 @@
-variant_group,number_of_binary_tools,mean_coverage_percent,median_coverage_percent,highest_coverage_percent,lowest_coverage_percent
-Missense,22,94,99.8,99.9,58.9
-Stop/start altered,22,33.2,22.4,97,0
-Non-coding/regulatory,22,6.1,9.8,9.8,0
-Synonymous,22,0.3,0,7.4,0
-Other coding,22,0.1,0,3,0
-Frameshift,22,0,0,0,0
-Splice-related,22,0,0,0,0
-UTR,22,0,0,0,0

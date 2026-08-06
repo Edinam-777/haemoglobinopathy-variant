@@ -1,9 +1,0 @@
-tool_category,number_of_tools,mean_coverage_percent,median_coverage_percent,highest_tool_coverage,lowest_tool_coverage
-Meta/ensemble predictor,9,61.2,61.8,64.9,48
-Substitution matrix / descriptive feature,1,61,61,61,61
-Individual missense predictor,8,56.8,61.8,64.9,27
-Modern/deep learning predictor,9,55.5,60.2,63.6,35.5
-Continuous deleteriousness / constraint score,13,55.3,59.7,90.2,24.8
-Conservation score,6,54.1,64.9,64.9,0
-Gene-level intolerance / LoF metric,5,51.7,64,64,2.6
-Splicing predictor,4,26.4,5.8,88.5,5.7

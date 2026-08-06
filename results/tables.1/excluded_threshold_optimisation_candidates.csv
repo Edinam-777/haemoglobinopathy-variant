@@ -1,2 +1,0 @@
-tool,score_column,pathogenic_score_direction,threshold_condition,score_column_exists,reason_excluded
-BLOSUM62,BLOSUM62_new,NA,NA,TRUE,Score direction not confirmed or not appropriate for threshold optimisation

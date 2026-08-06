@@ -1,9 +1,0 @@
-qc_step,purpose,status
-Reference classification QC,Checked how original clinical classifications were converted into binary labels.,Completed
-Binary reference dataset creation,Excluded VUS and retained only benign/likely benign and pathogenic/likely pathogenic variants.,Completed
-Tool-column mapping QC,Confirmed that each tool was linked to the correct raw score and prediction columns.,Completed
-Tool-level coverage QC,"Measured raw score availability, binary prediction availability, missing values and uncertain outputs per tool.",Completed
-Prediction-label harmonisation,Updated prediction-label rules so tool-specific labels were converted consistently.,Completed
-Clean binary performance analysis,"Recalculated accuracy, sensitivity, specificity, MCC and related metrics using cleaned predictions.",Completed
-Likelihood ratio recalculation,Recalculated LR+ and LR− with safer handling of zero cells and non-interpretable cases.,Completed
-Manual variant-level QC,"Manually inspected example variants representing TP, TN, FP, FN, missing scores, uncertain outputs and conflicting predictions.",Completed

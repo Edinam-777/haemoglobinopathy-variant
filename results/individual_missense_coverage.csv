@@ -1,9 +1,0 @@
-tool_category,tool,total_variants,variants_with_tool_output,variants_without_tool_output,percent_with_tool_output
-Individual missense predictor,MutationTaster,1627,1056,571,64.9
-Individual missense predictor,VEST4,1627,1056,571,64.9
-Individual missense predictor,SIFT,1627,1007,620,61.9
-Individual missense predictor,PolyPhen-2,1627,1007,620,61.9
-Individual missense predictor,PROVEAN,1627,1006,621,61.8
-Individual missense predictor,FATHMM,1627,1006,621,61.8
-Individual missense predictor,MutationAssessor,1627,813,814,50
-Individual missense predictor,LRT,1627,439,1188,27
