@@ -70,3 +70,6 @@ data/processed/ENSEMBL_VEP_OUTPUT.xlsx
 supplementary stuff/
 supplementary stuff/
 data/raw/ENSEMBL_VEP_OUTPUT.csv
+
+data/raw/vep_variants_output.txt
+data/raw/variants_output_final results.txt
