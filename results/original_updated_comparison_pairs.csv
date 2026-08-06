@@ -1,0 +1,17 @@
+updated_column,original_column
+BayesDel_addAF_score_new,BayesDel_addAF_score
+CADD_PHRED_new,CADD_PHRED
+ClinPred_score_new,ClinPred_score
+Consequence_new,Consequence
+DANN_score_new,DANN_score
+Gene_new,Gene
+Location_new,Location
+MaxEntScan_diff_new,MaxEntScan_diff
+MetaLR_score_new,MetaLR_score
+MetaSVM_score_new,MetaSVM_score
+MutationTaster_score_new,MutationTaster_score
+REVEL_score_new,REVEL_score
+ada_score_new,ada_score
+phastCons17way_primate_new,phastCons17way_primate
+phyloP100way_vertebrate_new,phyloP100way_vertebrate
+rf_score_new,rf_score

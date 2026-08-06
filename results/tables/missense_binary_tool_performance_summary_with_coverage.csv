@@ -1,0 +1,23 @@
+tool,prediction_column,total_eligible_binary_variants,n_evaluated,variants_not_evaluated,true_positive,true_negative,false_positive,false_negative,accuracy,sensitivity,specificity,ppv,npv,balanced_accuracy,mcc,LR_positive,LR_negative,percent_missense_binary_variants_evaluated
+SIFT,SIFT_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+PolyPhen-2,PolyPhen_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+PROVEAN,PROVEAN_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MutationTaster,MutationTaster_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MutationAssessor,MutationAssessor_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MutPred2,MutPred2_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+DEOGEN2,DEOGEN2_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+PrimateAI,PrimateAI_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+ClinPred,ClinPred_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MetaSVM,MetaSVM_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MetaLR,MetaLR_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+MetaRNN,MetaRNN_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+BayesDel addAF,BayesDel_addAF_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+BayesDel noAF,BayesDel_noAF_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+LIST-S2,LIST_S2_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+AlphaMissense,AlphaMissense_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+EVE,EVE_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+ESM1b,ESM1b_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+popEVE,popEVE_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+CADD,CADD_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+DANN,DANN_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA
+Eigen-PC,Eigen_PC_predicted_clean,0,0,0,0,0,0,0,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA

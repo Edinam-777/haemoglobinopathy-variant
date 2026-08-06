@@ -1,0 +1,5 @@
+term,definition,relevance_to_analysis
+Raw-score coverage,The proportion of eligible binary-reference variants with a usable numerical or categorical score for a tool.,Shows whether the tool produced any usable output for the variant.
+Binary-prediction coverage / binary evaluability,The proportion of eligible binary-reference variants that could be converted into a benign-like or pathogenic-like prediction.,"Determines whether the variant can be included in binary performance calculations such as accuracy, sensitivity, specificity, MCC and likelihood ratios."
+Uncertain or intermediate output,A tool output that was available but could not be confidently assigned as benign-like or pathogenic-like.,Excluded from binary performance analysis but reported separately because it affects tool applicability.
+Missing or unusable output,"A tool output that was absent, blank, coded as '-', '.', NA, or otherwise unusable.",Excluded from binary performance analysis and counted as not evaluated.

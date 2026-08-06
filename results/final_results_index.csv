@@ -1,0 +1,11 @@
+output_type,output_name,file_name
+Table,Whole binary tool performance,binary_performance_summary_with_coverage.csv
+Table,Corrected missense-only tool performance,corrected_missense_binary_performance_summary_with_coverage_after_polyphen_fix.csv
+Table,Common missense subset performance,common_missense_subset_performance_selected_tools.csv
+Table,Default versus optimised threshold comparison,default_vs_corrected_optimised_threshold_comparison_after_polyphen_fix.csv
+Table,Main analysis comparison summary,main_analysis_comparison_summary.csv
+Plot,Whole-dataset MCC plot,whole_dataset_mcc_by_tool.png
+Plot,Missense-only MCC plot,missense_only_mcc_by_tool.png
+Plot,Common-subset MCC plot,common_missense_subset_mcc_by_tool.png
+Plot,Missense coverage versus MCC plot,missense_coverage_vs_mcc.png
+Plot,Default versus optimised MCC change plot,default_vs_optimised_mcc_change.png

@@ -1,0 +1,11 @@
+tool,n_evaluated,coverage_percent,sensitivity,specificity,balanced_accuracy,mcc,LR_positive_display,LR_negative_display,overall_interpretation
+MutPred2,291,28.4,0.887,0.783,0.835,0.641,4.088,0.144,"Among the better-performing tools in this dataset, but still requires cautious interpretation."
+CADD,742,72.3,0.94,0.471,0.706,0.484,1.777,0.127,"Among the better-performing tools in this dataset, but still requires cautious interpretation."
+AlphaMissense,283,27.6,0.848,0.66,0.754,0.46,2.494,0.23,"Among the better-performing tools in this dataset, but still requires cautious interpretation."
+Eigen-PC,522,50.9,0.883,0.545,0.714,0.432,1.941,0.215,"Among the better-performing tools in this dataset, but still requires cautious interpretation."
+SIFT,472,46,0.922,0.366,0.644,0.347,1.454,0.213,"Among the better-performing tools in this dataset, but still requires cautious interpretation."
+DANN,522,50.9,0.861,0.473,0.667,0.336,1.634,0.294,"Among the better-performing tools in this dataset, but still requires cautious interpretation."
+PolyPhen-2,481,46.9,0.72,0.615,0.667,0.299,1.87,0.455,Showed modest performance in this dataset.
+ESM1b,514,50.1,0.853,0.42,0.636,0.278,1.471,0.35,Showed modest performance in this dataset.
+MetaSVM,472,46,0.911,0.304,0.608,0.263,1.309,0.293,Showed modest performance in this dataset.
+ClinPred,472,46,0.897,0.321,0.609,0.257,1.321,0.321,Showed modest performance in this dataset.

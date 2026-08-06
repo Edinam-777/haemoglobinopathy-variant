@@ -1,0 +1,7 @@
+tool,n_evaluated,coverage_percent,sensitivity,specificity,mcc,LR_positive_display,LR_positive_interpretation,LR_negative_display,LR_negative_interpretation,overall_interpretation
+popEVE,67,6.5,0.564,0.786,0.35,2.636,Weak pathogenic-like support,0.555,Limited or no benign-like support,Interpret cautiously because coverage was low.
+EVE,75,7.3,0.138,1,0.187,Inf,Infinite LR+ due to zero false positives; interpret cautiously,0.862,Limited or no benign-like support,Interpret cautiously because coverage was low.
+LIST-S2,103,10,0.71,0.561,0.271,1.617,Limited or no pathogenic-like support,0.517,Limited or no benign-like support,Interpret cautiously because coverage was low.
+MutationAssessor,224,21.8,0.925,0.417,0.336,1.587,Limited or no pathogenic-like support,0.18,Moderate benign-like support,Interpret cautiously because coverage was low.
+DEOGEN2,335,32.7,0.056,0.923,-0.036,0.727,Evidence against pathogenic-like prediction,1.023,Evidence against benign-like prediction,Performed poorly in this dataset.
+PrimateAI,457,44.5,0.012,0.946,-0.123,0.222,Evidence against pathogenic-like prediction,1.044,Evidence against benign-like prediction,Performed poorly in this dataset.

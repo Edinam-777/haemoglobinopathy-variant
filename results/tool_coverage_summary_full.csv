@@ -1,0 +1,56 @@
+tool,columns_present,missing_columns,total_variants,variants_with_tool_output,variants_without_tool_output,percent_with_tool_output
+CADD,CADD_PHRED; CADD_PHRED_new; CADD_RAW_new,,1627,1468,159,90.2
+SpliceAI,SpliceAI_pred_DS_AG_new; SpliceAI_pred_DS_AL_new; SpliceAI_pred_DS_DG_new; SpliceAI_pred_DS_DL_new; SpliceAI_pred_SYMBOL_new,SpliceAI_pred_DS_AG; SpliceAI_pred_DS_AL; SpliceAI_pred_DS_DG; SpliceAI_pred_DS_DL; SpliceAI_pred_SYMBOL,1627,1440,187,88.5
+MutationTaster,MutationTaster_score; MutationTaster_score_new; MutationTaster_pred_new; MutationTaster_model_new,,1627,1056,571,64.9
+FATHMM-MKL,fathmm-MKL_coding_score,,1627,1056,571,64.9
+BayesDel addAF,BayesDel_addAF_score; BayesDel_addAF_score_new; BayesDel_addAF_pred_new,,1627,1056,571,64.9
+DANN,DANN_score; DANN_score_new,,1627,1056,571,64.9
+VEST4,VEST4_score_seperated,,1627,1056,571,64.9
+GERP++,GERP++_RS,GERP_RS; GERP++_RS_new; GERP_RS_new,1627,1056,571,64.9
+phyloP,phyloP100way_vertebrate; phyloP30way_mammalian; phyloP17way_primate_new,phyloP17way_primate,1627,1056,571,64.9
+phastCons,phastCons30way_mammalian; phastCons17way_primate; phastCons17way_primate_new,phastCons100way_vertebrate,1627,1056,571,64.9
+SiPhy,SiPhy_29way_logOdds,SiPhy_29way_logOdds_rankscore; SiPhy_29way_logOdds_new,1627,1056,571,64.9
+fitCons,integrated_fitCons_score,integrated_fitCons_score_new; fitCons_score; fitCons_score_new,1627,1056,571,64.9
+BayesDel noAF,BayesDel_noAF_score_new; BayesDel_noAF_pred_new,,1627,1042,585,64
+LoFtool,LoFtool_score_new,LoFtool_score,1627,1042,585,64
+HIPred,HIPred_score_new,HIPred_score,1627,1042,585,64
+GDI,GDI_new,GDI,1627,1042,585,64
+GHIS,GHIS_new,GHIS,1627,1042,585,64
+FATHMM-XF,fathmm_XF_coding_score_new; fathmm_XF_coding_pred_new,,1627,1034,593,63.6
+ESM1b,ESM1b_score_new; ESM1b_pred_new,,1627,1034,593,63.6
+SIFT,SIFT_score; SIFT_new,,1627,1007,620,61.9
+PolyPhen-2,PolyPhen_score; PolyPhen_new,,1627,1007,620,61.9
+Condel,Condel_score,Condel_pred; Condel_score_new; Condel_pred_new,1627,1007,620,61.9
+PROVEAN,PROVEAN_score_seperated; PROVEAN_score_new; PROVEAN_pred_new,,1627,1006,621,61.8
+FATHMM,FATHMM_score_seperated,,1627,1006,621,61.8
+REVEL,REVEL_score; REVEL_score_new; REVEL_new,,1627,1006,621,61.8
+ClinPred,ClinPred_score; ClinPred_score_new; ClinPred_pred_new; ClinPred_new,,1627,1006,621,61.8
+MetaSVM,MetaSVM_score; MetaSVM_score_new; MetaSVM_pred_new,,1627,1006,621,61.8
+MetaLR,MetaLR_score; MetaLR_score_new; MetaLR_pred_new,,1627,1006,621,61.8
+MutPred / MutPred2,MutPred_score; MutPred2_score_new; MutPred2_pred_new,,1627,1006,621,61.8
+BLOSUM62,BLOSUM62_new,BLOSUM62,1627,993,634,61
+MetaRNN,MetaRNN_score_new; MetaRNN_pred_new,,1627,992,635,61
+MVP,MVP_score_new,,1627,992,635,61
+MutFormer,MutFormer_score_new,,1627,992,635,61
+popEVE,popEVE_pred_new; popEVE_score_new; popEVE_SCORE_1_new; popEVE_EVE_new; popEVE_ESM1v_new,,1627,979,648,60.2
+PrimateAI,PrimateAI_score_new; PrimateAI_pred_new,,1627,977,650,60
+MisFit-D,MisFit_D_score_new; MisFit_D_pred_lenient_new; MisFit_D_pred_stringent_new,,1627,977,650,60
+MisFit-S,MisFit_S_score_new,,1627,977,650,60
+PHACTboost,PHACTboost_score_new,,1627,972,655,59.7
+MutationAssessor,MutationAssessor_standalone_score; MutationAssessor_score_new; MutationAssessor_pred_new,,1627,813,814,50
+MPC,MPC_score_new,,1627,801,826,49.2
+LIST-S2,LIST-S2_score_seperated; LIST_S2_score_new; LIST_S2_pred_new,,1627,781,846,48
+DEOGEN2,DEOGEN2_score_new; DEOGEN2_pred_new,,1627,767,860,47.1
+VARITY-R,VARITY_R_score_new,,1627,767,860,47.1
+VARITY-ER,VARITY_ER_score_new,,1627,767,860,47.1
+VARITY-R-LOO,VARITY_R_LOO_score_new,,1627,767,860,47.1
+VARITY-ER-LOO,VARITY_ER_LOO_score_new,,1627,767,860,47.1
+AlphaMissense,am_class_new; am_pathogenicity_new,am_class; am_pathogenicity,1627,757,870,46.5
+EVE,EVE_CLASS_new; EVE_SCORE_new,,1627,577,1050,35.5
+LRT,LRT_score,,1627,439,1188,27
+gMVP,gMVP_score_new,,1627,403,1224,24.8
+MaxEntScan,MaxEntScan_diff; MaxEntScan_alt_new; MaxEntScan_diff_new; MaxEntScan_ref_new,MaxEntScan_alt; MaxEntScan_ref,1627,94,1533,5.8
+ada_score,ada_score; ada_score_new,,1627,93,1534,5.7
+rf_score,rf_score; rf_score_new,,1627,93,1534,5.7
+Aloft,Aloft_pred_new; Aloft_Confidence_new,Aloft_pred; Aloft_Confidence,1627,42,1585,2.6
+Eigen-PC,NA,Eigen_PC_phred;Eigen_PC_raw;Eigen_PC_phred_new;Eigen_PC_raw_new,1627,0,1627,0

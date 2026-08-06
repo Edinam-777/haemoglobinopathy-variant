@@ -1,0 +1,29 @@
+tool,score_column,pathogenic_score_direction,optimised_threshold,n_evaluated,accuracy,sensitivity,specificity,balanced_accuracy,mcc
+rf_score,rf_score_new,higher,0.012,71,0.986,1,0.5,0.75,0.702
+MutPred2,MutPred2_score_new,higher,0.44281709127033114,472,0.831,0.908,0.58,0.744,0.513
+CADD,CADD_PHRED_new,higher,10.56,742,0.819,0.94,0.471,0.706,0.484
+Eigen-PC,Eigen_PC_phred_coding_new,higher,1.776404,522,0.797,0.822,0.705,0.763,0.476
+MutationAssessor,MutationAssessor_score_new,higher,2.52,224,0.857,0.875,0.708,0.791,0.462
+AlphaMissense,am_pathogenicity_new,higher,0.4253,325,0.794,0.835,0.631,0.733,0.425
+REVEL,REVEL_score_new,higher,0.64,472,0.773,0.831,0.589,0.71,0.403
+phastCons100way,phastCons100way_vertebrate_new,higher,0.427,522,0.766,0.798,0.652,0.725,0.403
+LIST-S2,LIST_S2_score_new,higher,0.665433,103,0.699,0.968,0.293,0.63,0.372
+phyloP100way,phyloP100way_vertebrate_new,higher,0.402,522,0.778,0.846,0.527,0.686,0.362
+BayesDel noAF,BayesDel_noAF_score_new,higher,0.354745,522,0.661,0.617,0.821,0.719,0.36
+ClinPred,ClinPred_score_new,higher,0.96966141462326,472,0.686,0.667,0.75,0.709,0.358
+BayesDel addAF,BayesDel_addAF_score_new,higher,0.412496,522,0.638,0.578,0.857,0.718,0.357
+MetaSVM,MetaSVM_score_new,higher,0.4833,472,0.731,0.764,0.625,0.695,0.352
+DANN,DANN_score_new,higher,0.9595738270659581,522,0.797,0.905,0.402,0.653,0.343
+MetaLR,MetaLR_score_new,higher,0.7827,472,0.722,0.753,0.625,0.689,0.34
+ESM1b,ESM1b_score_new,lower,-7.8542175,514,0.765,0.833,0.518,0.675,0.338
+popEVE,popEVE_score_new,lower,-4.563,103,0.689,0.79,0.537,0.663,0.338
+ada_score,ada_score_new,higher,0.00143921045473364,71,0.944,0.957,0.5,0.728,0.328
+PolyPhen-2,PolyPhen_score,higher,0.098,481,0.769,0.893,0.385,0.639,0.314
+fathmm-XF,fathmm_XF_coding_score_new,higher,0.74296,514,0.687,0.704,0.625,0.664,0.282
+MetaRNN,MetaRNN_score_new,higher,0.8478804,472,0.725,0.811,0.446,0.629,0.253
+PROVEAN,PROVEAN_score_new,lower,-1.65,472,0.773,0.956,0.188,0.572,0.226
+MPC,MPC_score_new,higher,0.034232644187,356,0.809,0.989,0.085,0.537,0.188
+PrimateAI,PrimateAI_score_new,higher,0.655839681625,457,0.499,0.414,0.759,0.587,0.154
+DEOGEN2,DEOGEN2_score_new,higher,0.034258,335,0.803,0.97,0.108,0.539,0.149
+MVP,MVP_score_new,higher,0.999932037799,472,0.261,0.031,1,0.515,0.086
+MutationTaster,MutationTaster_score_new,higher,NA,0,NA,NA,NA,NA,NA

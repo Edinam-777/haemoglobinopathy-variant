@@ -1,0 +1,5 @@
+tool_category,tool,total_variants,variants_with_tool_output,variants_without_tool_output,percent_with_tool_output
+Splicing predictor,SpliceAI,1627,1440,187,88.5
+Splicing predictor,MaxEntScan,1627,94,1533,5.8
+Splicing predictor,ada_score,1627,93,1534,5.7
+Splicing predictor,rf_score,1627,93,1534,5.7

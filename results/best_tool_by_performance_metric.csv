@@ -1,0 +1,6 @@
+metric,tool,value
+Highest accuracy,MutationAssessor,0.871
+Highest sensitivity,MetaLR,0.992
+Highest specificity,EVE,1
+Highest balanced accuracy,MutPred2,0.835
+Highest MCC,MutPred2,0.641

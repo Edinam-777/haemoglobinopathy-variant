@@ -1,0 +1,7 @@
+output_name,file_name
+Allele-frequency column summary,allele_frequency_column_summary.csv
+AF by clinical group summary,af_by_clinical_group_summary.csv
+High-frequency P/LP variants,high_frequency_pathogenic_variants.csv
+AF by tool error group summary,af_by_tool_error_group_summary.csv
+AF by clinical group boxplot,plots/af_by_clinical_group_boxplot.png
+AF by tool error group boxplot,plots/af_by_tool_error_group_boxplot.png

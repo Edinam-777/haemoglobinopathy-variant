@@ -1,0 +1,20 @@
+tool,score_column,pathogenic_score_direction,same_score_available_n,default_threshold,optimised_threshold,default_accuracy_same_score_subset,default_sensitivity_same_score_subset,default_specificity_same_score_subset,default_balanced_accuracy_same_score_subset,default_mcc_same_score_subset,optimised_accuracy_same_score_subset,optimised_sensitivity_same_score_subset,optimised_specificity_same_score_subset,optimised_balanced_accuracy_same_score_subset,optimised_mcc_same_score_subset,mcc_change_same_score_subset
+BayesDel addAF,BayesDel_addAF_score_new,higher,522,0.069,0.412496,0.785,0.968,0.116,0.542,0.159,0.638,0.578,0.857,0.718,0.357,0.198
+BayesDel noAF,BayesDel_noAF_score_new,higher,522,-0.057,0.354745,0.782,0.956,0.143,0.549,0.165,0.661,0.617,0.821,0.719,0.36,0.195
+DEOGEN2,DEOGEN2_score_new,higher,335,0.5,0.034258,0.224,0.056,0.923,0.49,-0.036,0.803,0.97,0.108,0.539,0.149,0.185
+MetaLR,MetaLR_score_new,higher,472,0.5,0.7827,0.78,0.992,0.098,0.545,0.225,0.722,0.753,0.625,0.689,0.34,0.115
+MetaRNN,MetaRNN_score_new,higher,472,0.5,0.8478804,0.754,0.942,0.152,0.547,0.146,0.725,0.811,0.446,0.629,0.253,0.107
+MutationAssessor,MutationAssessor_score_new,higher,224,1.9,2.52,0.879,0.935,0.417,0.676,0.358,0.857,0.875,0.708,0.791,0.462,0.104
+LIST-S2,LIST_S2_score_new,higher,103,0.85,0.665433,0.65,0.71,0.561,0.635,0.271,0.699,0.968,0.293,0.63,0.372,0.101
+ClinPred,ClinPred_score_new,higher,472,0.5,0.96966141462326,0.761,0.897,0.321,0.609,0.257,0.686,0.667,0.75,0.709,0.358,0.101
+MetaSVM,MetaSVM_score_new,higher,472,0,0.4833,0.767,0.911,0.304,0.608,0.263,0.731,0.764,0.625,0.695,0.352,0.089
+REVEL,REVEL_score_new,higher,472,0.5,0.64,0.794,0.978,0.205,0.592,0.315,0.773,0.831,0.589,0.71,0.403,0.088
+PROVEAN,PROVEAN_score_new,lower,472,-2.5,-1.65,0.708,0.833,0.304,0.569,0.146,0.773,0.956,0.188,0.572,0.226,0.08
+MutPred2,MutPred2_score_new,higher,472,0.5,0.44281709127033114,0.79,0.842,0.625,0.734,0.448,0.831,0.908,0.58,0.744,0.513,0.065
+ESM1b,ESM1b_score_new,lower,514,-7.5,-7.8542175,0.759,0.853,0.42,0.636,0.278,0.765,0.833,0.518,0.675,0.338,0.06
+popEVE,popEVE_score_new,lower,103,-4.5,-4.563,0.67,0.806,0.463,0.635,0.288,0.689,0.79,0.537,0.663,0.338,0.05
+Eigen-PC,Eigen_PC_phred_coding_new,higher,522,1.3,1.776404,0.81,0.883,0.545,0.714,0.432,0.797,0.822,0.705,0.763,0.476,0.044
+PrimateAI,PrimateAI_score_new,higher,457,0.5,0.655839681625,0.685,0.8,0.33,0.565,0.133,0.499,0.414,0.759,0.587,0.154,0.021
+PolyPhen-2,PolyPhen_score,higher,481,0.453,0.098,0.692,0.717,0.615,0.666,0.296,0.769,0.893,0.385,0.639,0.314,0.018
+DANN,DANN_score_new,higher,522,0.971,0.9595738270659581,0.778,0.861,0.473,0.667,0.336,0.797,0.905,0.402,0.653,0.343,0.007
+CADD,CADD_PHRED_new,higher,742,10.44,10.6,0.819,0.94,0.471,0.706,0.484,0.817,0.936,0.471,0.704,0.476,-0.008
