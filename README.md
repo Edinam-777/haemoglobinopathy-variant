@@ -211,3 +211,12 @@ Additional tables and figures are available in:
 
 - [`results/tables/`](results/tables/)
 - [`results/plots/`](results/plots/)
+
+### Large input file
+
+The full `ENSEMBL_VEP_OUTPUT.csv` file is not included in the repository because it exceeds GitHub’s individual file-size limit.
+
+The notebook expects this file at:
+
+```text
+data/raw/ENSEMBL_VEP_OUTPUT.csv
