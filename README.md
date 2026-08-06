@@ -332,8 +332,8 @@ Cyprus Institute of Neurology and Genetics
 
 This research was conducted under the supervision of:
 
-- Dr Petros Kountouris
 - Dr Stella Tamana
+- Dr Petros Kountouris
 
 ## Licence
 
